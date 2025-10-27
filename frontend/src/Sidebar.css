@@ -5,15 +5,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex: 0 0 35px;
     width: 35px;
     padding: 8px 0 8px 0;
     gap: 6px;
+    z-index: 11;
 }
 
 .nav-bar {
     height: 4px;
     width: 100%;
-    background-color: #3fd6f0;
+    background-color: black;
     border-radius: 5px;
 }
 
@@ -23,7 +25,24 @@
     pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     visibility: hidden;
-    width: "18rem";
-    height: "100vh";
-    background-color: "pink";
+    transform: translateX(-10px);
+    width: 15rem;
+    position: absolute;
+}
+
+#nav-stack.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    height: 100vh;
+    padding-top: 50px;
+    background-color: rgb(181, 193, 255);
+    z-index: 1;
+    pointer-events: auto;
+}
+
+.nav-links {
+    color: white !important;
+    font-weight: bold !important;
 }
