@@ -1,14 +1,29 @@
-import { useState} from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Stack, Nav } from 'react-bootstrap';
 import '../Sidebar.css';
 
 function Sidebar() {
     const [open, setOpen] = useState(false);
+    const navRef = useRef(null)
     
     const toggleNav = (e) => {
         e.preventDefault();
         setOpen(!open)
     }
+    /*
+    const clickOutside = (e) => {
+        if (navRef.current && !navRef.current.contains(e.target)) {
+            setOpen(false);
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousedown", clickOutside);
+        return () => {
+            document.removeEventListener('mousedown', clickOutside);
+        }
+    }, [])
+    */
 
     return (
         <div>
@@ -18,7 +33,7 @@ function Sidebar() {
                     <span className="nav-bar"></span>
                     <span className="nav-bar"></span>
                 </a>
-                <Stack gap={2} id="nav-stack" className={open ? "active" : ''}>
+                <Stack gap={2} id="nav-stack" className={open ? "active" : ''} ref={navRef}>
                     <Nav.Item>
                         <Nav.Link href="/dashboard" className="nav-links fs-5" >Home</Nav.Link>
                     </Nav.Item>
