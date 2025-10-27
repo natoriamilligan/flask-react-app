@@ -1,0 +1,29 @@
+#nav-toggle {
+    position: absolute;
+    top: .55rem;
+    left: .9rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 35px;
+    padding: 8px 0 8px 0;
+    gap: 6px;
+}
+
+.nav-bar {
+    height: 4px;
+    width: 100%;
+    background-color: #3fd6f0;
+    border-radius: 5px;
+}
+
+#nav-stack {
+    opacity: 0;
+    transform: translateX(-10px); /* start slightly above */
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    visibility: hidden;
+    width: "18rem";
+    height: "100vh";
+    background-color: "pink";
+}
