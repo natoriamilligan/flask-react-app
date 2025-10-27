@@ -1,39 +1,37 @@
-import { useState } from 'react';
+import { useState} from 'react';
 import { Stack, Nav } from 'react-bootstrap';
 import '../Sidebar.css';
 
 function Sidebar() {
-    const navToggle = document.getElementById("nav-toggle");
-    const navLinks = document.getElementById("nav-stack");
-
-    navToggle.addEventListener("click", (e) => {
-        e.preventDefault()
-        navLinks.classList.toggle("active");
-    });
+    const [open, setOpen] = useState(false);
+    
+    const toggleNav = (e) => {
+        e.preventDefault();
+        setOpen(!open)
+    }
 
     return (
         <div>
             <Nav>
-                <a id="nav-toggle" href="">
-                    <span class="nav-bar"></span>
-                    <span class="nav-bar"></span>
-                    <span class="nav-bar"></span>
+                <a id="nav-toggle" href="" onClick={toggleNav}>
+                    <span className="nav-bar"></span>
+                    <span className="nav-bar"></span>
+                    <span className="nav-bar"></span>
                 </a>
-                <Stack gap={2} id="nav-stack">
+                <Stack gap={2} id="nav-stack" className={open ? "active" : ''}>
                     <Nav.Item>
-                        <Nav.Link href="/dashboard">Home</Nav.Link>
+                        <Nav.Link href="/dashboard" className="nav-links fs-5" >Home</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link href="/dashboard">Create Deposit</Nav.Link>
+                        <Nav.Link href="/dashboard" className="nav-links fs-5">Create Deposit</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link href="/dashboard">Withdrawls</Nav.Link>
+                        <Nav.Link href="/dashboard" className="nav-links fs-5">Withdrawls</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
-                        <Nav.Link href="/dashboard">Send Transfer</Nav.Link>
+                        <Nav.Link href="/dashboard" className="nav-links fs-5">Send Transfer</Nav.Link>
                     </Nav.Item>
                 </Stack>
-                
             </Nav>
         </div>
     )
