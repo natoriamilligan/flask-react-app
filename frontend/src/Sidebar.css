@@ -22,7 +22,6 @@
 #nav-stack {
     opacity: 0;
     transform: translateX(-10px); /* start slightly above */
-    pointer-events: none;
     transition: opacity 0.2s ease, transform 0.2s ease;
     visibility: hidden;
     transform: translateX(-10px);

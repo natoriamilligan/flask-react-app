@@ -10,7 +10,7 @@ function Sidebar() {
         e.preventDefault();
         setOpen(!open)
     }
-    /*
+    
     const clickOutside = (e) => {
         if (navRef.current && !navRef.current.contains(e.target)) {
             setOpen(false);
@@ -18,22 +18,24 @@ function Sidebar() {
     }
 
     useEffect(() => {
-        document.addEventListener("mousedown", clickOutside);
+        if (open) {
+            document.addEventListener("mousedown", clickOutside);
+        }
         return () => {
             document.removeEventListener('mousedown', clickOutside);
         }
-    }, [])
-    */
+    }, [open])
+    
 
     return (
         <div>
-            <Nav>
+            <Nav ref={navRef}>
                 <a id="nav-toggle" href="" onClick={toggleNav}>
                     <span className="nav-bar"></span>
                     <span className="nav-bar"></span>
                     <span className="nav-bar"></span>
                 </a>
-                <Stack gap={2} id="nav-stack" className={open ? "active" : ''} ref={navRef}>
+                <Stack gap={2} id="nav-stack" className={open ? "active" : ''}>
                     <Nav.Item>
                         <Nav.Link href="/dashboard" className="nav-links fs-5" >Home</Nav.Link>
                     </Nav.Item>
