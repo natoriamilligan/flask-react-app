@@ -1,12 +1,25 @@
-.header-container {
-    margin-top: 50px;
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+}
+
+.header-title {
+    font-weight: 300;
+    font-size: 23px;
+}
+
+.acct-header-container {
+    margin-top: 35px;
     margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.header-container * {
+.acct-header-container * {
     margin: 0;
 }
 
@@ -27,6 +40,26 @@
     cursor: pointer;
     text-underline-offset: 2px;
     text-decoration-thickness: 1px;
+}
 
+.trans-card {
+    margin-top: 30px;
+}
+
+.trans-list-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 75px;
+}
+
+.list-item-top {
+    height: 50%;
+}
+
+.list-item-bottom {
+    display: flex;
+    justify-content: space-between;
+    height: 50%;
 }
 

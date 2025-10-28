@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Container, Card, Modal } from 'react-bootstrap';
+import { Button, Container, Card, Modal, ListGroup, ListGroupItem } from 'react-bootstrap';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 
@@ -13,7 +13,10 @@ function Dashboard() {
         <>
             <Sidebar />
             <Container>
-                <div className="header-container">
+                <header>
+                    <h1 className="header-title">Banksie</h1>
+                </header>
+                <div className="acct-header-container">
                     <h2 className="display-3">Hello John!</h2>
                     <p className="acct-display">Checking ...8809</p>
                 </div>
@@ -22,6 +25,53 @@ function Dashboard() {
                         <h2 className="display-1">$782.38</h2>
                         <button className="acct-details" onClick={handleShow}>Account Details</button>
                     </Card.Body>
+                </Card>
+                <Card className="trans-card">
+                    <Card.Header>Transactions</Card.Header>
+                    <ListGroup>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                        <ListGroup.Item className="trans-list-item">
+                            <div className="list-item-top">11/34/25</div>
+                            <div className="list-item-bottom">
+                                <div>Deposit</div>
+                                <div>+$500</div>
+                            </div>
+                        </ListGroup.Item>
+                    </ListGroup>
                 </Card>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header>
