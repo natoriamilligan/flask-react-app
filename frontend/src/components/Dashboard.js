@@ -12,10 +12,10 @@ function Dashboard() {
     return (
         <>
             <Sidebar />
+            <header>
+                <h1 className="header-title">Banksie</h1>
+            </header>
             <Container>
-                <header>
-                    <h1 className="header-title">Banksie</h1>
-                </header>
                 <div className="acct-header-container">
                     <h2 className="display-3">Hello John!</h2>
                     <p className="acct-display">Checking ...8809</p>
