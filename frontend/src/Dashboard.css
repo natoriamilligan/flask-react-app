@@ -1,5 +1,6 @@
 .header-container {
     margin-top: 50px;
+    margin-bottom: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -11,5 +12,21 @@
 
 .acct-display {
     font-size: 20px;
+}
+
+.acct-balance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.acct-details {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    cursor: pointer;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+
 }
 
