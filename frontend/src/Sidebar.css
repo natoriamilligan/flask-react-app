@@ -47,14 +47,13 @@ body.no-scroll {
     box-shadow: 0 5px 10px gray;
 }
 
-
-
 .nav-items {
     border: 1px white solid;
     border-radius: 10px;
     background-color: white;
     align-items: center;
     color: rgb(162, 176, 244) !important;
+    pointer-events: none;
 }
 
 .nav-item {
@@ -75,7 +74,6 @@ body.no-scroll {
 
 .nav-link-active {
     color: rgb(162, 176, 244) !important;
-    pointer-events: none;
 }
 
 .overlay {

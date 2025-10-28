@@ -53,7 +53,7 @@ function Sidebar() {
                         <Nav.Link 
                         as={NavLink}
                         to="/dashboard" 
-                        className={location.pathname === "/dashboard" ? "nav-link-active nav-links fs-5" : "nav-links fs-5"}
+                        className={location.pathname === "/dashboard" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
                         Home
                         </Nav.Link>
@@ -62,7 +62,7 @@ function Sidebar() {
                         <Nav.Link 
                         as={NavLink}
                         to="/deposit" 
-                        className={location.pathname === "/deposit" ? "nav-link-active nav-links fs-5" : "nav-links fs-5"}
+                        className={location.pathname === "/deposit" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
                         Deposit Funds
                         </Nav.Link>
@@ -71,7 +71,7 @@ function Sidebar() {
                         <Nav.Link 
                         as={NavLink}
                         to="/withdrawl" 
-                        className={location.pathname === "/withdrawl" ? "nav-link-active nav-links fs-5" : "nav-links fs-5"}
+                        className={location.pathname === "/withdrawl" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
                         Withdrawl Funds
                         </Nav.Link>
@@ -80,7 +80,7 @@ function Sidebar() {
                         <Nav.Link 
                         as={NavLink}
                         to="/tranfer" 
-                        className={location.pathname === "/transfer" ? "nav-link-active nav-links fs-5" : "nav-links fs-5"}
+                        className={location.pathname === "/transfer" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
                         Send Transfer
                         </Nav.Link>
