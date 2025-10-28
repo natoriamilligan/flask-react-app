@@ -29,6 +29,7 @@ function Sidebar() {
 
     return (
         <div>
+            {open && <div className="overlay" onClick={() => setOpen(false)}></div>}
             <Nav ref={navRef}>
                 <a id="nav-toggle" href="" onClick={toggleNav}>
                     <span className="nav-bar"></span>
