@@ -72,6 +72,9 @@ function Dashboard() {
                             </div>
                         </ListGroup.Item>
                     </ListGroup>
+                    <Card.Footer className="trans-footer">
+                        <button className="trans-footer-btn">View more</button>
+                    </Card.Footer>
                 </Card>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header>

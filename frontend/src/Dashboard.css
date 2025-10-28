@@ -43,7 +43,7 @@ header {
 }
 
 .trans-card {
-    margin-top: 30px;
+    margin: 30px 0;
 }
 
 .trans-list-item {
@@ -61,5 +61,22 @@ header {
     display: flex;
     justify-content: space-between;
     height: 50%;
+}
+
+.trans-footer {
+    display: flex;
+    justify-content: end;
+    height: 50px;
+    padding: 0 !important;
+}
+
+.trans-footer-btn {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+    background: none;
+    border: none;
+    color: black;
+    padding-right: 20px;
 }
 
