@@ -19,30 +19,63 @@ body.no-scroll {
 .nav-bar {
     height: 2px;
     width: 100%;
-    background-color: black;
+    background-color: rgb(48, 45, 45);
     border-radius: 5px;
 }
 
 #nav-stack {
     opacity: 0;
-    transform: translateX(-10px); /* start slightly above */
+    transform: translateX(-10px) translateZ(0); /* start slightly above */
     transition: opacity 0.2s ease, transform 0.2s ease;
     width: 15rem;
     position: absolute;
+    pointer-events: none;
+    will-change: opacity, transform;
+    visibility: hidden;
 }
 
 #nav-stack.active {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) translateZ(0);
     height: 100vh;
     padding-top: 50px;
-    background-color: rgb(181, 193, 255);
+    background-color: rgb(162, 176, 244);
     z-index: 10;
+    pointer-events: auto;
+    visibility: visible;
+    border-top-right-radius: 30px;
+    box-shadow: 0 5px 10px gray;
+}
+
+
+
+.nav-items {
+    border: 1px white solid;
+    border-radius: 10px;
+    background-color: white;
+    align-items: center;
+    color: rgb(162, 176, 244) !important;
+}
+
+.nav-item {
+    margin: 5px 16px;
+    padding-bottom: 3px;
 }
 
 .nav-links {
     color: white !important;
-    font-weight: bold !important;
+    font-weight: 600 !important;
+    border-radius: 10px;
+}
+
+.nav-item:hover {
+    background-color: rgb(135, 154, 246);
+    border-radius: 10px;
+}
+
+.nav-link-active {
+    color: rgb(162, 176, 244) !important;
+    pointer-events: none;
 }
 
 .overlay {
