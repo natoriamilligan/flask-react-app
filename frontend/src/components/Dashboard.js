@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Button, Container, Card, Modal, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Button, Container, Card, Modal, ListGroup} from 'react-bootstrap';
+import {NavLink} from 'react-router-dom';
+import { PersonCircle } from 'react-bootstrap-icons';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 
@@ -13,7 +15,14 @@ function Dashboard() {
         <>
             <Sidebar />
             <header>
-                <h1 className="header-title">Banksie</h1>
+                    <h1 className="header-title">Banksie</h1>
+                    <NavLink
+                    to="/profile"
+                    className="profile-icon"
+                    >
+                        <PersonCircle  size={25} color="black"/>
+                    </NavLink>
+                    
             </header>
             <Container>
                 <div className="acct-header-container">

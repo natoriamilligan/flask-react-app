@@ -1,17 +1,22 @@
 header {
+    position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: right;
     align-items: center;
     width: 100%;
     height: 60px;
-    pointer-events: none;
     background-color: rgb(248, 247, 247);
     border-bottom: 1px rgb(219, 219, 219) solid;
 }
-
+.profile-icon {
+    position: absolute;
+    margin-right: 20px;
+}
 .header-title {
     font-weight: 300;
     font-size: 23px;
+    margin: 0 auto;
+    padding-bottom: 3px;
 }
 
 .acct-header-container {
