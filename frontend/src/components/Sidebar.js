@@ -3,18 +3,22 @@ import { Stack, Nav } from 'react-bootstrap';
 import '../Sidebar.css';
 
 function Sidebar() {
+    const [active, setActive] = useState(false);
     const [open, setOpen] = useState(false);
     const navRef = useRef(null)
     
     const toggleNav = (e) => {
         e.preventDefault();
-        setOpen(!open)
+        setOpen(!open);
+        setActive(!active);
     }
     
     const clickOutside = (e) => {
         if (navRef.current && !navRef.current.contains(e.target)) {
             setOpen(false);
+            setActive(false);
         }
+        
     }
 
     useEffect(() => {
@@ -25,6 +29,12 @@ function Sidebar() {
             document.removeEventListener('mousedown', clickOutside);
         }
     }, [open])
+
+    if (active) {
+        document.body.classList.add("no-scroll");
+    } else {
+        document.body.classList.remove('no-scroll');
+    }
     
 
     return (
