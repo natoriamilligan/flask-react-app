@@ -4,6 +4,7 @@ import {NavLink} from 'react-router-dom';
 import { PersonCircle } from 'react-bootstrap-icons';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
+import Header from './Header';
 
 function Dashboard() {
     const [show, setShow] = useState(false);
@@ -14,16 +15,7 @@ function Dashboard() {
     return (
         <>
             <Sidebar />
-            <header>
-                    <h1 className="header-title">Banksie</h1>
-                    <NavLink
-                    to="/profile"
-                    className="profile-icon"
-                    >
-                        <PersonCircle  size={25} color="black"/>
-                    </NavLink>
-                    
-            </header>
+            <Header />
             <Container>
                 <div className="acct-header-container">
                     <h2 className="display-3">Hello John!</h2>
