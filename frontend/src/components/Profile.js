@@ -11,22 +11,31 @@ function Profile() {
     const [active, setActive] = useState(true);
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     const token = localStorage.getItem("accessToken");
+    let accountId = null;
+
     if (token) {
         const decodedToken = jwtDecode(token);
-        const accountId = decodedToken.identity;
-        console.log(accountId)
+        accountId = decodedToken.sub || decodedToken.identity;
     }
 
-    // const handleSubmit = async (e) => {
-    //     e.preventDefault();
-    //     // const response = await fetch(`http://localhost:5000/${accountId}`, {
-
-    //     // })
-    // }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+            method: 'PUT',
+            headers: { 
+                'Content-Type' : 'application/json',
+                Authorization : `Bearer ${token}` 
+            },
+            body: JSON.stringify({
+                first_name: firstname,
+                last_name: lastname,
+                password: password 
+            })
+        })
+    }
 
     return (
         <>
@@ -39,10 +48,15 @@ function Profile() {
                        <h1>John Doe</h1>
                     </div>
                     <div className="credentials-section">
-                        <Form className="form-section">
+                        <Form className="form-section" onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
-                                <Form.Control type="text" placeholder="John" readOnly={isReadOnly} />
+                                <Form.Control type="text" 
+                                placeholder="John" 
+                                readOnly={isReadOnly} 
+                                value={firstname}
+                                onChange={(e) => setFirstname(e.target.value)}
+                                />
                             </Form.Group>
                             <Form.Group controlId="lastname">
                                 <Form.Label>Last name:</Form.Label>
