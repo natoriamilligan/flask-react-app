@@ -1,11 +1,33 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
+import { jwtDecode } from 'jwt-decode';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import '../Profile.css';
 
 function Profile() {
+    const [isReadOnly, setReadOnly] = useState(true);
+    const [active, setActive] = useState(true);
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        const decodedToken = jwtDecode(token);
+        const accountId = decodedToken.identity;
+        console.log(accountId)
+    }
+
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+    //     // const response = await fetch(`http://localhost:5000/${accountId}`, {
+
+    //     // })
+    // }
+
     return (
         <>
             <Sidebar />
@@ -18,28 +40,31 @@ function Profile() {
                     </div>
                     <div className="credentials-section">
                         <Form className="form-section">
-                            <Form.Group controlID="firstname">
+                            <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
-                                <Form.Control type="text" placeholder="John"></Form.Control>
+                                <Form.Control type="text" placeholder="John" readOnly={isReadOnly} />
                             </Form.Group>
-                            <Form.Group controlID="lastname">
+                            <Form.Group controlId="lastname">
                                 <Form.Label>Last name:</Form.Label>
-                                <Form.Control type="text" placeholder="John Doe"></Form.Control>
+                                <Form.Control type="text" placeholder="Doe" readOnly />
                             </Form.Group>
-                            <Form.Group controlID="username">
+                            <Form.Group controlId="username">
                                 <Form.Label>Username:</Form.Label>
-                                <Form.Control type="text" placeholder="John Doe"></Form.Control>
+                                <Form.Control type="text" placeholder="jDoe123" readOnly />
                             </Form.Group>
-                            <Form.Group controlID="password">
+                            <Form.Group controlId="password">
                                 <Form.Label>Password:</Form.Label>
-                                <Form.Control type="text" placeholder="John Doe"></Form.Control>
+                                <Form.Control type="password" readOnly />
                             </Form.Group>
                             <div className="modify-btn">
-                                <Button >Edit Info</Button>
-                                <Button variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
+                                {active ? (
+                                    <Button onClick= {() => {setReadOnly(false); setActive(!active);}} value="Edit">Edit Info</Button>
+                                ) : (
+                                    <Button type="submit" onClick= {() => {setReadOnly(true); setActive(!active)}}>Save</Button>
+                                )}
+                                <Button type="submit" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
                             </div>
                         </Form>
-                        
                     </div>
                 </Card.Body>
             </Card>
