@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import { jwtDecode } from 'jwt-decode';
@@ -7,6 +7,10 @@ import Header from './Header';
 import '../Profile.css';
 
 function Profile() {
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [isReadOnly, setReadOnly] = useState(true);
     const [active, setActive] = useState(false);
 
@@ -18,27 +22,30 @@ function Profile() {
         accountId = decodedToken.sub || decodedToken.identity;
     }
 
-    const handleEdit = async (e) => {
-        e.preventDefault();
-        const response = await fetch(`http://localhost:5000/account/${accountId}`, {
-            method: 'GET',
-            headers: { 
-                'Content-Type' : 'application/json',
-                Authorization : `Bearer ${token}` 
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+                method: 'GET',
+                headers: { 
+                    'Content-Type' : 'application/json',
+                    Authorization : `Bearer ${token}` 
+                }
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                setFirstname(data.first_name || "");
+                setLastname(data.last_name || "");
+                setUsername(data.username || "");
+            } else {
+                return alert("Please try again.");
             }
-        })
-
-        if (response) {
-            alert(response);
-        } else {
-            alert("Please try again.");
         }
+        fetchData();
+    }, []);
+    
 
-    }
-
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [password, setPassword] = useState('');
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,20 +92,23 @@ function Profile() {
                                 <Form.Control 
                                 type="text" 
                                 placeholder="Doe" 
-                                readOnly 
+                                readOnly={isReadOnly} 
                                 value={lastname}
                                 onChange={(e) => setLastname(e.target.value)}
                                 />
                             </Form.Group>
                             <Form.Group controlId="username">
                                 <Form.Label>Username:</Form.Label>
-                                <Form.Control type="text" placeholder="jDoe123" readOnly />
+                                <Form.Control 
+                                type="text" 
+                                value={username}
+                                readOnly />
                             </Form.Group>
                             <Form.Group controlId="password">
                                 <Form.Label>Password:</Form.Label>
                                 <Form.Control 
                                 type="password" 
-                                readOnly 
+                                readOnly={isReadOnly}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 />
