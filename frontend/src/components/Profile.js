@@ -11,8 +11,9 @@ function Profile() {
     const [lastname, setLastname] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [isReadOnly, setReadOnly] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(true);
     const [active, setActive] = useState(false);
+    const [passAlert, setPassAlert] = useState(false);
 
     const token = localStorage.getItem("accessToken");
     let accountId = null;
@@ -40,27 +41,32 @@ function Profile() {
             } else {
                 return alert("Please try again.");
             }
+            
         }
         fetchData();
     }, []);
     
-
-    
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:5000/account/${accountId}`, {
-            method: 'PUT',
-            headers: { 
-                'Content-Type' : 'application/json',
-                Authorization : `Bearer ${token}` 
-            },
-            body: JSON.stringify({
-                first_name: firstname,
-                last_name: lastname,
-                password: password 
+        if (password == "") {
+            setPassAlert(true);
+        } else {
+            setIsDisabled(true);
+            setPassAlert(false);
+            const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+                method: 'PUT',
+                headers: { 
+                    'Content-Type' : 'application/json',
+                    Authorization : `Bearer ${token}` 
+                },
+                body: JSON.stringify({
+                    first_name: firstname,
+                    last_name: lastname,
+                    password: password 
+                })
             })
-        })
+            setActive(!active);
+        }  
     }
 
     return (
@@ -75,14 +81,13 @@ function Profile() {
                     </div>
                     <div className="credentials-section">
                         <div className="edit-btn-section">
-                            <button className="edit-btn" onClick= {() => {setReadOnly(false); setActive(!active);}} value="Edit">Edit Info</button>
+                            <button className="edit-btn" onClick= {() => {setIsDisabled(false); setActive(!active); setPassword("")}} value="Edit">Edit Info</button>
                         </div>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
                                 <Form.Control type="text" 
-                                placeholder="John" 
-                                readOnly={isReadOnly} 
+                                disabled={isDisabled} 
                                 value={firstname}
                                 onChange={(e) => setFirstname(e.target.value)}
                                 />
@@ -91,8 +96,7 @@ function Profile() {
                                 <Form.Label>Last name:</Form.Label>
                                 <Form.Control 
                                 type="text" 
-                                placeholder="Doe" 
-                                readOnly={isReadOnly} 
+                                disabled={isDisabled}  
                                 value={lastname}
                                 onChange={(e) => setLastname(e.target.value)}
                                 />
@@ -100,22 +104,26 @@ function Profile() {
                             <Form.Group controlId="username">
                                 <Form.Label>Username:</Form.Label>
                                 <Form.Control 
-                                type="text" 
+                                readOnly
                                 value={username}
-                                readOnly />
+                                disabled />
                             </Form.Group>
                             <Form.Group controlId="password">
                                 <Form.Label>Password:</Form.Label>
                                 <Form.Control 
                                 type="password" 
-                                readOnly={isReadOnly}
+                                disabled={isDisabled} 
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 />
+                                {passAlert &&
+                                    <Form.Text>You must enter your password or create a new one.</Form.Text>    
+                                }
+                                
                             </Form.Group>
                             {active &&
                                 <div className='modify-btn'>
-                                    <Button type="submit" onClick= {() => {setReadOnly(true)}}>Save</Button>
+                                    <Button type="submit">Save</Button>
                                     <Button type="submit" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
                                 </div>
                             }
