@@ -8,10 +8,7 @@ import '../Profile.css';
 
 function Profile() {
     const [isReadOnly, setReadOnly] = useState(true);
-    const [active, setActive] = useState(true);
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [password, setPassword] = useState('');
+    const [active, setActive] = useState(false);
 
     const token = localStorage.getItem("accessToken");
     let accountId = null;
@@ -20,6 +17,28 @@ function Profile() {
         const decodedToken = jwtDecode(token);
         accountId = decodedToken.sub || decodedToken.identity;
     }
+
+    const handleEdit = async (e) => {
+        e.preventDefault();
+        const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+            method: 'GET',
+            headers: { 
+                'Content-Type' : 'application/json',
+                Authorization : `Bearer ${token}` 
+            }
+        })
+
+        if (response) {
+            alert(response);
+        } else {
+            alert("Please try again.");
+        }
+
+    }
+
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -48,7 +67,10 @@ function Profile() {
                        <h1>John Doe</h1>
                     </div>
                     <div className="credentials-section">
-                        <Form className="form-section" onSubmit={handleSubmit}>
+                        <div className="edit-btn-section">
+                            <button className="edit-btn" onClick= {() => {setReadOnly(false); setActive(!active);}} value="Edit">Edit Info</button>
+                        </div>
+                        <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
                                 <Form.Control type="text" 
@@ -60,7 +82,13 @@ function Profile() {
                             </Form.Group>
                             <Form.Group controlId="lastname">
                                 <Form.Label>Last name:</Form.Label>
-                                <Form.Control type="text" placeholder="Doe" readOnly />
+                                <Form.Control 
+                                type="text" 
+                                placeholder="Doe" 
+                                readOnly 
+                                value={lastname}
+                                onChange={(e) => setLastname(e.target.value)}
+                                />
                             </Form.Group>
                             <Form.Group controlId="username">
                                 <Form.Label>Username:</Form.Label>
@@ -68,18 +96,21 @@ function Profile() {
                             </Form.Group>
                             <Form.Group controlId="password">
                                 <Form.Label>Password:</Form.Label>
-                                <Form.Control type="password" readOnly />
+                                <Form.Control 
+                                type="password" 
+                                readOnly 
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                />
                             </Form.Group>
-                            <div className="modify-btn">
-                                {active ? (
-                                    <Button onClick= {() => {setReadOnly(false); setActive(!active);}} value="Edit">Edit Info</Button>
-                                ) : (
-                                    <Button type="submit" onClick= {() => {setReadOnly(true); setActive(!active)}}>Save</Button>
-                                )}
-                                <Button type="submit" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
-                            </div>
                         </Form>
                     </div>
+                    {active &&
+                    <div className='modify-btn'>
+                        <Button onClick= {() => {setReadOnly(true)}}>Save</Button>
+                        <Button type="button" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
+                    </div>
+                    }
                 </Card.Body>
             </Card>
         </>

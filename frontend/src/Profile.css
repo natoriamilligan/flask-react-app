@@ -13,8 +13,20 @@
     padding-top: 20px;
 }
 
-.form-section {
+.credentials-section {
     margin-top: 50px;
+}
+
+.edit-btn-section {
+    display: flex;
+    justify-content: right;
+}
+.edit-btn {
+    background: none;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
 }
 
 .modify-btn {
