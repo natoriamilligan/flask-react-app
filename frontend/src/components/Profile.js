@@ -103,14 +103,14 @@ function Profile() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 />
                             </Form.Group>
+                            {active &&
+                                <div className='modify-btn'>
+                                    <Button type="submit" onClick= {() => {setReadOnly(true)}}>Save</Button>
+                                    <Button type="submit" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
+                                </div>
+                            }
                         </Form>
                     </div>
-                    {active &&
-                    <div className='modify-btn'>
-                        <Button onClick= {() => {setReadOnly(true)}}>Save</Button>
-                        <Button type="button" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
-                    </div>
-                    }
                 </Card.Body>
             </Card>
         </>
