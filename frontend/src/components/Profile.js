@@ -81,7 +81,7 @@ function Profile() {
                     </div>
                     <div className="credentials-section">
                         <div className="edit-btn-section">
-                            <button className="edit-btn" onClick= {() => {setIsDisabled(false); setActive(!active); setPassword("")}} value="Edit">Edit Info</button>
+                            <button className="edit-btn" onClick= {() => {setIsDisabled(!isDisabled); setActive(!active); setPassword("")}} value="Edit">Edit Info</button>
                         </div>
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
