@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { Button, Container, Card, Modal, ListGroup} from 'react-bootstrap';
-import {NavLink} from 'react-router-dom';
-import { PersonCircle } from 'react-bootstrap-icons';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 import Header from './Header';
