@@ -1,0 +1,20 @@
+.deposit-card {
+    margin-top: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.deposit-input {
+    padding-bottom: 20px;
+}
+
+.deposit-btn {
+    display: flex;
+    justify-content: end;
+    margin-bottom: 10px;
+}
+
+.cancel-btn {
+    display: flex;
+    justify-content: end;
+}
