@@ -8,6 +8,7 @@ import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
 import Deposit from './components/Deposit';
 import Withdrawal from './components/Withdrawal';
+import Transfer from './components/Transfer';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/deposit' element={<Deposit />} />
           <Route path='/withdrawal' element={<Withdrawal />} />
+          <Route path='/transfer' element={<Transfer />} />
         </Routes>
       </Router>
     </Container>
