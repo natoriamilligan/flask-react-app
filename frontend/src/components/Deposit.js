@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
-import '../Deposit.css';
+import '../bankOperations.css';
 import Header from './Header';
 
 function Deposit() {
@@ -38,11 +38,11 @@ function Deposit() {
     return (
         <>
             <Header />
-            <Card className="deposit-card">
+            <Card className="form-card">
                 <Card.Header>Create Deposit</Card.Header>
                 <Card.Body>
                     <Form onSubmit={handleSubmit}>
-                        <Form.Group className="deposit-input">
+                        <Form.Group className="form-input">
                             <Form.Label className="fs-4">Amount:</Form.Label>
                             <Form.Control 
                             type="text"
@@ -51,7 +51,7 @@ function Deposit() {
                             ></Form.Control>
                             <Form.Text muted>Daily limit $5,000</Form.Text>
                         </Form.Group>
-                        <div className="deposit-btn">
+                        <div className="submit-btn">
                             <Button type="submit">Deposit</Button>
                         </div>
                     </Form>
