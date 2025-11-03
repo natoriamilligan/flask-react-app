@@ -6,6 +6,7 @@ import Create from './components/Create';
 import Logout from './components/Logout';
 import Dashboard from './components/Dashboard';
 import Profile from './components/Profile';
+import Deposit from './components/Deposit';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path='/logout' element={<Logout />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/deposit' element={<Deposit />} />
         </Routes>
       </Router>
     </Container>
