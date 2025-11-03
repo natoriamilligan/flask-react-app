@@ -1,0 +1,19 @@
+.create-container {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+}
+
+.create-card {
+    margin-bottom: 100px;
+    width: 80%;
+    max-width: 400px;
+}
+
+.card-btn {
+    display: flex;
+    justify-content: end;
+    margin-top: 10px;
+}
