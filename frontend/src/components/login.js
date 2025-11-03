@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import { Card, Button, Form, Container } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import '../Login.css';
 
 function Login() {
-  
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const btnLink = () => {
+    navigate("/create");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,7 +65,7 @@ function Login() {
             </div>
           </Form>
           <div className="card-btn">
-            <Button variant="secondary">Create Account</Button>
+            <Button variant="secondary" onClick={btnLink}>Create Account</Button>
           </div>
         </Card.Body>
       </Card>
