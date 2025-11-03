@@ -24,7 +24,7 @@ function Transfer() {
         if (empty == "") {
             setEmpty(true);
         } else {
-            const response = await fetch(`http://localhost:5000/account/${accountId}/transfer`, {
+            const response = await fetch(`http://localhost:5000/transfer`, {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
