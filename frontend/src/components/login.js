@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Card, Button, Form } from 'react-bootstrap';
+import { Card, Button, Form, Container } from 'react-bootstrap';
+import '../Login.css';
 
 function Login() {
   
@@ -32,7 +33,8 @@ function Login() {
   }
   
   return (
-    <Card bg="light">
+    <Container fluid className="px-0 login-container">
+      <Card className="login-card" bg="light">
         <Card.Header>Banksie</Card.Header>
         <Card.Body>
           <Card.Title>Sign In</Card.Title>
@@ -53,11 +55,17 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Group>
-            <Button type="submit">Sign In</Button>
+            <div className="card-btn">
+              <Button type="submit">Sign In</Button>
+            </div>
           </Form>
-          <Button>Create Account</Button>
+          <div className="card-btn">
+            <Button variant="secondary">Create Account</Button>
+          </div>
         </Card.Body>
-    </Card>
+      </Card>
+    </Container>
+    
   )
 }
 export default Login;
