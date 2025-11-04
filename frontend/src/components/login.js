@@ -9,9 +9,13 @@ function Login() {
   const [password, setPassword] = useState('');
   const [loginAlert, setLoginAlert] = useState(false);
 
-  const btnLink = () => {
+  const createLink = () => {
     navigate("/create");
   };
+
+  const dashboardLink = () => {
+    navigate("/dashboard");
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,8 +34,8 @@ function Login() {
 
         if (response.ok) {
           const data = await response.json();
-          localStorage.setItem("accessToken", data.access_token)
-          alert(data.access_token)
+          localStorage.setItem("accessToken", data.access_token);
+          dashboardLink();
         } else {
           alert("Login unsuccessful. Please try again.")
         }
@@ -72,7 +76,7 @@ function Login() {
             </div>
           </Form>
           <div className="card-btn">
-            <Button variant="secondary" onClick={btnLink}>Create Account</Button>
+            <Button variant="secondary" onClick={createLink}>Create Account</Button>
           </div>
         </Card.Body>
       </Card>
