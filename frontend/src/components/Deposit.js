@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import '../bankOperations.css';
+import Sidebar from './Sidebar.js';
 import Header from './Header';
 
 function Deposit() {
@@ -37,6 +38,7 @@ function Deposit() {
 
     return (
         <>
+            <Sidebar />
             <Header />
             <Card className="form-card">
                 <Card.Header>Create Deposit</Card.Header>
