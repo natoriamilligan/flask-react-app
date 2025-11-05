@@ -79,7 +79,7 @@ function Create() {
                   onChange={(e) => createPassword(e.target.value)}
                 />
                 {createError &&
-                  <Form.Text>Please fill out all fields.</Form.Text>
+                  <Form.Text>Please complete all fields.</Form.Text>
                 }
               </Form.Group>
               <div className="card-btn">
