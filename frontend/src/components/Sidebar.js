@@ -58,7 +58,7 @@ function Sidebar() {
                         Home
                         </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    <Nav.Item className={location.pathname === "/deposit" ? "nav-items" : ""}>
                         <Nav.Link 
                         as={NavLink}
                         to="/deposit" 
@@ -67,16 +67,16 @@ function Sidebar() {
                         Deposit Funds
                         </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    <Nav.Item className={location.pathname === "/withdrawal" ? "nav-items" : ""}>
                         <Nav.Link 
                         as={NavLink}
-                        to="/withdrawl" 
-                        className={location.pathname === "/withdrawl" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
+                        to="/withdrawal" 
+                        className={location.pathname === "/withdrawal" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
-                        Withdrawl Funds
+                        Withdrawal Funds
                         </Nav.Link>
                     </Nav.Item>
-                    <Nav.Item>
+                    <Nav.Item className={location.pathname === "/transfer" ? "nav-items" : ""}>
                         <Nav.Link 
                         as={NavLink}
                         to="/tranfer" 
