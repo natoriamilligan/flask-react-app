@@ -27,11 +27,15 @@ function Create() {
                     password : password
                 })
             })
+
+            if (response.ok) {
+               navigate("/dashboard");
+            } 
         } catch {
             alert("Something wrong with the server");
         }
 
-        navigate("/dashboard");
+       
     }
 
     return (
