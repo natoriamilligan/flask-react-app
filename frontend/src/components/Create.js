@@ -9,6 +9,7 @@ function Create() {
     const [lastname, createLastname] = useState('');
     const [username, createUsername] = useState('');
     const [password, createPassword] = useState('');
+    const [createError, setCreateError] = useState(false);
 
     const btnLink = () => {
       navigate('/login');
@@ -16,26 +17,27 @@ function Create() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:5000/create', {
-                method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
-                body: JSON.stringify({
-                    first_name : firstname,
-                    last_name : lastname,
-                    username : username,
-                    password : password
-                })
-            })
-
-            if (response.ok) {
-               navigate("/dashboard");
-            } 
-        } catch {
-            alert("Something wrong with the server");
+        if (firstname == "" || lastname == "" || username == "" || password == "") {
+          setCreateError(true);
+        } else {
+            try {
+              const response = await fetch('http://localhost:5000/create', {
+                  method: 'POST',
+                  headers: {'Content-Type' : 'application/json'},
+                  body: JSON.stringify({
+                      first_name : firstname,
+                      last_name : lastname,
+                      username : username,
+                      password : password
+                  })
+              })
+              if (response.ok) {
+                navigate("/dashboard");
+              } 
+          } catch {
+              alert("Something wrong with the server");
+          }
         }
-
-       
     }
 
     return (
@@ -76,6 +78,9 @@ function Create() {
                   value={password}
                   onChange={(e) => createPassword(e.target.value)}
                 />
+                {createError &&
+                  <Form.Text>Please fill out all fields.</Form.Text>
+                }
               </Form.Group>
               <div className="card-btn">
                 <Button type="submit" >Create Account</Button>
