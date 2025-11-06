@@ -21,7 +21,7 @@ function Transfer() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (empty == "") {
+        if (empty == true) {
             setEmpty(true);
         } else {
             const response = await fetch(`http://localhost:5000/transfer`, {
