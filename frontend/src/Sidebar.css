@@ -25,7 +25,7 @@ body.no-scroll {
 
 #nav-stack {
     opacity: 0;
-    transform: translateX(-10px); /* start slightly above */
+    transform: translateX(-10px);
     transition: opacity 0.2s ease, transform 0.2s ease;
     width: 15rem;
     position: absolute;
@@ -44,7 +44,7 @@ body.no-scroll {
     visibility: visible;
     border-top-right-radius: 30px;
     box-shadow: 0 5px 10px gray;
-    padding-top: 70px;
+    padding-top: 60px;
 }
 
 .nav-items {
@@ -52,7 +52,6 @@ body.no-scroll {
     border-radius: 10px;
     background-color: white;
     align-items: center;
-    color: rgb(162, 176, 244) !important;
     pointer-events: none;
 }
 
@@ -74,6 +73,20 @@ body.no-scroll {
 
 .nav-link-active {
     color: rgb(162, 176, 244) !important;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.logout-btn {
+    width: 40%;
+    align-items: flex-end;
+    margin-top: auto;
+    margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: 10px;
 }
 
 .overlay {
