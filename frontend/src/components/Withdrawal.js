@@ -3,6 +3,7 @@ import { Card, Button, Form } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
 import '../bankOperations.css';
 import Header from './Header';
+import Sidebar from './Sidebar';
 
 function Withdrawal() {
     const [withdrawal, setWithdrawal] = useState('');
@@ -37,6 +38,7 @@ function Withdrawal() {
 
     return (
         <>
+            <Sidebar />
             <Header />
             <Card className="form-card">
                 <Card.Header>Create Withdrawal</Card.Header>
