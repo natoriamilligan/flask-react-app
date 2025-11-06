@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../bankOperations.css';
 import Header from './Header';
@@ -9,6 +10,12 @@ function Transfer() {
     const [recipient, setRecipient] = useState('');
     const [memo, setMemo] = useState('');
     const [empty, setEmpty] = useState(false);
+    const [isInvalid, setIsInvalid] = useState(false);
+    const navigate = useNavigate();
+
+    const toDashboard = () => {
+        navigate('/dashboard');
+    }
 
     const token = localStorage.getItem("accessToken");
     let accountId = null;
