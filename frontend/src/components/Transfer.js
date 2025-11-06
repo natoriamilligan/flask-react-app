@@ -48,7 +48,7 @@ function Transfer() {
             })
 
             if (response.ok) {
-                alert("yes")
+                setSuccess(true);
             } else {
                 const data = await response.json();
 
