@@ -79,7 +79,7 @@ function Sidebar() {
                     <Nav.Item className={location.pathname === "/transfer" ? "nav-items" : ""}>
                         <Nav.Link 
                         as={NavLink}
-                        to="/tranfer" 
+                        to="/transfer" 
                         className={location.pathname === "/transfer" ? "nav-link-active nav-links fs-6" : "nav-links fs-6"}
                         >
                         Send Transfer
