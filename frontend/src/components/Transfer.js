@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import '../bankOperations.css';
 import Header from './Header';
+import Sidebar from './Sidebar';
 
 function Transfer() {
     const [transfer, setTransfer] = useState('');
@@ -65,6 +66,7 @@ function Transfer() {
 
     return (
         <>
+            <Sidebar />
             <Header />
             <Card className="form-card">
                 <Card.Header>Create Transfer</Card.Header>
