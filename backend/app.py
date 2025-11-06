@@ -5,6 +5,7 @@ from db import db
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
+from datetime import timedelta
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
@@ -29,6 +30,7 @@ def create_app():
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader
