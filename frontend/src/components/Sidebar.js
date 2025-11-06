@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Stack, Nav, Button } from 'react-bootstrap';
 import {NavLink, useLocation} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../Sidebar.css';
 
 function Sidebar() {
@@ -9,6 +10,7 @@ function Sidebar() {
     const navRef = useRef(null)
     const location =useLocation();
     const token = localStorage.getItem("accessToken");
+    const navigate = useNavigate();
 
     const handleLogout = async () => {
         const response = await fetch("http://localhost:5000/logout", {
@@ -18,6 +20,10 @@ function Sidebar() {
                 Authorization : `Bearer ${token}`
             }
         })
+
+        if (response.ok) {
+            navigate("/logout");
+        }
     }
     
     const toggleNav = (e) => {
