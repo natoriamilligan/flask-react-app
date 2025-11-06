@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { jwtDecode } from 'jwt-decode';
+import { useNavigate } from 'react-router-dom';
 import '../bankOperations.css';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
 function Withdrawal() {
     const [withdrawal, setWithdrawal] = useState('');
+    const [success, setSuccess] = useState(false);
+    const [isInvalid, setIsInvalid] = useState(false);
+    const navigate = useNavigate();
+
+    const toDashboard = () => {
+        navigate('/dashboard');
+    };
 
     const token = localStorage.getItem("accessToken");
     let accountId = null;
@@ -30,9 +38,9 @@ function Withdrawal() {
         })
 
         if (response.ok) {
-            alert("yes")
+            setSuccess(true);
         } else {
-            alert("no")
+            setIsInvalid(true);
         }
     };
 
@@ -43,23 +51,35 @@ function Withdrawal() {
             <Card className="form-card">
                 <Card.Header>Create Withdrawal</Card.Header>
                 <Card.Body>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group className="form-input">
-                            <Form.Label className="fs-4">Amount:</Form.Label>
-                            <Form.Control 
-                            type="text"
-                            value={withdrawal}
-                            onChange={(e) => setWithdrawal(e.target.value)}
-                            ></Form.Control>
-                            <Form.Text muted>Daily limit $5,000</Form.Text>
-                        </Form.Group>
-                        <div className="submit-btn">
-                            <Button type="submit">Withdrawal</Button>
-                        </div>
-                    </Form>
-                    <div className="cancel-btn">
-                        <Button variant="danger">Cancel Withdrawal</Button>
-                    </div>
+                    {success ? (
+                        <>
+                            <p>Withdrawal was successful!</p>
+                            <Button onClick={toDashboard}>Back to Dashboard</Button>
+                        </>
+                    ) : (
+                        <>
+                            <Form onSubmit={handleSubmit}>
+                                <Form.Group className="form-input">
+                                    <Form.Label className="fs-4">Amount:</Form.Label>
+                                    <Form.Control 
+                                    type="text"
+                                    value={withdrawal}
+                                    onChange={(e) => setWithdrawal(e.target.value)}
+                                    ></Form.Control>
+                                    <Form.Text muted>Daily limit $5,000</Form.Text><br />
+                                    {isInvalid &&
+                                        <Form.Text>Please enter a valid number.</Form.Text>
+                                    }
+                                </Form.Group>
+                                <div className="submit-btn">
+                                    <Button type="submit">Withdrawal</Button>
+                                </div>
+                            </Form>
+                            <div className="cancel-btn">
+                                <Button variant="danger" onClick={toDashboard}>Cancel Withdrawal</Button>
+                            </div>
+                        </>
+                    )}
                 </Card.Body>
             </Card>
         </>
