@@ -2,7 +2,7 @@ from flask.views import MethodView
 from flask_smorest import Blueprint
 
 from models import TransferModel, DepositModel, WithdrawalModel
-from schemas import TransactionSchema, AccountSchema, DepositSchema, WithdrawalSchema, TransferSchema
+from schemas import TransactionSchema, DepositSchema, WithdrawalSchema, TransferSchema
 
 blp = Blueprint("transactions", __name__, description="Operation on transactions")
 
