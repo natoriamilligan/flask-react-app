@@ -3,6 +3,7 @@ import { Button, Container, Card, Modal, ListGroup} from 'react-bootstrap';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 import Header from './Header';
+import Transactions from './Transactions';
 
 function Dashboard() {
     const [show, setShow] = useState(false);
@@ -27,50 +28,7 @@ function Dashboard() {
                 </Card>
                 <Card className="trans-card">
                     <Card.Header>Transactions</Card.Header>
-                    <ListGroup>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                        <ListGroup.Item className="trans-list-item">
-                            <div className="list-item-top">11/34/25</div>
-                            <div className="list-item-bottom">
-                                <div>Deposit</div>
-                                <div>+$500</div>
-                            </div>
-                        </ListGroup.Item>
-                    </ListGroup>
+                    <Transactions />
                     <Card.Footer className="trans-footer">
                         <button className="trans-footer-btn">View more</button>
                     </Card.Footer>
