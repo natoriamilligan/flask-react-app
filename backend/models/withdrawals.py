@@ -8,4 +8,4 @@ class WithdrawalModel(db.Model):
     amount = db.Column(db.Float(precision=2), unique=False, nullable=False)
     account_id = db.Column(db.Integer, db.ForeignKey("accounts.id"), nullable=False)
     account = db.relationship("AccountModel", back_populates="withdrawals")
-    timestamp = db.Column(db.Datetime, default=lambda: datetime.now(timezone.utc))
+    timestamp = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
