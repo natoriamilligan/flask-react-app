@@ -4,11 +4,13 @@ class DepositSchema(Schema):
     id = fields.Int(dump_only=True)
     amount = fields.Float(required=True)
     account_id = fields.Int(dump_only=True)
+    timestamp = fields.Str(dump_only=True)
     
 class WithdrawalSchema(Schema):
     id = fields.Int(dump_only=True)
     amount = fields.Float(required=True)
     account_id = fields.Int(dump_only=True)
+    timestamp = fields.Str(dump_only=True)
 
 class TransferSchema(Schema):
     id = fields.Int(dump_only=True)
@@ -16,6 +18,7 @@ class TransferSchema(Schema):
     memo = fields.Str(required=False)
     submitter_id = fields.Int(required=True)
     recipient_id = fields.Int(required=True)
+    timestamp = fields.Str(dump_only=True)
 
 class UpdateAccountSchema(Schema):
     first_name = fields.Str(required=True)
@@ -42,6 +45,6 @@ class BlocklistSchema(Schema):
 class TransactionSchema(Schema):
     id = fields.Int(dump_only=True)
     type = fields.Str(dump_only=True)
-    amount = fields.Int(dump_only=True)
+    amount = fields.Float(dump_only=True)
     submitter_id = fields.Int(dump_only=True)
     recipient_id = fields.Int(dump_only=True)
