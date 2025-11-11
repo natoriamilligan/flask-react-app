@@ -1,4 +1,5 @@
 from db import db
+from datetime import datetime, timezone
 
 class TransferModel(db.Model):
     __tablename__ = "transfers"
@@ -10,3 +11,4 @@ class TransferModel(db.Model):
     recipient_id = db.Column(db.Integer, db.ForeignKey("accounts.id"), unique=False, nullable=False)
     submitter = db.relationship("AccountModel", foreign_keys=[submitter_id], back_populates="sent_transfers")
     recipient = db.relationship("AccountModel", foreign_keys=[recipient_id], back_populates="received_transfers")
+    timestamp = db.Column(db.Datetime, default=lambda: datetime.now(timezone.utc))
