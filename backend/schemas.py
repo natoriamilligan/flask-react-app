@@ -38,3 +38,10 @@ class LoginSchema(Schema):
 class BlocklistSchema(Schema):
     id = fields.Int(dump_only=True)
     jti = fields.Str(dump_only=True)
+
+class TransactionSchema(Schema):
+    id = fields.Int(dump_only=True)
+    type = fields.Str(dump_only=True)
+    amount = fields.Int(dump_only=True)
+    submitter_id = fields.Int(dump_only=True)
+    recipient_id = fields.Int(dump_only=True)
