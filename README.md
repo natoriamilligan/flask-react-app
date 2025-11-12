@@ -27,9 +27,10 @@ Before you begin, make sure you have the following installed:
 
 ### 🖥️ Installation
 1. Clone the repo
-   ```
-   git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git
-   ```
+```
+git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git
+```
+
 ### Frontend
 2. Install packages
 ```Bash
@@ -65,6 +66,7 @@ source venv/bin/activate
 # Install Python dependencies
 pip install -r requirements.txt
 ```
+
 ### 🐳 Docker
 4. Create a docker image and run your container
    
@@ -80,22 +82,6 @@ docker run -dp "${PWD}:/app" -w/app -v my-image
 # For Mac/Linux
 docker run -dp "$(pwd)":/app -w/app -v my-image
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 [React.js]: https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=for-the-badge
