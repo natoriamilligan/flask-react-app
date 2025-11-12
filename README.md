@@ -39,7 +39,8 @@ npm install
 npm install react-bootstrap bootstrap
 
 # Run the development server
-npm run dev`
+npm run dev
+```
 
 
 
