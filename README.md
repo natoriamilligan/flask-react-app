@@ -85,6 +85,26 @@ docker run -dp "${PWD}:/app" -w/app -v my-image
 docker run -dp "$(pwd)":/app -w/app -v my-image
 ```
 
+## 🗺️ Roadmap
+- [] Add dates to transactions (transactions component) 
+- [] Make website responsive
+- [] Limit amount of transactions shown on dashboard
+- [] Add see more to list more transactions in dashboard
+- [] Implement refresh tokens
+- [] Implement better error handling throughout website
+- [] Relogin/type password to delete account
+
+## Contributing
+
+Any contributions you make are **greatly appreciated**. There are a lot of features and bugs that I have not gotten to. I am really just using the app as a way for me to practice AWS.
+
+If you would like to help make this app better, please fork the repo and create a pull request. You can also open an issue with the tag "improvement".
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 [React.js]: https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=for-the-badge
 [Python-badge]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
