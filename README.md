@@ -16,6 +16,46 @@ This app will primarily be used to practice cloud labs so there are many feature
 * ![HTML][HTML-badge]
 * ![Docker][Docker.com]
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+Before you begin, make sure you have the following installed:
+- [Node.js](https://nodejs.org/)
+- [Python](https://www.python.org/downloads/)
+- [Docker](https://docs.docker.com/desktop/)
+
+### Installation
+
+### Frontend
+`# Navigate into the frontend folder
+cd frontend
+
+# Install project dependencies
+npm install
+
+# Install React Bootstrap (if not already listed in package.json)
+npm install react-bootstrap bootstrap
+
+# Run the development server
+npm run dev`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 [React.js]: https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=for-the-badge
 [Python-badge]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
 [Flask-badge]: https://img.shields.io/badge/Flask-3BABC3?logo=flask&logoColor=white&style=for-the-badge
