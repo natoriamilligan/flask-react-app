@@ -13,8 +13,8 @@ This app will primarily be used to practice cloud labs so there are many feature
 * ![React][React.js]
 
 
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[Python.org]: https://img.shields.io/badge/-Python-
+[React.js]: https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=react&logoColor=61DAFB
+[Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
 [Flask-badge]: https://img.shields.io/badge/Flask-3BABC3?logo=flask&logoColor=white&style=for-the-badge&logoWidth=50
 [React-bootstrap]: https://img.shields.io/badge/
 [HTML-badge]: https://img.shields.io/badge/
