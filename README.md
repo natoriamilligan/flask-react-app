@@ -62,6 +62,7 @@ source venv/bin/activate
 # Install Python dependencies
 pip install -r requirements.txt
 ```
+### 🐳 Docker
 3. Create a docker image and run your container
    
 ```Bash
