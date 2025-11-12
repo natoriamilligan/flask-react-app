@@ -12,14 +12,20 @@
     <li>
       <a href="#-getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#-prerequisites">Prerequisites</a></li>
+        <li>
+          <a href="#%EF%B8%8F-installation">Installation</a>
+          <ul>
+            <li><a href="#%EF%B8%8F-frontend">Frontend</a></li>
+            <li><a href="#%EF%B8%8F-backend">Backend</a></li>
+            <li><a href="#-docker">Docker</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
-    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#%EF%B8%8F-roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
