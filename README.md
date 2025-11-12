@@ -8,13 +8,16 @@ I also decided that this project would be a great way for me to learn React and 
 This app will primarily be used to practice cloud labs so there are many features that need to be implemented (see Roadmap), however I will continue to update the app frequently.
 
 ## 🧰 Tech
-* !Python
-* [Flask][Flask-badge]
+* ![Python][Python-badge]
+* ![Flask][Flask-badge]
 * ![React][React.js]
-
+* ![React Bootstrap][React-bootstrap]
+* ![Javascript][JS]
+* ![HTML][HTML-badge]
+* ![Docker][Docker.com]
 
 [React.js]: https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=for-the-badge
-[Python]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
+[Python-badge]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
 [Flask-badge]: https://img.shields.io/badge/Flask-3BABC3?logo=flask&logoColor=white&style=for-the-badge
 [React-bootstrap]: https://img.shields.io/badge/React%20Bootstrap-41E0FD?logo=reactbootstrap&logoColor=white&style=for-the-badge
 [HTML-badge]: https://img.shields.io/badge/HTML-E34F26?logo=html&logoColor=white&style=for-the-badge
