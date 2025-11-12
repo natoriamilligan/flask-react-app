@@ -28,7 +28,7 @@ Before you begin, make sure you have the following installed:
 ### Installation
 
 ### Frontend
-`# Navigate into the frontend folder
+<pre># Navigate into the frontend folder
 cd frontend
 
 # Install project dependencies
@@ -39,6 +39,7 @@ npm install react-bootstrap bootstrap
 
 # Run the development server
 npm run dev`
+</pre>
 
 
 
