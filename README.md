@@ -18,20 +18,20 @@ This app will primarily be used to practice cloud labs so there are many feature
 
 ## 🚀 Getting Started
 
-### Prerequisites
+### 📝 Prerequisites
 
 Before you begin, make sure you have the following installed:
 - [Node.js](https://nodejs.org/)
 - [Python](https://www.python.org/downloads/)
 - [Docker](https://docs.docker.com/desktop/)
 
-### 🖥️ Installation
+### ⚙️ Installation
 1. Clone the repo
 ```
 git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git
 ```
 
-### Frontend
+### 🖥️ Frontend
 2. Install packages
 ```Bash
 # Navigate into the frontend folder
