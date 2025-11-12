@@ -8,8 +8,8 @@ I also decided that this project would be a great way for me to learn React and 
 This app will primarily be used to practice cloud labs so there are many features that need to be implemented (see Roadmap), however I will continue to update the app frequently.
 
 ## 🧰 Tech
-* [!Python]
-* ![Flask][Flask-badge]
+* !Python
+* [Flask][Flask-badge]
 * ![React][React.js]
 
 
