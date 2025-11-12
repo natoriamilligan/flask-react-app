@@ -70,7 +70,7 @@ docker run -dp "${PWD}:/app" -w/app -v my-image
 
 # For Mac/Linux
 docker run -dp "$(pwd)":/app -w/app -v my-image
-
+```
 
 
 
