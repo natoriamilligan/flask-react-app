@@ -20,6 +20,6 @@ This app will primarily be used to practice cloud labs so there are many feature
 [Python-badge]: https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white&style=for-the-badge
 [Flask-badge]: https://img.shields.io/badge/Flask-3BABC3?logo=flask&logoColor=white&style=for-the-badge
 [React-bootstrap]: https://img.shields.io/badge/React%20Bootstrap-41E0FD?logo=reactbootstrap&logoColor=white&style=for-the-badge
-[HTML-badge]: https://img.shields.io/badge/HTML-E34F26?logo=html&logoColor=white&style=for-the-badge
+[HTML-badge]: https://img.shields.io/badge/HTML-E34F26?logo=html5&logoColor=white&style=for-the-badge
 [Docker.com]: https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white&style=for-the-badge
 [JS]: https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=white&style=for-the-badge
