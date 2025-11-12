@@ -109,7 +109,7 @@ pip install -r requirements.txt
    
 ```Bash
 # Build the Docker image
-docker build -t myapp .
+docker build -t my-image .
 
 # Run the container
 
