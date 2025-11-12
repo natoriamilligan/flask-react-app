@@ -9,7 +9,7 @@ This app will primarily be used to practice cloud labs so there are many feature
 
 ## 🧰 Tech
 * [!Python]
-* ![Flask][Flask-badge]
+* [![Flask][Flask-badge]]
 * [![React][React.js]]
 
 
