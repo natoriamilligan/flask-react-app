@@ -28,6 +28,7 @@ Before you begin, make sure you have the following installed:
 ### 🖥️ Installation
 
 ### Frontend
+1. Install packages
 ```Bash
 # Navigate into the frontend folder
 cd frontend
@@ -43,6 +44,8 @@ npm run dev
 ```
 
 ### 🧠 Backend
+2. Create a virtual environment and install Python packages
+   
 ```bash
 # Navigate into the backend folder
 cd backend
@@ -59,6 +62,8 @@ source venv/bin/activate
 # Install Python dependencies
 pip install -r requirements.txt
 ```
+3. Create a docker image and run your container
+   
 ```Bash
 # Build the Docker image
 docker build -t myapp .
