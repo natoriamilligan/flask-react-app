@@ -9,8 +9,8 @@ This app will primarily be used to practice cloud labs so there are many feature
 
 ## 🧰 Tech
 * [!Python]
-* [![Flask][Flask-badge]]
-* [![React][React.js]]
+* ![Flask][Flask-badge]
+* ![React][React.js]
 
 
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
