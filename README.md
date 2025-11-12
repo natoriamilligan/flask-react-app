@@ -26,7 +26,8 @@ Before you begin, make sure you have the following installed:
 - [Docker](https://docs.docker.com/desktop/)
 
 ### 🖥️ Installation
-
+1. Clone the repo
+   ```git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git```
 ### Frontend
 1. Install packages
 ```Bash
