@@ -17,7 +17,7 @@
           <a href="#%EF%B8%8F-installation">Installation</a>
           <ul>
             <li><a href="#%EF%B8%8F-frontend">Frontend</a></li>
-            <li><a href="#%EF%B8%8F-backend">Backend</a></li>
+            <li><a href="#-backend">Backend</a></li>
             <li><a href="#-docker">Docker</a></li>
           </ul>
         </li>
@@ -130,7 +130,7 @@ docker run -dp "$(pwd)":/app -w/app -v my-image
 - [ ] Implement better error handling throughout website
 - [ ] Relogin/type password to delete account
 
-## Contributing
+## 🤝 Contributing
 
 Any contributions you make are **greatly appreciated**. There are a lot of features and bugs that I have not gotten to. I am really just using the app as a way for me to practice AWS.
 
@@ -142,9 +142,10 @@ If you would like to help make this app better, please fork the repo and create 
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## Contact
+## 📫 Contact
 
 Natoria Milligan - [@natoriamilligan](https://x.com/natoriamilligan) - natoriamilligan@gmail.com
+
 Project Link: [https://github.com/natoriamilligan/Python-Simple-Banking-System](https://github.com/natoriamilligan/Python-Simple-Banking-System)
 
 [React.js]: https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=white&style=for-the-badge
