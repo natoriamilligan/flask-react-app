@@ -25,7 +25,7 @@ Before you begin, make sure you have the following installed:
 - [Python](https://www.python.org/downloads/)
 - [Docker](https://docs.docker.com/desktop/)
 
-### Installation
+### 🖥️ Installation
 
 ### Frontend
 ```Bash
@@ -42,7 +42,7 @@ npm install react-bootstrap bootstrap
 npm run dev
 ```
 
-### Backend
+### 🧠 Backend
 ```bash
 # Navigate into the backend folder
 cd backend
