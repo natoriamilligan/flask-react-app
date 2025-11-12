@@ -31,7 +31,7 @@ Before you begin, make sure you have the following installed:
    git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git
    ```
 ### Frontend
-1. Install packages
+2. Install packages
 ```Bash
 # Navigate into the frontend folder
 cd frontend
@@ -47,7 +47,7 @@ npm run dev
 ```
 
 ### 🧠 Backend
-2. Create a virtual environment and install Python packages
+3. Create a virtual environment and install Python packages
    
 ```bash
 # Navigate into the backend folder
@@ -66,7 +66,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 ### 🐳 Docker
-3. Create a docker image and run your container
+4. Create a docker image and run your container
    
 ```Bash
 # Build the Docker image
