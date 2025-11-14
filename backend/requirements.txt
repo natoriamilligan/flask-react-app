@@ -6,3 +6,4 @@ flask-jwt-extended
 passlib
 flask-migrate
 flask-cors
+gunicorn
