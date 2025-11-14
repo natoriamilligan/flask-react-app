@@ -6,12 +6,14 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
 from datetime import timedelta
+from flask_migrate import Migrate
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
 from resources.deposits import blp as DepositsBlueprint
 from resources.withdrawals import blp as WithdrawalsBlueprint
 from resources.transfers import blp as TransfersBlueprint
+from resources.transactions import blp as TransactionsBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -25,8 +27,7 @@ def create_app():
     app.config["OPENAPI_VERSION"] = "3.0.3"
 
     db.init_app(app)
-    with app.app_context():
-        db.create_all()
+    migrate = Migrate(app, db)
     api = Api(app)
 
     app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
@@ -90,6 +91,7 @@ def create_app():
     api.register_blueprint(DepositsBlueprint)
     api.register_blueprint(WithdrawalsBlueprint)
     api.register_blueprint(TransfersBlueprint)
+    api.register_blueprint(TransactionsBlueprint)
 
     return app
 
