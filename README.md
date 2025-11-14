@@ -129,6 +129,7 @@ docker run -dp "$(pwd)":/app -w/app -v my-image
 - [ ] Implement refresh tokens
 - [ ] Implement better error handling throughout website
 - [ ] Relogin/type password to delete account
+- [ ] Add loading icon for dashboard loads
 
 ## 🤝 Contributing
 
