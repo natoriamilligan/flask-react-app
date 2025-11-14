@@ -14,6 +14,7 @@ function Profile() {
     const [isDisabled, setIsDisabled] = useState(true);
     const [active, setActive] = useState(false);
     const [passAlert, setPassAlert] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
 
     const token = localStorage.getItem("accessToken");
     let accountId = null;
@@ -48,25 +49,35 @@ function Profile() {
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (password == "") {
-            setPassAlert(true);
-        } else {
-            setIsDisabled(true);
-            setPassAlert(false);
+        if (isDelete) {
             const response = await fetch(`http://localhost:5000/account/${accountId}`, {
-                method: 'PUT',
+                method: 'DELETE',
                 headers: { 
                     'Content-Type' : 'application/json',
                     Authorization : `Bearer ${token}` 
-                },
-                body: JSON.stringify({
-                    first_name: firstname,
-                    last_name: lastname,
-                    password: password 
-                })
+                }
             })
-            setActive(!active);
-        }  
+        } else {
+            if (password == "") {
+            setPassAlert(true);
+            } else {
+                setIsDisabled(true);
+                setPassAlert(false);
+                const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+                    method: 'PUT',
+                    headers: { 
+                        'Content-Type' : 'application/json',
+                        Authorization : `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({
+                        first_name: firstname,
+                        last_name: lastname,
+                        password: password 
+                    })
+                })
+                setActive(!active);
+            }  
+        }
     }
 
     return (
@@ -77,7 +88,7 @@ function Profile() {
                 <Card.Body>
                     <div className="name-section">
                        <PersonCircle  size={65} color="black"/> 
-                       <h1>John Doe</h1>
+                       <h1>{firstname.charAt(0).toUpperCase() + firstname.slice(1)} {lastname.charAt(0).toUpperCase() + lastname.slice(1)}</h1>
                     </div>
                     <div className="credentials-section">
                         <div className="edit-btn-section">
@@ -117,14 +128,14 @@ function Profile() {
                                 onChange={(e) => setPassword(e.target.value)}
                                 />
                                 {passAlert &&
-                                    <Form.Text>You must enter your password or create a new one.</Form.Text>    
+                                    <Form.Text muted>You must enter your password or create a new one.</Form.Text>    
                                 }
                                 
                             </Form.Group>
                             {active &&
                                 <div className='modify-btn'>
                                     <Button type="submit">Save</Button>
-                                    <Button type="submit" variant="danger" style={{marginLeft: "10px"}}>Delete Account</Button>
+                                    <Button type="submit" variant="danger" style={{marginLeft: "10px"}} onClick={() => setIsDelete(true)}>Delete Account</Button>
                                 </div>
                             }
                         </Form>
