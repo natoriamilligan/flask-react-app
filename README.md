@@ -92,6 +92,7 @@ docker compose up --build
 
 # To stop the container
 docker compose down
+```
 
 ## 🗺️ Roadmap
 
