@@ -75,50 +75,23 @@ cd frontend
 # Install project dependencies
 npm install
 
-# Install React Bootstrap (if not already listed in package.json)
+# Install React Bootstrap
 npm install react-bootstrap bootstrap
 
 # Run the development server
 npm run dev
 ```
 
-### 🧠 Backend
+### 🐳 Docker Compose
 
-3. Create a virtual environment and install Python packages
-   
-```bash
-# Navigate into the backend folder
-cd backend
-
-# (Optional) Create and activate a virtual environment
-python -m venv venv
-
-# Activate for Windows
-venv\Scripts\activate
-
-# Activate for Mac/Linux
-source venv/bin/activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-```
-
-### 🐳 Docker
-
-4. Create a docker image and run your container
+3. Create a docker image and run your container
    
 ```Bash
 # Build the Docker image
-docker build -t my-image .
+docker compose up --build
 
-# Run the container
-
-# For Windows
-docker run -dp "${PWD}:/app" -w/app -v my-image
-
-# For Mac/Linux
-docker run -dp "$(pwd)":/app -w/app -v my-image
-```
+# To stop the container
+docker compose down
 
 ## 🗺️ Roadmap
 
