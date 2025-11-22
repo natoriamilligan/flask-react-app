@@ -1,5 +1,5 @@
 import './App.css';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/login';
 import Create from './components/Create';
@@ -13,6 +13,11 @@ import Transfer from './components/Transfer';
 function App() {
   return (
     <Container fluid className="px-0">
+      <div className="wrapper">
+        <h1>BANKSIE</h1>
+        <Button className="front-btns">Login</Button>
+        <Button className="front-btns">Create Account</Button>
+      </div>
       <Router>
         <Routes>
           <Route path='/login' element={<Login />} />
