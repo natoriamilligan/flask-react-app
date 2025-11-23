@@ -11,13 +11,9 @@ import Withdrawal from './components/Withdrawal';
 import Transfer from './components/Transfer';
 
 function App() {
+
   return (
     <Container fluid className="px-0">
-      <div className="wrapper">
-        <h1>BANKSIE</h1>
-        <Button className="front-btns">Login</Button>
-        <Button className="front-btns">Create Account</Button>
-      </div>
       <Router>
         <Routes>
           <Route path='/login' element={<Login />} />
