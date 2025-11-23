@@ -9,6 +9,7 @@ import Profile from './components/Profile';
 import Deposit from './components/Deposit';
 import Withdrawal from './components/Withdrawal';
 import Transfer from './components/Transfer';
+import Home from './components/Home';
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
     <Container fluid className="px-0">
       <Router>
         <Routes>
+          <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login />} />
           <Route path='/create' element={<Create />} />
           <Route path='/logout' element={<Logout />} />
