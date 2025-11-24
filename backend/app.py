@@ -93,6 +93,10 @@ def create_app():
     api.register_blueprint(TransfersBlueprint)
     api.register_blueprint(TransactionsBlueprint)
 
+    @app.route("/")
+    def home():
+        return "<h1>Banking API is running!</h1><p>Backend deployed successfully.</p>"
+
     return app
 
 
