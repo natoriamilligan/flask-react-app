@@ -29,16 +29,14 @@ jobs:
           docker push ${{ secrets.ECR_REPO }}:latest
 
       - name: Fetch ECS Task Definition
-        id: fetch-task-def
         run: |
-          TASK_DEFINITION_ARN=$(aws ecs describe-task-definition --task-definition ${{ vars.TASK_DEFINITION_NAME }} --query "taskDefinition.taskDefinitionArn" --output text)
-          echo "task-definition-arn=$TASK_DEFINITION_ARN" >> $GITHUB_OUTPUT
+          aws ecs describe-task-definition --task-definition banksie-task --query "taskDefinition" > task-definition.json
 
       - name: Update task definition
         id: updated-task
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.fetch-task-def.outputs.task-definition-arn }}   
+          task-definition: task-definition.json   
           container-name: banksie-container                        
           image: ${{ secrets.ECR_REPO }}:latest
 
