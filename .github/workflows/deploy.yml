@@ -31,12 +31,13 @@ jobs:
       - name: Fetch ECS Task Definition
         run: |
           aws ecs describe-task-definition --task-definition banksie-task --query "taskDefinition" > task-definition.json
+          jq 'del(.enableFaultInjection)' task-definition.json > task-definition-updated.json
 
       - name: Update task definition
         id: updated-task
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: task-definition.json   
+          task-definition: task-definition-updated.json   
           container-name: banksie-container                        
           image: ${{ secrets.ECR_REPO }}:latest
 
