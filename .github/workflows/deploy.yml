@@ -31,14 +31,14 @@ jobs:
       - name: Fetch ECS Task Definition
         id: fetch-task-def
         run: |
-          TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ vars.TASK_DEFINITION_NAME }} --query "taskDefinition" --output json)
-          echo "task-definition=$TASK_DEFINITION" >> $GITHUB_OUTPUT
+          TASK_DEFINITION_ARN=$(aws ecs describe-task-definition --task-definition ${{ vars.TASK_DEFINITION_NAME }} --query "taskDefinition.taskDefinitionArn" --output text)
+          echo "task-definition-arn=$TASK_DEFINITION_ARN" >> $GITHUB_OUTPUT
 
       - name: Update task definition
         id: updated-task
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.fetch-task-def.outputs.task-definition }}  
+          task-definition: ${{ steps.fetch-task-def.outputs.task-definition-arn }}   
           container-name: banksie-container                        
           image: ${{ secrets.ECR_REPO }}:latest
 
