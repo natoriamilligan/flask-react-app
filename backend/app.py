@@ -7,6 +7,7 @@ from flask_migrate import Migrate
 from flask_cors import CORS
 from datetime import timedelta
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
@@ -17,9 +18,10 @@ from resources.transactions import blp as TransactionsBlueprint
 
 def create_app():
     app = Flask(__name__)
+    load_dotenv()
     CORS(app)
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///data.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
@@ -95,7 +97,7 @@ def create_app():
 
     @app.route("/")
     def home():
-        return "<h1>Banking API is running!</h1><p>Backend deployed successfully.</p>"
+        return "<h1>Banking API is running!</h1><p>Backend deployed successfully v2.</p>"
 
     return app
 
