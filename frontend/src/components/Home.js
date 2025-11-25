@@ -19,7 +19,7 @@ const toCreate = () => {
             <div className="btn-wrapper">
                 <Button className="front-btns" onClick={toLogin}>Login</Button>
                 <Button className="front-btns" onClick={toCreate}>Create Account</Button>
-                <Button className="front-btns">See Architecture Diagram</Button>
+                <Button className="front-btns">See Architecture Diagrams</Button>
             </div>
       </div>
     )
