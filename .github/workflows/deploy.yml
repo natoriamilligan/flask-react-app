@@ -31,7 +31,7 @@ jobs:
       - name: Fetch ECS Task Definition
         run: |
           TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{vars.TASK_DEFINITION_NAME}} --query "taskDefinition" --output json)
-
+          echo "TASK_DEFINITION=$TASK_DEFINITION" >> $GITHUB_ENV
 
       - name: Update task definition
         id: updated-task
