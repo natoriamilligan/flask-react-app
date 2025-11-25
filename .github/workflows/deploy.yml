@@ -32,7 +32,7 @@ jobs:
         id: fetch-task-def
         run: |
           TASK_DEFINITION=$(aws ecs describe-task-definition --task-definition ${{ vars.TASK_DEFINITION_NAME }} --query "taskDefinition" --output json)
-          echo "::set-output name=task-definition::$TASK_DEFINITION"
+          echo "task-definition=$TASK_DEFINITION" >> $GITHUB_OUTPUT
 
       - name: Update task definition
         id: updated-task
