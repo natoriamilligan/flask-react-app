@@ -97,7 +97,7 @@ def create_app():
 
     @app.route("/")
     def home():
-        return "<h1>Banking API is running!</h1><p>Backend deployed successfully v2.</p>"
+        return "<h1>Banking API is running!</h1><p>Backend deployed successfully v4.</p>"
 
     return app
 
