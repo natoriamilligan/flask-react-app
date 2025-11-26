@@ -19,16 +19,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push Docker image to ECR
         run: |
-          docker buildx build --platform linux/amd64 -t ${{ secrets.ECR_REPO }}:latest --push backend
+          docker build -f backend/Dockerfile -t ${{ secrets.ECR_REPO }}:latest backend/
+          docker push ${{ secrets.ECR_REPO }}:latest
 
       - name: Fetch ECS Task Definition
         run: |
