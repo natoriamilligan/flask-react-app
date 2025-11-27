@@ -22,6 +22,7 @@ def create_app():
     CORS(app)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    print("DATABASE_URL:", os.getenv("DATABASE_URL"))
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
