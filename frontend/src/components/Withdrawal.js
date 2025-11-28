@@ -26,7 +26,7 @@ function Withdrawal() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://localhost:5000/account/${accountId}/withdrawal`, {
+        const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/account/${accountId}/withdrawal`, {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json',

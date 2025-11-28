@@ -26,7 +26,7 @@ function Profile() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+            const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
                 method: 'GET',
                 headers: { 
                     'Content-Type' : 'application/json',
@@ -50,7 +50,7 @@ function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isDelete) {
-            const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+            const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
                 method: 'DELETE',
                 headers: { 
                     'Content-Type' : 'application/json',
@@ -63,7 +63,7 @@ function Profile() {
             } else {
                 setIsDisabled(true);
                 setPassAlert(false);
-                const response = await fetch(`http://localhost:5000/account/${accountId}`, {
+                const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
                     method: 'PUT',
                     headers: { 
                         'Content-Type' : 'application/json',
