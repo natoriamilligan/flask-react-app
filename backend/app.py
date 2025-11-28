@@ -22,7 +22,6 @@ def create_app():
     CORS(app)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
-    print("DATABASE_URL:", os.getenv("DATABASE_URL"))
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
@@ -95,10 +94,6 @@ def create_app():
     api.register_blueprint(WithdrawalsBlueprint)
     api.register_blueprint(TransfersBlueprint)
     api.register_blueprint(TransactionsBlueprint)
-
-    @app.route("/")
-    def home():
-        return "<h1>Banking API is running!</h1><p>Backend deployed successfully v5.</p>"
 
     return app
 
