@@ -95,6 +95,7 @@ def create_app():
     api.register_blueprint(TransfersBlueprint)
     api.register_blueprint(TransactionsBlueprint)
 
+
     return app
 
 
