@@ -26,7 +26,7 @@ function Deposit() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`https://api.banksie.app/deposit`, {
+        const response = await fetch(`https://api.banksie.app/account/${accountId}/deposit`, {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json',
