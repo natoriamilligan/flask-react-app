@@ -24,7 +24,7 @@ function Dashboard() {
         }
         
         async function fetchTransactions() {
-            const response = await fetch(`https://api.banksie.app/${accountId}`, {
+            const response = await fetch(`https://api.banksie.app/account${accountId}/transactions`, {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'}
             })
