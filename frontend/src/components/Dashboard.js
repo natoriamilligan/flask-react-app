@@ -13,11 +13,12 @@ function Dashboard() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
-    const token = localStorage.getItem("accessToken");
-    let accountId = null;
     
     useEffect(() => {
+
+        const token = localStorage.getItem("accessToken");
+        let accountId = null;
+        
         if (token) {
             const decodedToken = jwtDecode(token);
             accountId = decodedToken.sub || decodedToken.identity;
