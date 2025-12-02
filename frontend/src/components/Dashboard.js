@@ -45,7 +45,7 @@ function Dashboard() {
             <Header />
             <Container>
                 <div className="acct-header-container">
-                    <h2 className="display-3">Hello {name.charAt(0).toUpperCase() + name.slice(1)}!</h2>
+                    <h2 className="display-3">Hello {name ? name.charAt(0).toUpperCase() + name.slice(1) : ""}!</h2>
                     <p className="acct-display">Checking</p>
                 </div>
                 <Card>
