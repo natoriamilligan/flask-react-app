@@ -22,7 +22,7 @@ function Create() {
           setCreateError(true);
         } else {
             try {
-              const response = await fetch('http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/create', {
+              const response = await fetch('https://api.banksie.app/create', {
                   method: 'POST',
                   headers: {'Content-Type' : 'application/json'},
                   body: JSON.stringify({

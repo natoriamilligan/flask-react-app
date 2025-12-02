@@ -13,7 +13,7 @@ function Sidebar() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        const response = await fetch("http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/logout", {
+        const response = await fetch("https://api.banksie.app/logout", {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json',

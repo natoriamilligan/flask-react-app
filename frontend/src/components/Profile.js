@@ -26,7 +26,7 @@ function Profile() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                 method: 'GET',
                 headers: { 
                     'Content-Type' : 'application/json',
@@ -50,7 +50,7 @@ function Profile() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (isDelete) {
-            const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                 method: 'DELETE',
                 headers: { 
                     'Content-Type' : 'application/json',
@@ -63,7 +63,7 @@ function Profile() {
             } else {
                 setIsDisabled(true);
                 setPassAlert(false);
-                const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/${accountId}`, {
+                const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                     method: 'PUT',
                     headers: { 
                         'Content-Type' : 'application/json',

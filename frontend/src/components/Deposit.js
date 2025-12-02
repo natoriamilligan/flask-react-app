@@ -26,7 +26,7 @@ function Deposit() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/deposit`, {
+        const response = await fetch(`https://api.banksie.app/deposit`, {
             method: 'POST',
             headers: {
                 'Content-Type' : 'application/json',

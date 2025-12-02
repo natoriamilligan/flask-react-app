@@ -34,7 +34,7 @@ function Transfer() {
         if (recipient == "") {
             setEmpty(true);
         } else {
-            const response = await fetch(`http://flask-app-alb-1415187314.us-east-1.elb.amazonaws.com/transfer`, {
+            const response = await fetch(`https://api.banksie.app/transfer`, {
                 method: 'POST',
                 headers: {
                     'Content-Type' : 'application/json',
