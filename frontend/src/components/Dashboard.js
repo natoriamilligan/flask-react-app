@@ -18,7 +18,7 @@ function Dashboard() {
 
         const token = localStorage.getItem("accessToken");
         let accountId = null;
-        
+
         if (token) {
             const decodedToken = jwtDecode(token);
             accountId = decodedToken.sub || decodedToken.identity;
@@ -37,7 +37,20 @@ function Dashboard() {
             }
         }
 
+        async function fetchBalance() {
+            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'}
+            })
+
+            if (response.ok) {
+                const data = await response.json();
+                setBalance(data.balance);
+            }
+        }
+
         fetchTransactions();
+        fetchBalance();
     }, []);
 
     return (
