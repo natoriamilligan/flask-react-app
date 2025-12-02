@@ -95,6 +95,9 @@ def create_app():
     api.register_blueprint(TransfersBlueprint)
     api.register_blueprint(TransactionsBlueprint)
 
+    @app.route("/health")
+    def health():
+        return "ok", 200
 
     return app
 
