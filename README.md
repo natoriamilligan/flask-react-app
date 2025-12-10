@@ -65,7 +65,7 @@ Before you begin, make sure you have the following installed:
 git clone https://github.com/natoriamilligan/Python-Simple-Banking-System.git
 ```
 
-### 🖥️ Frontend
+#### 🖥️ Frontend
 
 2. Install packages
 ```Bash
@@ -82,7 +82,7 @@ npm install react-bootstrap bootstrap
 npm run dev
 ```
 
-### 🐳 Docker Compose
+#### 🐳 Docker Compose
 
 3. Create a docker image and run your container
    
