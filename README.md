@@ -82,6 +82,26 @@ npm install react-bootstrap bootstrap
 npm run dev
 ```
 
+#### 🧠 Backend
+3. Create a virtual environment and install Python packages
+   
+```bash
+# Navigate into the backend folder
+cd backend
+
+# (Optional) Create and activate a virtual environment
+python -m venv venv
+
+# Activate for Windows
+venv\Scripts\activate
+
+# Activate for Mac/Linux
+source venv/bin/activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+```
+
 #### 🐳 Docker Compose
 
 3. Create a docker image and run your container
