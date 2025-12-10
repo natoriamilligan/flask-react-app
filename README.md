@@ -104,7 +104,7 @@ pip install -r requirements.txt
 
 #### 🐳 Docker Compose
 
-3. Create a docker image and run your container
+4. Create a docker image and run your container
    
 ```Bash
 # Build the Docker image
