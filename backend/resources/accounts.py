@@ -1,9 +1,9 @@
-from flask import request
+from flask import request, jsonify
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 from passlib.hash import pbkdf2_sha256
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt
+from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt_identity, jwt_required, get_jwt, set_access_cookies, set_refresh_cookies
 
 from db import db
 from models import AccountModel, BlocklistModel
@@ -20,7 +20,6 @@ class AccountList(MethodView):
 @blp.route("/create")
 class CreateAccount(MethodView):
     @blp.arguments(AccountSchema)
-    @blp.response(201, AccountSchema)
     def post(self, account_data):
         if AccountModel.query.filter(AccountModel.username == account_data["username"]).first():
                 abort(409, message="The username you entered is already taken")
@@ -38,7 +37,7 @@ class CreateAccount(MethodView):
         except SQLAlchemyError:
             abort(500, message="An error occured while inserting the item into the database")
 
-        return account
+        return {"message": "Account successfully created!"}, 201
     
 @blp.route("/login")
 class AccountLogin(MethodView):
@@ -49,13 +48,19 @@ class AccountLogin(MethodView):
         if account and pbkdf2_sha256.verify(account_data["password"], account.password):
             access_token = create_access_token(identity=str(account.id), fresh=True)
             refresh_token = create_refresh_token(identity=str(account.id))
-            return {"access_token": access_token, "refresh_token": refresh_token}
+
+            response = jsonify({"message": "Login successful!"})
+
+            set_access_cookies(response, access_token)
+            set_refresh_cookies(response, refresh_token)
+
+            return response, 200
         else:
             abort(401, message="Invalid credentials")
 
 @blp.route("/logout")
 class AccountLogout(MethodView):
-    @jwt_required()
+    @jwt_required(optional=True)
     @blp.arguments(BlocklistSchema)
     def post(self, blocklist_data):
         jti = get_jwt()["jti"]
@@ -67,13 +72,18 @@ class AccountLogout(MethodView):
 
         return {"message": "Successfully logged out"}, 200
     
-@blp.route("/refresh")
+@blp.route("/refresh") 
 class TokenRefresh(MethodView):
     @jwt_required(refresh=True)
     def post(self):
         current_account = get_jwt_identity()
         new_token = create_access_token(identity=current_account, fresh=False)
-        return {"access_token": new_token}  
+
+        response = jsonify({"message": "Refresh successful!"})
+
+        set_access_cookies(response, new_token)
+
+        return response, 200
 
 
 @blp.route("/account/<int:account_id>")
@@ -90,9 +100,12 @@ class Account(MethodView):
         account = AccountModel.query.get_or_404(account_id)
 
         if account:
-            account.first_name = account_data["first_name"]
-            account.last_name = account_data["last_name"]
-            account.password = account_data["password"]
+            if all(account_data.values()):
+                account.first_name = account_data["first_name"]
+                account.last_name = account_data["last_name"]
+                account.password = account_data["password"]
+            else:
+                return {"error" : "All fields are required"}, 400
         else: 
             return {"message" : "This account does not exist"}
 
@@ -109,6 +122,6 @@ class Account(MethodView):
             db.session.delete(account)
             db.session.commit()
 
-            return {"message": "The account was successfully deleted."}
+            return {"message": "The account was successfully deleted."}, 200
         except SQLAlchemyError:
             abort(500, message="An error occured while deleting the account")

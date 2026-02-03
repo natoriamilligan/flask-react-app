@@ -6,7 +6,6 @@ from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
 from datetime import timedelta
-from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 from models import BlocklistModel
@@ -34,6 +33,7 @@ def create_app():
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+    app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
 
 
     db.init_app(app)
