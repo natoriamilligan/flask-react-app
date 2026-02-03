@@ -26,14 +26,20 @@ def create_app():
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
     app.config["API_VERSION"] = "v1"
-    app.config["OPENAPI_VERSION"] = "3.0.3"
+    app.config["OPENAPI_VERSION"] = "3.1.1"
+    app.config["JWT_SECRET_KEY"] = "super-secret"
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    app.config["JWT_COOKIE_SECURE"] = True
+    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
+    app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+
 
     db.init_app(app)
     migrate = Migrate(app, db)
     api = Api(app)
-
-    app.config["JWT_SECRET_KEY"] = "79023088310581544527589837667420155225"
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
+    
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader

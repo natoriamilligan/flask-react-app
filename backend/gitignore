@@ -1,6 +1,27 @@
-.venv
-accounts.json
-.flaskenv
-*.pyc
-__pycache__
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Flask
+instance/
+.webassets-cache
+
+# Environment variables
 .env
+.flaskenv
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
