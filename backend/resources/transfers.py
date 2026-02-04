@@ -13,14 +13,22 @@ blp = Blueprint("transfers", __name__, description="Operation on transfers")
 class AccountSentTransdfer(MethodView):
     @blp.response(200, TransferSchema(many=True))
     def get(self, account_id):
-        account = TransferModel.query.get_or_404(account_id)
+        account = TransferModel.query.get(account_id)
+
+        if not account:
+            return {"message": "Account not found."}, 404
+        
         return account.sent_transfers.all()
     
 @blp.route("/account/<int:account_id>/received_transfers")
 class AccountReceivedtransfer(MethodView):
     @blp.response(200, TransferSchema(many=True))
     def get(self, account_id):
-        account = TransferModel.query.get_or_404(account_id)
+        account = TransferModel.query.get(account_id)
+
+        if not account:
+            return {"message": "Account not found."}, 404
+        
         return account.received_transfers.all()
     
 @blp.route("/transfer")
@@ -31,13 +39,19 @@ class AccountTransfer(MethodView):
     def post(self, transfer_data):
 
         if transfer_data["submitter_id"] == transfer_data["recipient_id"]:
-            abort(400, message="The submitter cannot be the same as the reciever.")
+            return {"message": "Submitter cannot be the same as receiver."}, 400
         else:
-            submitter = AccountModel.query.get_or_404(transfer_data["submitter_id"])
-            recipient = AccountModel.query.get_or_404(transfer_data["recipient_id"])
+            submitter = AccountModel.query.get(transfer_data["submitter_id"])
+            recipient = AccountModel.query.get(transfer_data["recipient_id"])
+
+            if not submitter:
+                return {"message": "Submitter cannot be the same as receiver."}, 400
+
+            if not recipient:
+                return {"message": "Submitter cannot be the same as receiver."}, 400
 
             if submitter.balance - transfer_data["amount"] < 0:
-                abort(422, message="Not enough funds in the submitter's account")
+                return {"message": "Not enough funds."}, 422
             else:
                 submitter.balance = submitter.balance - transfer_data["amount"]
                 recipient.balance = recipient.balance + transfer_data["amount"]
@@ -50,6 +64,6 @@ class AccountTransfer(MethodView):
             except SQLAlchemyError:
                 abort(500, message="An error occured adding the transaction to the database")
 
-            return transfer
+            return {"message": "Transfer successful!"}, 201
 
         

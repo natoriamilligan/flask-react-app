@@ -10,7 +10,10 @@ blp = Blueprint("transactions", __name__, description="Operation on transactions
 class TransactionList(MethodView):
     @blp.response(200, TransactionSchema(many=True))
     def get(self, account_id):
-        account = AccountModel.query.get_or_404(account_id)
+        account = AccountModel.query.get(account_id)
+
+        if not account:
+            return {"message": "Account not found."}, 404
 
         deposits = account.deposits.all()
         withdrawals = account.withdrawals.all()
