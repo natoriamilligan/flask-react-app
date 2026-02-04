@@ -98,7 +98,6 @@ class Account(MethodView):
     
     @jwt_required(fresh=True)
     @blp.arguments(UpdateAccountSchema)
-    @blp.response(201, AccountSchema)
     def put(self, account_data, account_id):
         account = AccountModel.query.get_or_404(account_id)
 
@@ -116,7 +115,7 @@ class Account(MethodView):
         except SQLAlchemyError:
             abort(500, message="An error occured while inserting the item into the database.")
 
-        return {"message": "Password change successful!"}
+        return {"message": "Password change successful!"}, 200
 
     @jwt_required(fresh=True)
     def delete(self, account_id):
@@ -126,6 +125,7 @@ class Account(MethodView):
             db.session.delete(account)
             db.session.commit()
 
-            return {"message": "The account was successfully deleted."}, 200
         except SQLAlchemyError:
             abort(500, message="An error occured while deleting the account")
+        
+        return {"message": "The account was successfully deleted."}, 200
