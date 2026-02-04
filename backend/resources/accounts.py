@@ -93,19 +93,23 @@ class TokenRefresh(MethodView):
 class Account(MethodView):
     @blp.response(200, AccountSchema)
     def get(self, account_id):
-        account = AccountModel.query.get_or_404(account_id)
+        account = AccountModel.query.get(account_id)
+
+        if not account:
+            return {"message": "Account not found."}, 404
+        
         return account
     
     @jwt_required(fresh=True)
     @blp.arguments(UpdateAccountSchema)
     def put(self, account_data, account_id):
-        account = AccountModel.query.get_or_404(account_id)
+        account = AccountModel.query.get(account_id)
 
         if account:
             if all(account_data.values()):
                 account.password = account_data["password"]
             else:
-                return {"error" : "New password required."}, 400
+                return {"message" : "New password required."}, 400
         else: 
             return {"message" : "Invalid account or password."}, 401
 
@@ -119,7 +123,10 @@ class Account(MethodView):
 
     @jwt_required(fresh=True)
     def delete(self, account_id):
-        account = AccountModel.query.get_or_404(account_id) 
+        account = AccountModel.query.get(account_id) 
+
+        if not account:
+            return {"message": "Account not found."}, 404
 
         try:
             db.session.delete(account)
