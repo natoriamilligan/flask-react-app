@@ -22,7 +22,7 @@ class CreateAccount(MethodView):
     @blp.arguments(AccountSchema)
     def post(self, account_data):
         if AccountModel.query.filter(AccountModel.username == account_data["username"]).first():
-                abort(409, message="The username you entered is already taken")
+                abort(409, message="The username you entered is already taken.")
                 
         account = AccountModel(
             first_name=account_data["first_name"],
@@ -35,7 +35,7 @@ class CreateAccount(MethodView):
             db.session.add(account)
             db.session.commit()
         except SQLAlchemyError:
-            abort(500, message="An error occured while inserting the item into the database")
+            abort(500, message="An error occured while inserting the item into the database.")
 
         return {"message": "Account successfully created!"}, 201
     
@@ -56,7 +56,7 @@ class AccountLogin(MethodView):
 
             return response, 200
         else:
-            abort(401, message="Invalid credentials")
+            abort(401, message="Invalid credentials.")
 
 @blp.route("/logout")
 class AccountLogout(MethodView):
@@ -67,10 +67,13 @@ class AccountLogout(MethodView):
 
         blocklist = BlocklistModel(jti=jti)
         
-        db.session.add(blocklist)
-        db.session.commit()
+        try:
+            db.session.add(blocklist)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message="An error occured while inserting the item into the database.")
 
-        return {"message": "Successfully logged out"}, 200
+        return {"message": "Successfully logged out."}, 200
     
 @blp.route("/refresh") 
 class TokenRefresh(MethodView):
@@ -93,7 +96,7 @@ class Account(MethodView):
         account = AccountModel.query.get_or_404(account_id)
         return account
     
-    @jwt_required()
+    @jwt_required(fresh=True)
     @blp.arguments(UpdateAccountSchema)
     @blp.response(201, AccountSchema)
     def put(self, account_data, account_id):
@@ -101,18 +104,19 @@ class Account(MethodView):
 
         if account:
             if all(account_data.values()):
-                account.first_name = account_data["first_name"]
-                account.last_name = account_data["last_name"]
                 account.password = account_data["password"]
             else:
-                return {"error" : "All fields are required"}, 400
+                return {"error" : "New password required."}, 400
         else: 
-            return {"message" : "This account does not exist"}
+            return {"message" : "Invalid account or password."}, 401
 
-        db.session.add(account)
-        db.session.commit()
+        try:
+            db.session.add(account)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message="An error occured while inserting the item into the database.")
 
-        return account
+        return {"message": "Password change successful!"}
 
     @jwt_required(fresh=True)
     def delete(self, account_id):
