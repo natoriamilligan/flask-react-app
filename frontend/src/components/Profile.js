@@ -6,9 +6,6 @@ import Header from './Header';
 import '../Profile.css';
 
 function Profile() {
-    const [firstname, setFirstname] = useState('');
-    const [lastname, setLastname] = useState('');
-    const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -56,7 +53,6 @@ function Profile() {
         e.preventDefault();
         if (isDelete) {
             setLoginShow(true)
-            setIsDelete(false)
         } else {
             if (password == "") {
             setPassAlert(true);
@@ -95,14 +91,22 @@ function Profile() {
                     })
                 })
 
-                if (response.ok) {
-                    setLoginShow(false);
+                if (!response.ok) {
+                   throw new Error("Login failed.") ;
+                }
+                
+                setLoginShow(false);
+                
+                if (isDelete) {
+                    setIsDelete(false);
                     setDeleteShow(true);
-                } else {
-                    alert("Login unsuccessful. Please try again.")
+                } else if (isChangePassword) {
+                    setIsChangePassword(false)
+                    setChangePasswordShow(true)
                 }
             } catch {
                 alert("Something wrong with the server");
+                setLoginShow(false);
             }
         }
     };
@@ -198,6 +202,41 @@ function Profile() {
                     <Button onClick={handleDelete}>Delete</Button>
                 </Modal.Footer>
             </Modal>  
+            <Modal show={deleteShow} onHide={handleDeleteClose}>
+                <Modal.Header>
+                    <Modal.Title>Change Password</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>Please enter a new password.</p>
+                    <Form onSubmit={handleLogin}>
+                        <Form.Group controlId='username'>
+                            <Form.Label>Username:</Form.Label>
+                            <Form.Control 
+                                type='text' 
+                                value={loginUsername}
+                                onChange={(e) => setLoginUsername(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Form.Group controlId='password'>
+                            <Form.Label>Password:</Form.Label>
+                            <Form.Control 
+                                type='text' 
+                                value={loginPassword}
+                                onChange={(e) => setLoginPassword(e.target.value)}
+                            />
+                            {loginAlert &&
+                                <Form.Text>Please enter username and password.</Form.Text>
+                            }
+                        </Form.Group>
+                        <div className="login-btn">
+                            <Button type="submit">Submit</Button>
+                        </div>
+                    </Form>        
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={handleDelete}>Delete</Button>
+                </Modal.Footer>
+            </Modal>                
             <Card className="profile-card">
                 <Card.Body>
                     <div className="name-section">
@@ -211,19 +250,18 @@ function Profile() {
                         <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
-                                <Form.Control type="text" 
-                                disabled={isDisabled} 
+                                <Form.Control type="text"  
                                 value={firstname}
-                                onChange={(e) => setFirstname(e.target.value)}
+                                disabled
                                 />
                             </Form.Group>
                             <Form.Group controlId="lastname">
                                 <Form.Label>Last name:</Form.Label>
                                 <Form.Control 
                                 type="text" 
-                                disabled={isDisabled}  
+                                disabled 
                                 value={lastname}
-                                onChange={(e) => setLastname(e.target.value)}
+                                disabled
                                 />
                             </Form.Group>
                             <Form.Group controlId="username">
@@ -231,20 +269,8 @@ function Profile() {
                                 <Form.Control 
                                 readOnly
                                 value={username}
-                                disabled />
-                            </Form.Group>
-                            <Form.Group controlId="password">
-                                <Form.Label>Password:</Form.Label>
-                                <Form.Control 
-                                type="password" 
-                                disabled={isDisabled} 
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                disabled 
                                 />
-                                {passAlert &&
-                                    <Form.Text muted>You must enter your password or create a new one.</Form.Text>    
-                                }
-                                
                             </Form.Group>
                             {active &&
                                 <div className='modify-btn'>
