@@ -14,9 +14,8 @@ function Sidebar() {
     const handleLogout = async () => {
         const response = await fetch("https://api.banksie.app/logout", {
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            }
+            headers: {'Content-Type' : 'application/json'},
+            credentials: "include"
         })
 
         if (response.ok) {

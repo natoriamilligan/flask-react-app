@@ -27,10 +27,8 @@ function Profile() {
         const fetchData = async () => {
             const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                 method: 'GET',
-                headers: { 
-                    'Content-Type' : 'application/json',
-                    Authorization : `Bearer ${token}` 
-                }
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include"
             })
 
             if (response.ok) {
@@ -57,11 +55,10 @@ function Profile() {
             try {
                 const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                     method: 'PUT',
-                    headers: { 
-                    'Content-Type' : 'application/json'
-                    },
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include",
                     body: JSON.stringify({
-                    password: password 
+                        password: password 
                     })
                 })
                 
@@ -85,7 +82,8 @@ function Profile() {
             try {
                 const response = await fetch('https://api.banksie.app/login', {
                         method: 'POST',
-                        headers: { 'Content-Type' : 'application/json' },
+                        headers: {'Content-Type' : 'application/json'},
+                        credentials: "include",
                         body: JSON.stringify({
                             username: loginUsername,
                             password: loginPassword 
@@ -117,9 +115,8 @@ function Profile() {
         try {
             const response = await fetch('https://api.banksie.app/logout', {
                 method: 'POST',
-                headers: { 
-                    'Content-Type' : 'application/json'
-                }
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include"
             })
 
             if (!response.ok) {
@@ -137,9 +134,8 @@ function Profile() {
         try {
             const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                 method: 'DELETE',
-                headers: { 
-                    'Content-Type' : 'application/json'
-                }
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include"
             })
 
             if (!response.ok) {

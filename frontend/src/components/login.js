@@ -25,7 +25,8 @@ function Login() {
         try {
           const response = await fetch('https://api.banksie.app/login', {
             method: 'POST',
-            headers: { 'Content-Type' : 'application/json' },
+            headers: {'Content-Type' : 'application/json'},
+            credentials: "include",
             body: JSON.stringify({
               username: username,
               password: password 
@@ -33,8 +34,6 @@ function Login() {
           })
 
         if (response.ok) {
-          const data = await response.json();
-          localStorage.setItem("accessToken", data.access_token);
           dashboardLink();
         } else {
           alert("Login unsuccessful. Please try again.")

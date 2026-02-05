@@ -19,9 +19,8 @@ function Deposit() {
         e.preventDefault();
         const response = await fetch(`https://api.banksie.app/account/${accountId}/deposit`, {
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json'
-            },
+            headers: {'Content-Type' : 'application/json'},
+            credentials: "include",
             body: JSON.stringify({
                 amount: deposit
             })

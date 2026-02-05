@@ -19,10 +19,8 @@ function Withdrawal() {
         e.preventDefault();
         const response = await fetch(`https://api.banksie.app/account/${accountId}/withdrawal`, {
             method: 'POST',
-            headers: {
-                'Content-Type' : 'application/json',
-                Authorization : `Bearer ${token}`
-            },
+            headers: {'Content-Type' : 'application/json'},
+            credentials: "include",
             body: JSON.stringify({
                 amount: withdrawal
             })

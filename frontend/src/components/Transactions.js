@@ -10,7 +10,8 @@ function Transactions() {
         async function fetchTransactions() {
             const response = await fetch(`https://api.banksie.app/account/${accountId}/transactions`, {
                   method: 'GET',
-                  headers: {'Content-Type' : 'application/json'}
+                  headers: {'Content-Type' : 'application/json'},
+                  credentials: "include"
             })
 
             if (response.ok) {

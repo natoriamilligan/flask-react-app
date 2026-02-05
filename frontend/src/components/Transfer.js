@@ -27,10 +27,8 @@ function Transfer() {
         } else {
             const response = await fetch(`https://api.banksie.app/transfer`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type' : 'application/json',
-                    Authorization : `Bearer ${token}`
-                },
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include",
                 body: JSON.stringify({
                     amount: transfer,
                     memo: memo,
