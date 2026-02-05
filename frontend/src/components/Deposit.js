@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import '../bankOperations.css';
 import Sidebar from './Sidebar.js';
 import Header from './Header';
@@ -16,21 +15,12 @@ function Deposit() {
         navigate('/dashboard');
     };
 
-    const token = localStorage.getItem("accessToken");
-    let accountId = null;
-
-    if (token) {
-        const decodedToken = jwtDecode(token);
-        accountId = decodedToken.sub || decodedToken.identity;
-    }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         const response = await fetch(`https://api.banksie.app/account/${accountId}/deposit`, {
             method: 'POST',
             headers: {
-                'Content-Type' : 'application/json',
-                Authorization : `Bearer ${token}`
+                'Content-Type' : 'application/json'
             },
             body: JSON.stringify({
                 amount: deposit

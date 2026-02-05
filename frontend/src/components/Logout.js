@@ -8,6 +8,7 @@ function Logout() {
     const handleLogout = () => {
         navigate("/login")
     }
+
     return (
         <Card className="card-wrapper">
             <Card.Header bg="light">Banksie</Card.Header>

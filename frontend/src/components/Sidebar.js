@@ -9,15 +9,13 @@ function Sidebar() {
     const [open, setOpen] = useState(false);
     const navRef = useRef(null)
     const location =useLocation();
-    const token = localStorage.getItem("accessToken");
     const navigate = useNavigate();
 
     const handleLogout = async () => {
         const response = await fetch("https://api.banksie.app/logout", {
             method: 'POST',
             headers: {
-                'Content-Type' : 'application/json',
-                Authorization : `Bearer ${token}`
+                'Content-Type' : 'application/json'
             }
         })
 

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Button, Container, Card, Modal} from 'react-bootstrap';
-import { jwtDecode } from 'jwt-decode';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 import Header from './Header';
@@ -15,15 +14,6 @@ function Dashboard() {
     const handleShow = () => setShow(true);
     
     useEffect(() => {
-
-        const token = localStorage.getItem("accessToken");
-        let accountId = null;
-
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            accountId = decodedToken.sub || decodedToken.identity;
-        }
-        
         async function fetchTransactions() {
             const response = await fetch(`https://api.banksie.app/account/${accountId}/transactions`, {
                     method: 'GET',

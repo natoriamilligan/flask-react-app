@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { jwtDecode } from 'jwt-decode';
 
 function Transactions() {
     const [transactions, setTransactions] = useState([]);
@@ -8,11 +7,6 @@ function Transactions() {
     let accountId = null;
 
     useEffect(() => {
-        if (token) {
-            const decodedToken = jwtDecode(token);
-            accountId = decodedToken.sub || decodedToken.identity;
-        }
-        
         async function fetchTransactions() {
             const response = await fetch(`https://api.banksie.app/account/${accountId}/transactions`, {
                   method: 'GET',

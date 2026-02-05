@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
-import { jwtDecode } from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 import '../bankOperations.css';
 import Header from './Header';
@@ -15,14 +14,6 @@ function Withdrawal() {
     const toDashboard = () => {
         navigate('/dashboard');
     };
-
-    const token = localStorage.getItem("accessToken");
-    let accountId = null;
-
-    if (token) {
-        const decodedToken = jwtDecode(token);
-        accountId = decodedToken.sub || decodedToken.identity;
-    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
