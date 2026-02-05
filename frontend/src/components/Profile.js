@@ -9,18 +9,18 @@ function Profile() {
     const [password, setPassword] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
-    const [isDisabled, setIsDisabled] = useState(true);
-    const [active, setActive] = useState(false);
     const [passAlert, setPassAlert] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
+    const [isChangePassword, setIsChnagePassword] = useState(false);
     const [loginAlert, setLoginAlert] = useState(false);
-
     const [loginShow, setLoginShow] = useState(false);
     const [deleteShow, setDeleteShow] = useState(false);
     const [changePasswordShow, setChangePasswordShow] = useState(false);
+    const [changePasswordAlert, setChangePasswordAlert] = useState(false);
 
     const handleLoginClose = () => setLoginShow(false);
     const handleDeleteClose = () => setDeleteShow(false);
+    const handleChangePasswordClose = () => setChangePasswordShow(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,31 +49,31 @@ function Profile() {
         navigate("/login");
     };
     
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (isDelete) {
-            setLoginShow(true)
+    const handleChangePassword = async (e) => {
+        if (password == "") {
+            setChangePasswordAlert(true);
         } else {
-            if (password == "") {
-            setPassAlert(true);
-            } else {
-                setIsDisabled(true);
-                setPassAlert(false);
+            try {
                 const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
                     method: 'PUT',
                     headers: { 
-                        'Content-Type' : 'application/json',
-                        Authorization : `Bearer ${token}` 
+                    'Content-Type' : 'application/json'
                     },
                     body: JSON.stringify({
-                        first_name: firstname,
-                        last_name: lastname,
-                        password: password 
+                    password: password 
                     })
                 })
-                setActive(!active);
+                
+                if (!response.ok) {
+                    throw new Error("Password change failed.")
+                }
+
+                setChangePasswordShow(false);
+                handleLogout();
+            } catch {
+                alert("Something wrong with the server.")
             }  
-        }
+        }  
     };
 
     const handleLogin = async (e) => {
@@ -160,7 +160,7 @@ function Profile() {
             <Header />
             <Modal show={loginShow} onHide={handleLoginClose}>
                 <Modal.Header>
-                    <Modal.Title>Delete Account</Modal.Title>
+                    <Modal.Title>Verify Credentials</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>Please enter your account credentials.</p>
@@ -202,30 +202,21 @@ function Profile() {
                     <Button onClick={handleDelete}>Delete</Button>
                 </Modal.Footer>
             </Modal>  
-            <Modal show={deleteShow} onHide={handleDeleteClose}>
+            <Modal show={changePasswordShow} onHide={handleChangePasswordClose}>
                 <Modal.Header>
                     <Modal.Title>Change Password</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <p>Please enter a new password.</p>
                     <Form onSubmit={handleLogin}>
-                        <Form.Group controlId='username'>
-                            <Form.Label>Username:</Form.Label>
-                            <Form.Control 
-                                type='text' 
-                                value={loginUsername}
-                                onChange={(e) => setLoginUsername(e.target.value)}
+                        <Form.Group controlId="firstname">
+                            <Form.Label>First name:</Form.Label>
+                            <Form.Control type="text"  
+                            value={firstname}
+                            disabled
                             />
-                        </Form.Group>
-                        <Form.Group controlId='password'>
-                            <Form.Label>Password:</Form.Label>
-                            <Form.Control 
-                                type='text' 
-                                value={loginPassword}
-                                onChange={(e) => setLoginPassword(e.target.value)}
-                            />
-                            {loginAlert &&
-                                <Form.Text>Please enter username and password.</Form.Text>
+                            {changePasswordAlert &&
+                                <Form.Text>Please enter a new password.</Form.Text>
                             }
                         </Form.Group>
                         <div className="login-btn">
@@ -244,10 +235,7 @@ function Profile() {
                        <h1>{firstname.charAt(0).toUpperCase() + firstname.slice(1)} {lastname.charAt(0).toUpperCase() + lastname.slice(1)}</h1>
                     </div>
                     <div className="credentials-section">
-                        <div className="edit-btn-section">
-                            <button className="edit-btn" onClick= {() => {setIsDisabled(!isDisabled); setActive(!active); setPassword("")}} value="Edit">Edit Info</button>
-                        </div>
-                        <Form onSubmit={handleSubmit}>
+                        <Form onSubmit={() => setLoginShow(true)}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
                                 <Form.Control type="text"  
@@ -272,12 +260,10 @@ function Profile() {
                                 disabled 
                                 />
                             </Form.Group>
-                            {active &&
                                 <div className='modify-btn'>
-                                    <Button type="submit">Save</Button>
+                                    <Button type="submit" onClick={() => setIsChangePassword(true)}>Change Password</Button>
                                     <Button type="submit" variant="danger" style={{marginLeft: "10px"}} onClick={() => setIsDelete(true)}>Delete Account</Button>
                                 </div>
-                            }
                         </Form>
                     </div>
                 </Card.Body>
