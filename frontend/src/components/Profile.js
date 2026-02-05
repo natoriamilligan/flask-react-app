@@ -9,17 +9,18 @@ function Profile() {
     const [password, setPassword] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
-    const [passAlert, setPassAlert] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
-    const [isChangePassword, setIsChnagePassword] = useState(false);
+    const [isChangePassword, setIsChangePassword] = useState(false);
     const [loginAlert, setLoginAlert] = useState(false);
     const [loginShow, setLoginShow] = useState(false);
     const [deleteShow, setDeleteShow] = useState(false);
     const [changePasswordShow, setChangePasswordShow] = useState(false);
     const [changePasswordAlert, setChangePasswordAlert] = useState(false);
+    const [successShow, setSuccessShow] = useState(false);
 
     const handleLoginClose = () => setLoginShow(false);
     const handleDeleteClose = () => setDeleteShow(false);
+    const handleSuccessClose = () => setSuccessShow(false);
     const handleChangePasswordClose = () => setChangePasswordShow(false);
 
     useEffect(() => {
@@ -69,7 +70,7 @@ function Profile() {
                 }
 
                 setChangePasswordShow(false);
-                handleLogout();
+                setSuccessShow(true);
             } catch {
                 alert("Something wrong with the server.")
             }  
@@ -208,12 +209,13 @@ function Profile() {
                 </Modal.Header>
                 <Modal.Body>
                     <p>Please enter a new password.</p>
-                    <Form onSubmit={handleLogin}>
-                        <Form.Group controlId="firstname">
-                            <Form.Label>First name:</Form.Label>
-                            <Form.Control type="text"  
-                            value={firstname}
-                            disabled
+                    <Form onSubmit={handleChangePassword}>
+                        <Form.Group controlId="password">
+                            <Form.Label>Password:</Form.Label>
+                            <Form.Control 
+                            type="text"  
+                            value={password}
+                            onChange={() => setPassword(e.target.value)}
                             />
                             {changePasswordAlert &&
                                 <Form.Text>Please enter a new password.</Form.Text>
@@ -226,6 +228,17 @@ function Profile() {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={handleDelete}>Delete</Button>
+                </Modal.Footer>
+            </Modal> 
+            <Modal show={successShow} onHide={handleSuccessClose}>
+                <Modal.Header>
+                    <Modal.Title>Password Change Successful!</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p>You have successfully changed your password.</p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button onClick={handleSuccessClose}>Close</Button>
                 </Modal.Footer>
             </Modal>                
             <Card className="profile-card">
@@ -247,7 +260,6 @@ function Profile() {
                                 <Form.Label>Last name:</Form.Label>
                                 <Form.Control 
                                 type="text" 
-                                disabled 
                                 value={lastname}
                                 disabled
                                 />
