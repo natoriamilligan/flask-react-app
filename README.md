@@ -120,9 +120,9 @@ docker compose down
 - [ ] Make website responsive
 - [ ] Limit amount of transactions shown on dashboard
 - [ ] Add see more to list more transactions in dashboard
-- [ ] Implement refresh tokens
-- [ ] Implement better error handling throughout website
-- [ ] Relogin/type password to delete account
+- [x] Implement refresh tokens/cookies
+- [x] Implement better error handling throughout website
+- [x] Relogin/type password to delete account
 - [ ] Add loading icon for dashboard loads
 
 ## 🤝 Contributing
