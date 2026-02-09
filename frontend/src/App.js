@@ -1,6 +1,7 @@
 import './App.css';
 import { Container, Button } from 'react-bootstrap';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Login from './components/login';
 import Create from './components/Create';
 import Logout from './components/Logout';
@@ -15,6 +16,7 @@ function App() {
 
   return (
     <Container fluid className="px-0">
+      <Toaster position="top-right" />
       <Router>
         <Routes>
           <Route path='/' element={<Home />} />
