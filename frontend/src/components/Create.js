@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../Create.css';
 
 function Create() {
@@ -33,11 +34,16 @@ function Create() {
                       password : password
                   })
               })
-              if (response.ok) {
-                setIsCreated(true);
+
+              const data = response.json();
+              
+              if (!response.ok) {
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
               } 
-          } catch {
-              alert("Something wrong with the server");
+
+              setIsCreated(true);
+          } catch(error) {
+              toast.error(error.message);
           }
         }
     }

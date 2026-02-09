@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../bankOperations.css';
 import Sidebar from './Sidebar.js';
 import Header from './Header';
@@ -9,28 +10,63 @@ function Deposit() {
     const [deposit, setDeposit] = useState('');
     const [success, setSuccess] = useState(false);
     const [isInvalid, setIsInvalid] = useState(false);
+    const [accountID, setAccountID] = useState('');
     const navigate = useNavigate();
 
     const toDashboard = () => {
         navigate('/dashboard');
     };
 
+    useEffect(() => {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include"
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
+            }
+        }
+
+        fetchAccountID();
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`https://api.banksie.app/account/${accountId}/deposit`, {
-            method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
-            credentials: "include",
-            body: JSON.stringify({
-                amount: deposit
-            })
-        })
 
-        if (response.ok) {
+        try {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}/deposit`, {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include",
+                body: JSON.stringify({
+                    amount: deposit
+                })
+            })
+
+            if (!Number.isFinite(Number(deposit))) {
+                setIsInvalid(true);
+            }
+
+            if (!response.ok) {
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+            } 
+
             setSuccess(true);
-        } else {
-            setIsInvalid(true);
+        } catch(error) {
+            toast.error(error.message);
         }
+        
     };
 
     return (

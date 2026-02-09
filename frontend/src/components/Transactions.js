@@ -1,27 +1,69 @@
 import { useEffect, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
+import toast from 'react-hot-toast';
 
 function Transactions() {
     const [transactions, setTransactions] = useState([]);
-    const token = localStorage.getItem("accessToken");
-    let accountId = null;
+    const [accountID, setAccountID] = useState('');
 
     useEffect(() => {
-        async function fetchTransactions() {
-            const response = await fetch(`https://api.banksie.app/account/${accountId}/transactions`, {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include"
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
+            }
+        }
+
+        fetchAccountID();
+    }, []);
+
+    useEffect(() => {
+        if (!accountID) return;
+
+        async function loadData() {
+            try {
+                await fetchTransactions();
+            } catch(error) {
+                toast.error(error.message || "Failed to load account data.")
+            }
+        }
+
+        loadData();
+    }, [accountID]);
+
+    async function fetchTransactions() {
+
+        try {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}/transactions`, {
                   method: 'GET',
                   headers: {'Content-Type' : 'application/json'},
                   credentials: "include"
             })
 
-            if (response.ok) {
-                const data = await response.json();
-                setTransactions(data);
-            }
-        }
+            const data = await response.json();
 
-        fetchTransactions();
-    }, []);
+            if (!response.ok) {  
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+
+            setTransactions(data);
+        } catch(error) {
+            toast.error(error.message)
+        }     
+    }
 
      return (
         <>

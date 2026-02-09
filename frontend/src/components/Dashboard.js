@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Button, Container, Card, Modal} from 'react-bootstrap';
+import toast from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
 import Header from './Header';
@@ -9,41 +10,71 @@ function Dashboard() {
     const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [balance, setBalance] = useState('');
+    const [accountID, setAccountID] = useState('');
+
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     
     useEffect(() => {
-        async function fetchTransactions() {
-            const response = await fetch(`https://api.banksie.app/account/${accountId}/transactions`, {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
-            })
+                })
 
-            if (response.ok) {
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
                 const data = await response.json();
-                setName(data.first_name);
-                setBalance(data.balance);
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
             }
         }
 
-        async function fetchBalance() {
-            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
-                    method: 'GET',
-                    headers: {'Content-Type' : 'application/json'} ,
-                    credentials: "include"
-            })
-
-            if (response.ok) {
-                const data = await response.json();
-                setBalance(data.balance);
-            }
-        }
-
-        fetchTransactions();
-        fetchBalance();
+        fetchAccountID();
     }, []);
+
+    useEffect(() => {
+        if (!accountID) return;
+
+        async function loadData() {
+            try {
+                await fetchBalanceName();
+            } catch(error) {
+                toast.error(error.message || "Failed to load account data.")
+            }
+        }
+
+        loadData();
+    }, [accountID]);
+
+    async function fetchBalanceName() {
+        try {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
+                method: 'GET',
+                headers: {'Content-Type' : 'application/json'} ,
+                credentials: "include"
+            })
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+
+            setBalance(data.balance);
+            setName(data.first_name);
+
+        } catch(error) {
+            toast.error(error.message)
+        }
+    }
 
     return (
         <>

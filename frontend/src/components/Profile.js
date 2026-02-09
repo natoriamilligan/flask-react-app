@@ -41,6 +41,7 @@ function Profile() {
             }
             
         }
+        
         fetchData();
     }, []);
 

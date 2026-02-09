@@ -33,11 +33,12 @@ function Login() {
             })
           })
 
-        if (response.ok) {
-          dashboardLink();
-        } else {
-          alert("Login unsuccessful. Please try again.")
-        }
+        if (!response.ok) {
+          throw new Error("Login unsuccessful.")
+        } 
+        
+        dashboardLink();
+
       } catch {
         alert("Something wrong with the server");
       }
