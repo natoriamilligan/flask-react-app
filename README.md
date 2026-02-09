@@ -31,7 +31,7 @@
 
 ## ❓ About
 
-Banksie is a full stack web application where users can create accounts and manage funds. Data is stored in a PostgreSQL database running inside a Docker volume. I originally created this banking app to practice Python. After I got a grasp on the language I wanted to learn how APIs work and practice creating one. Soon after that, I started learning more about cloud computing and AWS. I wanted to have a multi tier app to deploy on the cloud so I decided to add a frontend to pair with the API. 
+Banksie is a full stack web application where users can create accounts and manage funds. I used React for the frontend and Python/Flask for the REST API. Data is stored in a PostgreSQL database. I originally created this banking app to practice Python. After I got a grasp on the language I wanted to learn how APIs work and practice creating one. Soon after that, I started learning more about cloud computing and AWS. I wanted to have a multi tier app to deploy on the cloud so I decided to add a frontend to pair with the API. 
 
 I also decided that this project would be a great way for me to learn React and React Bootstrap so you will see lots of mistakes and changes as I learn.
 
@@ -120,9 +120,9 @@ docker compose down
 - [ ] Make website responsive
 - [ ] Limit amount of transactions shown on dashboard
 - [ ] Add see more to list more transactions in dashboard
-- [ ] Implement refresh tokens
-- [ ] Implement better error handling throughout website
-- [ ] Relogin/type password to delete account
+- [x] Implement refresh tokens/cookies
+- [x] Implement better error handling throughout website
+- [x] Relogin/type password to delete account
 - [ ] Add loading icon for dashboard loads
 
 ## 🤝 Contributing
