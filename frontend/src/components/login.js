@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../Login.css';
 
 function Login() {
@@ -34,13 +35,13 @@ function Login() {
           })
 
         if (!response.ok) {
-          throw new Error("Login unsuccessful.")
+          throw new Error(data.message || "Login unsuccessful.")
         } 
         
         dashboardLink();
 
-      } catch {
-        alert("Something wrong with the server");
+      } catch(error) {
+        toast.error(error.message)
       }
     }
   }

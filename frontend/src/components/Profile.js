@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Button, Form, Modal} from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import '../Profile.css';
@@ -17,6 +18,8 @@ function Profile() {
     const [changePasswordShow, setChangePasswordShow] = useState(false);
     const [changePasswordAlert, setChangePasswordAlert] = useState(false);
     const [successShow, setSuccessShow] = useState(false);
+    const [accountID, setAccountID] = useState('');
+
 
     const handleLoginClose = () => setLoginShow(false);
     const handleDeleteClose = () => setDeleteShow(false);
@@ -24,26 +27,65 @@ function Profile() {
     const handleChangePasswordClose = () => setChangePasswordShow(false);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include"
+                })
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
+            }
+        }
+
+        fetchAccountID();
+    }, []);
+
+    useEffect(() => {
+        if (!accountID) return;
+
+        async function loadData() {
+            try {
+                await fetchData();
+            } catch(error) {
+                toast.error(error.message || "Failed to load account data.")
+            }
+        }
+
+        loadData();
+    }, [accountID]);
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                 method: 'GET',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
             })
 
-            if (response.ok) {
-                const data = await response.json();
-                setFirstname(data.first_name || "");
-                setLastname(data.last_name || "");
-                setUsername(data.username || "");
-            } else {
-                return alert("Error fetching data from database.");
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
             }
-            
+
+            setFirstname(data.first_name || "");
+            setLastname(data.last_name || "");
+            setUsername(data.username || "");
+        } catch(error) {
+            toast.error(error.message);
         }
-        
-        fetchData();
-    }, []);
+            
+    }
 
     const loginReturn = () => {
         navigate("/login");
@@ -54,7 +96,7 @@ function Profile() {
             setChangePasswordAlert(true);
         } else {
             try {
-                const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
+                const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                     method: 'PUT',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include",
@@ -62,15 +104,17 @@ function Profile() {
                         password: password 
                     })
                 })
+
+                const data = await response.json();
                 
                 if (!response.ok) {
-                    throw new Error("Password change failed.")
+                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
                 }
 
                 setChangePasswordShow(false);
                 setSuccessShow(true);
-            } catch {
-                alert("Something wrong with the server.")
+            } catch(error) {
+                toast.error(error.message)
             }  
         }  
     };
@@ -91,8 +135,10 @@ function Profile() {
                     })
                 })
 
+                const data = await response.json();
+
                 if (!response.ok) {
-                   throw new Error("Login failed.") ;
+                   throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
                 }
                 
                 setLoginShow(false);
@@ -104,8 +150,8 @@ function Profile() {
                     setIsChangePassword(false)
                     setChangePasswordShow(true)
                 }
-            } catch {
-                alert("Something wrong with the server");
+            } catch(error) {
+                toast.error(error.message)
                 setLoginShow(false);
             }
         }
@@ -120,33 +166,37 @@ function Profile() {
                 credentials: "include"
             })
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new error("Logout failed.")
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
             }
 
             loginReturn();
-        } catch {
-            alert("There was an error logging out.");
+        } catch(error) {
+            error.toast(error.message)
         }
     };
 
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountId}`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                 method: 'DELETE',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
             })
 
+            const data = await response.json();
+
             if (!response.ok) {
-                throw new Error("Deletion failed.")
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
             }
 
             setDeleteShow(false);
             handleLogout();
-        } catch {
-            alert("Error deleting account. Please try again");
+        } catch(error) {
+            toast.error(error.message)
             setDeleteShow(false);
         }
         
