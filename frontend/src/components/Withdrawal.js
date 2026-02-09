@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../bankOperations.css';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -9,28 +10,63 @@ function Withdrawal() {
     const [withdrawal, setWithdrawal] = useState('');
     const [success, setSuccess] = useState(false);
     const [isInvalid, setIsInvalid] = useState(false);
+    const [accountID, setAccountID] = useState('');
     const navigate = useNavigate();
 
     const toDashboard = () => {
         navigate('/dashboard');
     };
+    
+    useEffect(() => {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include"
+                })
 
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
+            }
+        }
+
+        fetchAccountID();
+    }, []);
+  
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await fetch(`https://api.banksie.app/account/${accountId}/withdrawal`, {
-            method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
-            credentials: "include",
-            body: JSON.stringify({
-                amount: withdrawal
-            })
-        })
 
-        if (response.ok) {
+        try {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}/withdrawal`, {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include",
+                body: JSON.stringify({
+                    amount: withdrawal
+                })
+            })
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setIsInvalid(true);
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+            }
+
             setSuccess(true);
-        } else {
-            setIsInvalid(true);
+        } catch(error) {
+            toast.error(error.message);
         }
+        
     };
 
     return (

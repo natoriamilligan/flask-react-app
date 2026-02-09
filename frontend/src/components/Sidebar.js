@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Stack, Nav, Button } from 'react-bootstrap';
 import {NavLink, useLocation} from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../Sidebar.css';
 
 function Sidebar() {
@@ -12,15 +13,24 @@ function Sidebar() {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
-        const response = await fetch("https://api.banksie.app/logout", {
-            method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
-            credentials: "include"
-        })
+        try {
+            const response = await fetch("https://api.banksie.app/logout", {
+                method: 'POST',
+                headers: {'Content-Type' : 'application/json'},
+                credentials: "include"
+            })
 
-        if (response.ok) {
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
+            }
+
             navigate("/logout");
+        } catch(error) {
+            toast.error(error.message)
         }
+        
     }
     
     const toggleNav = (e) => {

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import '../bankOperations.css';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -14,10 +15,36 @@ function Transfer() {
     const [success, setSuccess] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const navigate = useNavigate();
+    const [accountID, setAccountID] = useState('');
 
     const toDashboard = () => {
         navigate('/dashboard');
     }
+
+    useEffect(() => {
+        async function fetchAccountID() {
+            try {
+                const response = await fetch('https://api.banksie.app/me', {
+                    method: 'GET',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include"
+                })
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
+                }
+
+                setAccountID(data.id);
+
+            } catch(error) {
+                toast.error(error.message);
+            }
+        }
+
+        fetchAccountID();
+    }, []);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -25,30 +52,35 @@ function Transfer() {
         if (recipient == "") {
             setEmpty(true);
         } else {
-            const response = await fetch(`https://api.banksie.app/transfer`, {
-                method: 'POST',
-                headers: {'Content-Type' : 'application/json'},
-                credentials: "include",
-                body: JSON.stringify({
-                    amount: transfer,
-                    memo: memo,
-                    submitter_id: accountId,
-                    recipient_id: recipient
+            try {
+                const response = await fetch(`https://api.banksie.app/transfer`, {
+                    method: 'POST',
+                    headers: {'Content-Type' : 'application/json'},
+                    credentials: "include",
+                    body: JSON.stringify({
+                        amount: transfer,
+                        memo: memo,
+                        submitter_id: accountID,
+                        recipient_id: recipient
+                    })
                 })
-            })
 
-            if (response.ok) {
-                setSuccess(true);
-            } else {
                 const data = await response.json();
 
-                if (data["code"] == 404) {
-                    setEmpty(false);
-                    setNotFound(true);
-                } else {
-                    setIsInvalid(true);
+                if (!response.ok) {
+                    if (data["code"] == 404) {
+                        setEmpty(false);
+                        setNotFound(true);
+                    } else {
+                        setIsInvalid(true);
+                    }
+
+                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`)
                 }
-                
+
+                setSuccess(true);
+            } catch(error) {
+                toast.error(error.message)
             }
         }
     };

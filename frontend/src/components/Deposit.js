@@ -26,11 +26,12 @@ function Deposit() {
                     credentials: "include"
                 })
 
+                const data = await response.json();
+
                 if (!response.ok) {
-                    throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
+                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                const data = await response.json();
                 setAccountID(data.id);
 
             } catch(error) {
