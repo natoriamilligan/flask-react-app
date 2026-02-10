@@ -2,12 +2,16 @@ import { useEffect, useState } from 'react';
 import { Card, Button, Form, Modal} from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import '../Profile.css';
 
 function Profile() {
-    const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
+    const [newPassword, setnewPassword] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [isDelete, setIsDelete] = useState(false);
@@ -26,10 +30,12 @@ function Profile() {
     const handleSuccessClose = () => setSuccessShow(false);
     const handleChangePasswordClose = () => setChangePasswordShow(false);
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('https://api.banksie.app/me', {
+                const response = await fetch('http://localhost:5000/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -41,7 +47,7 @@ function Profile() {
                     throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                setAccountID(data.id);
+                setAccountID(data.account_id);
 
             } catch(error) {
                 toast.error(error.message);
@@ -67,7 +73,7 @@ function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
+            const response = await fetch(`http://localhost:5000/account/${accountID}`, {
                 method: 'GET',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -91,18 +97,24 @@ function Profile() {
     const loginReturn = () => {
         navigate("/login");
     };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        setLoginShow(true);
+    }
     
     const handleChangePassword = async (e) => {
-        if (password == "") {
+        e.preventDefault();
+        if (newPassword === "") {
             setChangePasswordAlert(true);
         } else {
             try {
-                const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
+                const response = await fetch(`http://localhost:5000/account/${accountID}`, {
                     method: 'PUT',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include",
                     body: JSON.stringify({
-                        password: password 
+                        password: newPassword 
                     })
                 })
 
@@ -122,11 +134,11 @@ function Profile() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        if (username == "" || password == "") {
+        if (loginUsername === "" || loginPassword === "") {
             setLoginAlert(true);
         } else {
             try {
-                const response = await fetch('https://api.banksie.app/login', {
+                const response = await fetch('http://localhost:5000/login', {
                         method: 'POST',
                         headers: {'Content-Type' : 'application/json'},
                         credentials: "include",
@@ -158,10 +170,9 @@ function Profile() {
         }
     };
 
-    const handleLogout = async (e) => {
-        e.preventDefault();
+    const handleLogout = async () => {
         try {
-            const response = await fetch('https://api.banksie.app/logout', {
+            const response = await fetch('http://localhost:5000/logout', {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -175,14 +186,13 @@ function Profile() {
 
             loginReturn();
         } catch(error) {
-            error.toast(error.message)
+            toast.error(error.message)
         }
     };
 
     const handleDelete = async (e) => {
-        e.preventDefault();
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
+            const response = await fetch(`http://localhost:5000/account/${accountID}`, {
                 method: 'DELETE',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -226,7 +236,7 @@ function Profile() {
                         <Form.Group controlId='password'>
                             <Form.Label>Password:</Form.Label>
                             <Form.Control 
-                                type='text' 
+                                type='password' 
                                 value={loginPassword}
                                 onChange={(e) => setLoginPassword(e.target.value)}
                             />
@@ -258,12 +268,12 @@ function Profile() {
                 <Modal.Body>
                     <p>Please enter a new password.</p>
                     <Form onSubmit={handleChangePassword}>
-                        <Form.Group controlId="password">
+                        <Form.Group controlId="newPassword">
                             <Form.Label>Password:</Form.Label>
                             <Form.Control 
-                            type="text"  
-                            value={password}
-                            onChange={() => setPassword(e.target.value)}
+                            type="password"  
+                            value={newPassword}
+                            onChange={(e) => setnewPassword(e.target.value)}
                             />
                             {changePasswordAlert &&
                                 <Form.Text>Please enter a new password.</Form.Text>
@@ -275,7 +285,7 @@ function Profile() {
                     </Form>        
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button onClick={handleDelete}>Delete</Button>
+                    <Button onClick={handleChangePasswordClose}>Close</Button>
                 </Modal.Footer>
             </Modal> 
             <Modal show={successShow} onHide={handleSuccessClose}>
@@ -296,7 +306,7 @@ function Profile() {
                        <h1>{firstname.charAt(0).toUpperCase() + firstname.slice(1)} {lastname.charAt(0).toUpperCase() + lastname.slice(1)}</h1>
                     </div>
                     <div className="credentials-section">
-                        <Form onSubmit={() => setLoginShow(true)}>
+                        <Form onSubmit={handleSubmit}>
                             <Form.Group controlId="firstname">
                                 <Form.Label>First name:</Form.Label>
                                 <Form.Control type="text"  
