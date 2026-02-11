@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import '../Login.css';
 
-function Login() {
+function Login({setLoginTime}) {
   const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -18,13 +18,13 @@ function Login() {
     navigate("/dashboard");
   }
 
-  const handleSubmit = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (username == "" || password == "") {
+    if (username === "" || password === "") {
       setLoginAlert(true);
     } else {
         try {
-          const response = await fetch('https://api.banksie.app/login', {
+          const response = await fetch('http://localhost:5000/login', {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
             credentials: "include",
@@ -34,10 +34,13 @@ function Login() {
             })
           })
 
+          const data = await response.json();
+
         if (!response.ok) {
           throw new Error(data.message || "Login unsuccessful.")
         } 
         
+        setLoginTime(Date.now());
         dashboardLink();
 
       } catch(error) {
@@ -52,7 +55,7 @@ function Login() {
         <Card.Header>Banksie</Card.Header>
         <Card.Body>
           <Card.Title>Sign In</Card.Title>
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleLogin}>
             <Form.Group controlId='username'>
               <Form.Label>Username:</Form.Label>
               <Form.Control 
@@ -64,7 +67,7 @@ function Login() {
             <Form.Group controlId='password'>
               <Form.Label>Password:</Form.Label>
               <Form.Control 
-                type='text' 
+                type='password' 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
