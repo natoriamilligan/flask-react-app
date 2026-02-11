@@ -5,6 +5,10 @@ import { toast } from 'react-hot-toast';
 function RefreshSession({showModal, setShowModal, setLoginTime}) {
     const navigate = useNavigate();
 
+    const logoutReturn = () => {
+        navigate("/logout");
+    };
+
     const handleLogout = async () => {
         try {
             const response = await fetch("http://localhost:5000/logout", {
@@ -20,8 +24,8 @@ function RefreshSession({showModal, setShowModal, setLoginTime}) {
             }
 
             setShowModal(false);
-            setLoginTime(Date.now());
-            navigate("/logout");
+            setLoginTime(null);
+            logoutReturn();
         } catch(error) {
             toast.error(error.message)
         }
@@ -51,7 +55,7 @@ function RefreshSession({showModal, setShowModal, setLoginTime}) {
     }
 
     return (
-        <Modal show={showModal} onHide={() => {setModalShow(false)}}>
+        <Modal show={showModal} onHide={() => {setShowModal(false)}}>
             <Modal.Header>
                 <Modal.Title>Continue Session</Modal.Title>
             </Modal.Header>
