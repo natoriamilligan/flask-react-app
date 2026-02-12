@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Container, Card, Modal} from 'react-bootstrap';
+import { Container, Card, Modal} from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import '../Dashboard.css';
@@ -7,19 +7,14 @@ import Header from './Header';
 import Transactions from './Transactions';
 
 function Dashboard() {
-    const [show, setShow] = useState(false);
     const [name, setName] = useState('');
     const [balance, setBalance] = useState('');
     const [accountID, setAccountID] = useState('');
-
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
     
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('https://api.banksie.app/me', {
+                const response = await fetch('http://localhost:5000/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -31,7 +26,7 @@ function Dashboard() {
                     throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                setAccountID(data.id);
+                setAccountID(data.account_id);
 
             } catch(error) {
                 toast.error(error.message);
@@ -57,7 +52,7 @@ function Dashboard() {
 
     async function fetchBalanceName() {
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
+            const response = await fetch(`http://localhost:5000/account/${accountID}`, {
                 method: 'GET',
                 headers: {'Content-Type' : 'application/json'} ,
                 credentials: "include"
@@ -88,29 +83,16 @@ function Dashboard() {
                 </div>
                 <Card>
                     <Card.Body className="acct-balance">
+                        <h5>Balance</h5>
                         <h2 className="display-1">${Number(balance).toFixed(2)}</h2>
-                        <button className="acct-details" onClick={handleShow}>Account Details</button>
                     </Card.Body>
                 </Card>
                 <Card className="trans-card">
                     <Card.Header>Transactions</Card.Header>
                     <Transactions />
-                    <Card.Footer className="trans-footer">
-                        <button className="trans-footer-btn">View more</button>
-                    </Card.Footer>
+                    <Card.Footer className="trans-footer" />
+
                 </Card>
-                <Modal show={show} onHide={handleClose}>
-                    <Modal.Header>
-                        <Modal.Title>Account Details</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <p>Rounting number: 1234567896</p>
-                        <p>Account number: 789456123000</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button onClick={handleClose}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
             </Container>
         </>
 

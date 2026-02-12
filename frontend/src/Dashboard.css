@@ -67,3 +67,27 @@
     padding-right: 20px;
 }
 
+.pagnation-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+
+}
+
+.link-class-name {
+    list-style-type: none;
+}
+
+.previous {
+    list-style-type: none;
+    text-decoration: none;
+}
+
+.next {
+    list-style-type: none;
+    text-decoration: none;
+}
+
+.page-list {
+    list-style-type: none;
+}
