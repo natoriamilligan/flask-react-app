@@ -13,8 +13,8 @@ function Transactions() {
     const paginatedItems = transactions.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(transactions.length / itemsPerPage)
 
-    const handlePageClick = ({ selectedPage }) => {
-        setCurrentPage(selectedPage);
+    const handlePageClick = ({ selected }) => {
+        setCurrentPage(selected);
     };
 
     useEffect(() => {
