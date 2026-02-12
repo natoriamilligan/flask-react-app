@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast';
 import RefreshSession from "./RefreshSession";
@@ -16,11 +16,11 @@ function SessionManager({loginTime, setLoginTime}) {
 
         const timer = setTimeout(function(){
             setShowModal(true);
-        }, 60000 - 40000);
+        }, 900000 - 40000);
 
         const timer2 = setTimeout(function(){
             logoutSession();
-        }, 60000 - 10000);
+        }, 900000 - 10000);
 
         return () => {
             clearTimeout(timer);

@@ -18,7 +18,7 @@ from resources.transactions import blp as TransactionsBlueprint
 def create_app():
     app = Flask(__name__)
     load_dotenv()
-    CORS(app, supports_credentials=True, origins=["http://localhost:5000"])
+    CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -30,10 +30,10 @@ def create_app():
     app.config["JWT_SECRET_KEY"] = "super-secret"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False # For dev purposes only
-    app.config["JWT_COOKIE_SAMESITE"] = "None"
+    app.config["JWT_COOKIE_SAMESITE"] = "Lax"
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIES_PATH"] = "/refresh"
-    app.config["JWT_COOKIE_CSRF_PROTECT"] = True
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
   

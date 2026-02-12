@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Container } from 'react-bootstrap';
-import { useNavigate, BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Login from './components/login';
 import Create from './components/Create';
 import Logout from './components/Logout';
@@ -11,6 +11,7 @@ import Deposit from './components/Deposit';
 import Withdrawal from './components/Withdrawal';
 import Transfer from './components/Transfer';
 import Home from './components/Home';
+import BlockRoute from './components/BlockRoute';
 import SessionManager from './components/SessionManager';
 import './App.css';
 
@@ -26,12 +27,12 @@ function App() {
           <Route path='/' element={<Home />} />
           <Route path='/login' element={<Login setLoginTime={setLoginTime}/>} />
           <Route path='/create' element={<Create />} />
-          <Route path='/logout' element={<Logout />} />
-          <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/profile' element={<Profile />} />
-          <Route path='/deposit' element={<Deposit />} />
-          <Route path='/withdrawal' element={<Withdrawal />} />
-          <Route path='/transfer' element={<Transfer />} />
+          <Route path='/dashboard' element={<BlockRoute route={ <Dashboard /> } />} />
+          <Route path='/logout' element={<BlockRoute route={ <Logout /> } />} />
+          <Route path='/profile' element={<BlockRoute route={ <Profile /> } />} />
+          <Route path='/deposit' element={<BlockRoute route={ <Deposit /> } />} />
+          <Route path='/withdrawal' element={<BlockRoute route={ <Withdrawal /> } />} />
+          <Route path='/transfer' element={<BlockRoute route={ <Transfer /> } />} />
         </Routes>
       </Router>
     </Container>
