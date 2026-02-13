@@ -70,24 +70,26 @@
 .pagnation-container {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     gap: 20px;
-
+    padding: 10px 0;
+    margin-bottom: 0;
+    align-items: center;
 }
 
 .link-class-name {
     list-style-type: none;
 }
 
-.previous {
+.previous, .next, .pagelinks, .page-list {
     list-style-type: none;
     text-decoration: none;
 }
 
-.next {
-    list-style-type: none;
-    text-decoration: none;
+.selected {
+    text-decoration: underline;
 }
 
-.page-list {
-    list-style-type: none;
+.color {
+    color: black;
 }
