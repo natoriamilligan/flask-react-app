@@ -90,8 +90,6 @@ function Dashboard() {
                 <Card className="trans-card">
                     <Card.Header>Transactions</Card.Header>
                     <Transactions />
-                    <Card.Footer className="trans-footer" />
-
                 </Card>
             </Container>
         </>

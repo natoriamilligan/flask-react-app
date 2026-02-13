@@ -95,11 +95,11 @@ function Transactions() {
                 onPageChange={handlePageClick}
                 pageRangeDisplayed={2}
                 pageCount={pageCount}
-                previousLabel="< previous"
+                previousLabel="< prev"
                 containerClassName={"pagnation-container"}
-                linkClassName={"pageList"}
-                previousLinkClassName={"previous"}
-                nextLinkClassName={"next"}
+                previousLinkClassName={"previous color"}
+                nextLinkClassName={"next color"}
+                pageClassName={"page-list"}
             />
         </>
      )
