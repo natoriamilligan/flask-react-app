@@ -10,6 +10,7 @@ function Dashboard() {
     const [name, setName] = useState('');
     const [balance, setBalance] = useState('');
     const [accountID, setAccountID] = useState('');
+    const [selectedType, setSelectedType] = useState('select'); 
     
     useEffect(() => {
         async function fetchAccountID() {
@@ -88,8 +89,18 @@ function Dashboard() {
                     </Card.Body>
                 </Card>
                 <Card className="trans-card">
-                    <Card.Header>Transactions</Card.Header>
-                    <Transactions />
+                    <Card.Header className="trans-header">
+                        <h5>Transactions</h5>
+                        <div className="filter-container">
+                            <select value={selectedType} className="filter-select" name="types" id="types" onChange={(e) => {setSelectedType(e.target.value)}}>
+                                <option value="select">Transaction Type</option>
+                                <option value="deposit">Deposit</option>
+                                <option value="withdrawal">Withdrawal</option>
+                                <option value="transfer">Transfer</option>
+                            </select>
+                        </div>
+                    </Card.Header>
+                    <Transactions selectedType={selectedType}/>
                 </Card>
             </Container>
         </>

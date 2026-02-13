@@ -3,15 +3,15 @@ import { ListGroup } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import toast from 'react-hot-toast';
 
-function Transactions() {
+function Transactions({ selectedType }) {
     const [transactions, setTransactions] = useState([]);
     const [accountID, setAccountID] = useState('');
     const [currentPage, setCurrentPage] = useState(0);
+    const [paginatedItems, setPaginatedItems] = useState([]);
+    const [pageCount, setPageCount] = useState(0);
 
     const itemsPerPage = 6;
     const offset = currentPage * itemsPerPage;
-    const paginatedItems = transactions.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(transactions.length / itemsPerPage)
 
     const handlePageClick = ({ selected }) => {
         setCurrentPage(selected);
@@ -76,7 +76,25 @@ function Transactions() {
             toast.error(error.message)
         }     
     }
+
+    useEffect(() => {
+        if (selectedType === "select") {
+            setPaginatedItems(transactions.slice(offset, offset + itemsPerPage));
+            setPageCount(Math.ceil(transactions.length / itemsPerPage));
+        }
+    }, [transactions, currentPage])
     
+    useEffect(() => {
+        console.log("entered function")
+        
+
+        const newList = transactions.filter(function(element) {
+            return element["type"] === selectedType;
+        })
+        
+        setTransactions(newList)
+        
+    }, [selectedType])
      return (
         <>
             <ListGroup>
