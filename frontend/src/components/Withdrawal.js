@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ function Withdrawal() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('https://api.banksie.app/me', {
+                const response = await fetch('http://localhost:5000/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -32,7 +32,7 @@ function Withdrawal() {
                     throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                setAccountID(data.id);
+                setAccountID(data.account_id);
 
             } catch(error) {
                 toast.error(error.message);
@@ -46,7 +46,7 @@ function Withdrawal() {
         e.preventDefault();
 
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountID}/withdrawal`, {
+            const response = await fetch(`http://localhost:5000/account/${accountID}/withdrawal`, {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include",
@@ -91,9 +91,8 @@ function Withdrawal() {
                                     value={withdrawal}
                                     onChange={(e) => setWithdrawal(e.target.value)}
                                     ></Form.Control>
-                                    <Form.Text muted>Daily limit $5,000</Form.Text><br />
                                     {isInvalid &&
-                                        <Form.Text>Please enter a valid number.</Form.Text>
+                                        <Form.Text>Not enough funds.</Form.Text>
                                     }
                                 </Form.Group>
                                 <div className="submit-btn">
