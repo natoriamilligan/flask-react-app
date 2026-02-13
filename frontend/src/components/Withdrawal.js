@@ -58,14 +58,13 @@ function Withdrawal() {
             const data = await response.json();
 
             if (!response.ok) {
-                setIsInvalid(true);
                 throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
             }
 
             setSuccess(true);
         } catch(error) {
             toast.error(error.message);
-        }
+        } 
         
     };
 
@@ -91,9 +90,6 @@ function Withdrawal() {
                                     value={withdrawal}
                                     onChange={(e) => setWithdrawal(e.target.value)}
                                     ></Form.Control>
-                                    {isInvalid &&
-                                        <Form.Text>Not enough funds.</Form.Text>
-                                    }
                                 </Form.Group>
                                 <div className="submit-btn">
                                     <Button type="submit">Withdrawal</Button>
