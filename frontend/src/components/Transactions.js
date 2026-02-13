@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
 import toast from 'react-hot-toast';
@@ -9,6 +9,8 @@ function Transactions({ selectedType }) {
     const [currentPage, setCurrentPage] = useState(0);
     const [paginatedItems, setPaginatedItems] = useState([]);
     const [pageCount, setPageCount] = useState(0);
+
+    const allTransactions = useRef([]);
 
     const itemsPerPage = 6;
     const offset = currentPage * itemsPerPage;
@@ -72,29 +74,37 @@ function Transactions({ selectedType }) {
             }
 
             setTransactions(data);
+            allTransactions.current = data;
         } catch(error) {
             toast.error(error.message)
         }     
     }
 
     useEffect(() => {
-        if (selectedType === "select") {
+        console.log(transactions)
+        if (selectedType === "all") {
+            setPaginatedItems(allTransactions.current.slice(offset, offset + itemsPerPage));
+            setPageCount(Math.ceil(allTransactions.current.length / itemsPerPage));
+        } else {
             setPaginatedItems(transactions.slice(offset, offset + itemsPerPage));
             setPageCount(Math.ceil(transactions.length / itemsPerPage));
         }
     }, [transactions, currentPage])
-    
-    useEffect(() => {
-        console.log("entered function")
-        
 
-        const newList = transactions.filter(function(element) {
+    useEffect(() => {
+        console.log("entered")
+        if (selectedType === 'all') {
+            setTransactions(allTransactions.current);
+            return;
+        }
+            
+        const newTransactionList = allTransactions.current.filter(function(element) {
             return element["type"] === selectedType;
         })
-        
-        setTransactions(newList)
-        
+        console.log("entered2")
+        setTransactions(newTransactionList);
     }, [selectedType])
+
      return (
         <>
             <ListGroup>

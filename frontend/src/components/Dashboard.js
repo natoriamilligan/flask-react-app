@@ -10,7 +10,7 @@ function Dashboard() {
     const [name, setName] = useState('');
     const [balance, setBalance] = useState('');
     const [accountID, setAccountID] = useState('');
-    const [selectedType, setSelectedType] = useState('select'); 
+    const [selectedType, setSelectedType] = useState('all'); 
     
     useEffect(() => {
         async function fetchAccountID() {
@@ -92,11 +92,11 @@ function Dashboard() {
                     <Card.Header className="trans-header">
                         <h5>Transactions</h5>
                         <div className="filter-container">
-                            <select value={selectedType} className="filter-select" name="types" id="types" onChange={(e) => {setSelectedType(e.target.value)}}>
-                                <option value="select">Transaction Type</option>
-                                <option value="deposit">Deposit</option>
-                                <option value="withdrawal">Withdrawal</option>
-                                <option value="transfer">Transfer</option>
+                            <select value={selectedType} className="filter-select" name="types" id="types" onChange={(e) => {setSelectedType(e.target.value); }}>
+                                <option value="all">All Transactions</option>
+                                <option value="Deposit">Deposit</option>
+                                <option value="Withdrawal">Withdrawal</option>
+                                <option value="Transfer">Transfer</option>
                             </select>
                         </div>
                     </Card.Header>
