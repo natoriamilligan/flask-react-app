@@ -47,11 +47,11 @@ def create_app():
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader
-    def check_if_token_in_blocklist(jwt_header, jwt_payload):
+    def check_if_token_in_blocklist(_jwt_header, jwt_payload):
         return BlocklistModel.query.filter(BlocklistModel.jti == jwt_payload["jti"]).first() is not None
     
     @jwt.revoked_token_loader
-    def revoked_token_callback(jwt_header, jwt_payload):
+    def revoked_token_callback(_jwt_header, _jwt_payload):
         return (
             jsonify(
                 {"description": "The token has been revoked.", "error": "token_revoked"}
@@ -60,14 +60,14 @@ def create_app():
         )
 
     @jwt.expired_token_loader
-    def expired_token_callback(jwt_header, jwt_payload):
+    def expired_token_callback(_jwt_header, _jwt_payload):
         return (
             jsonify({"message": "The token has expired.", "error": "token_expired"}),
             401,
         )
     
     @jwt.invalid_token_loader
-    def invalid_token_callback(error):
+    def invalid_token_callback(_error):
         return (
             jsonify(
                 {"message": "Signature verification failed.", "error": "invalid_token"}
@@ -76,7 +76,7 @@ def create_app():
         )
     
     @jwt.unauthorized_loader
-    def missing_token_callback(error):
+    def missing_token_callback(_error):
         return (
             jsonify(
                 {
@@ -88,7 +88,7 @@ def create_app():
         )
     
     @jwt.needs_fresh_token_loader
-    def token_not_fresh_callback(jwt_header, jwt_payload):
+    def token_not_fresh_callback(_jwt_header, _jwt_payload):
         return (
             jsonify(
                 {
