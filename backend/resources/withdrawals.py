@@ -5,7 +5,7 @@ from flask_jwt_extended import jwt_required
 
 from db import db
 from models import AccountModel, WithdrawalModel
-from schemas import WithdrawalSchema, AccountSchema
+from schemas import WithdrawalSchema
 
 blp = Blueprint("withdrawals", __name__, description="Operation on withdrawals")
 

@@ -26,7 +26,7 @@ def create_app():
     app.config["API_TITLE"] = "Banking API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.1.1"
-    
+
     app.config["JWT_SECRET_KEY"] = "super-secret"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     app.config["JWT_COOKIE_SECURE"] = False # For dev purposes only
@@ -36,20 +36,17 @@ def create_app():
     app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=15)
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(days=7)
-  
-    
-
 
     db.init_app(app)
-    migrate = Migrate(app, db)
+    Migrate(app, db)
     api = Api(app)
-    
+
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader
     def check_if_token_in_blocklist(_jwt_header, jwt_payload):
         return BlocklistModel.query.filter(BlocklistModel.jti == jwt_payload["jti"]).first() is not None
-    
+
     @jwt.revoked_token_loader
     def revoked_token_callback(_jwt_header, _jwt_payload):
         return (
@@ -65,7 +62,7 @@ def create_app():
             jsonify({"message": "The token has expired.", "error": "token_expired"}),
             401,
         )
-    
+
     @jwt.invalid_token_loader
     def invalid_token_callback(_error):
         return (
@@ -74,7 +71,7 @@ def create_app():
             ),
             401,
         )
-    
+
     @jwt.unauthorized_loader
     def missing_token_callback(_error):
         return (
@@ -86,7 +83,7 @@ def create_app():
             ),
             401,
         )
-    
+
     @jwt.needs_fresh_token_loader
     def token_not_fresh_callback(_jwt_header, _jwt_payload):
         return (
@@ -105,12 +102,8 @@ def create_app():
     api.register_blueprint(TransfersBlueprint)
     api.register_blueprint(TransactionsBlueprint)
 
-
     @app.route("/health")
     def health():
         return "ok", 200
 
     return app
-
-
-    

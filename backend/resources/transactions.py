@@ -1,7 +1,7 @@
 from flask.views import MethodView
 from flask_smorest import Blueprint
 
-from models import TransferModel, DepositModel, WithdrawalModel, AccountModel
+from models import AccountModel
 from schemas import TransactionSchema, DepositSchema, WithdrawalSchema, TransferSchema
 
 blp = Blueprint("transactions", __name__, description="Operation on transactions")
@@ -24,7 +24,7 @@ class TransactionList(MethodView):
         withdrawal_data = WithdrawalSchema(many=True).dump(withdrawals)
         sent_transfer_data = TransferSchema(many=True).dump(sent_transfers)
         received_transfer_data = TransferSchema(many=True).dump(received_transfers)
-
+        
         for d in deposit_data:
             d["type"] = "Deposit"
         for w in withdrawal_data:

@@ -35,7 +35,6 @@ class AccountReceivedtransfer(MethodView):
 class AccountTransfer(MethodView):
     @jwt_required()
     @blp.arguments(TransferSchema)
-    @blp.response(200, TransferSchema)
     def post(self, transfer_data):
 
         if transfer_data["submitter_id"] == transfer_data["recipient_id"]:
@@ -45,10 +44,10 @@ class AccountTransfer(MethodView):
             recipient = AccountModel.query.get(transfer_data["recipient_id"])
 
             if not submitter:
-                return {"message": "Submitter cannot be the same as receiver."}, 400
+                return {"message": "Account not found."}, 400
 
             if not recipient:
-                return {"message": "Submitter cannot be the same as receiver."}, 400
+                return {"message": "Recipient account not found."}, 400
 
             if submitter.balance - transfer_data["amount"] < 0:
                 return {"message": "Not enough funds."}, 422
