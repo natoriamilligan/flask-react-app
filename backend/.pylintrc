@@ -1,0 +1,22 @@
+[MASTER]
+
+ignore-paths=\__pycache__,
+             .venv,
+             instance,
+             migrations
+
+ignore-patterns=.*\.env$,
+                .*\.flaskenv$,
+                .*\.md$,
+                main\.py$
+
+[MESSAGES CONTROL]
+disable=
+        missing-module-docstring,
+        missing-class-docstring,
+        too-few-public-methods, 
+        missing-function-docstring,
+        line-too-long,
+        too-many-locals
+
+        
