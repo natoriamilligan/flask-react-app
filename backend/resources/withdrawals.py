@@ -17,9 +17,9 @@ class AccountWithdrawal(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         return account.withdrawals.all()
-    
+
     @jwt_required()
     @blp.arguments(WithdrawalSchema)
     def post(self, withdrawal_data, account_id):
@@ -27,14 +27,14 @@ class AccountWithdrawal(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         if account.balance - withdrawal_data["amount"] < 0:
             return {"message": "Not enough funds."}, 422
         else:
             account.balance = account.balance - withdrawal_data["amount"]
 
         withdrawal = WithdrawalModel(account_id=account_id, **withdrawal_data)
-        
+
         try:
             db.session.add(withdrawal)
             db.session.commit()
@@ -51,5 +51,5 @@ class Deposit(MethodView):
 
         if not withdrawal:
             return {"message": "Withdrawal not found."}, 404
-        
+
         return withdrawal

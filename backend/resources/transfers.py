@@ -17,9 +17,9 @@ class AccountSentTransdfer(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         return account.sent_transfers.all()
-    
+
 @blp.route("/account/<int:account_id>/received_transfers")
 class AccountReceivedtransfer(MethodView):
     @blp.response(200, TransferSchema(many=True))
@@ -28,9 +28,9 @@ class AccountReceivedtransfer(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         return account.received_transfers.all()
-    
+
 @blp.route("/transfer")
 class AccountTransfer(MethodView):
     @jwt_required()
@@ -56,7 +56,7 @@ class AccountTransfer(MethodView):
                 recipient.balance = recipient.balance + transfer_data["amount"]
 
             transfer = TransferModel(**transfer_data)
-            
+
             try:
                 db.session.add(transfer)
                 db.session.commit()
@@ -64,5 +64,3 @@ class AccountTransfer(MethodView):
                 abort(500, message="An error occured adding the transaction to the database")
 
             return {"message": "Transfer successful!"}, 201
-
-        
