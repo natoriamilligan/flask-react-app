@@ -39,28 +39,28 @@ class AccountTransfer(MethodView):
 
         if transfer_data["submitter_id"] == transfer_data["recipient_id"]:
             return {"message": "Submitter cannot be the same as receiver."}, 400
-        else:
-            submitter = AccountModel.query.get(transfer_data["submitter_id"])
-            recipient = AccountModel.query.get(transfer_data["recipient_id"])
 
-            if not submitter:
-                return {"message": "Account not found."}, 400
+        submitter = AccountModel.query.get(transfer_data["submitter_id"])
+        recipient = AccountModel.query.get(transfer_data["recipient_id"])
 
-            if not recipient:
-                return {"message": "Recipient account not found."}, 400
+        if not submitter:
+            return {"message": "Account not found."}, 400
 
-            if submitter.balance - transfer_data["amount"] < 0:
-                return {"message": "Not enough funds."}, 422
-            else:
-                submitter.balance = submitter.balance - transfer_data["amount"]
-                recipient.balance = recipient.balance + transfer_data["amount"]
+        if not recipient:
+            return {"message": "Recipient account not found."}, 400
 
-            transfer = TransferModel(**transfer_data)
+        if submitter.balance - transfer_data["amount"] < 0:
+            return {"message": "Not enough funds."}, 422
 
-            try:
-                db.session.add(transfer)
-                db.session.commit()
-            except SQLAlchemyError:
-                abort(500, message="An error occured adding the transaction to the database")
+        submitter.balance = submitter.balance - transfer_data["amount"]
+        recipient.balance = recipient.balance + transfer_data["amount"]
 
-            return {"message": "Transfer successful!"}, 201
+        transfer = TransferModel(**transfer_data)
+
+        try:
+            db.session.add(transfer)
+            db.session.commit()
+        except SQLAlchemyError:
+            abort(500, message="An error occured adding the transaction to the database")
+
+        return {"message": "Transfer successful!"}, 201
