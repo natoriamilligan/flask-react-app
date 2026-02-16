@@ -1,4 +1,4 @@
-from flask import request, jsonify
+from flask import jsonify
 from flask.views import MethodView
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
@@ -17,20 +17,31 @@ class AccountList(MethodView):
     def get(self):
         return AccountModel.query.all()
 
+@blp.route("/me")
+class AccountID(MethodView):
+    @jwt_required()
+    def get(self):
+        account_id = get_jwt_identity()
+
+        if not account_id:
+            return {"message": "Account not found."}, 404
+
+        return {"account_id": account_id}
+
 @blp.route("/create")
 class CreateAccount(MethodView):
     @blp.arguments(AccountSchema)
     def post(self, account_data):
         if AccountModel.query.filter(AccountModel.username == account_data["username"]).first():
-                abort(409, message="The username you entered is already taken.")
-                
+            abort(409, message="The username you entered is already taken.")
+
         account = AccountModel(
             first_name=account_data["first_name"],
             last_name=account_data["last_name"],
             username=account_data["username"],
             password=pbkdf2_sha256.hash(account_data["password"])
             )
-    
+
         try:
             db.session.add(account)
             db.session.commit()
@@ -38,7 +49,7 @@ class CreateAccount(MethodView):
             abort(500, message="An error occured while inserting the item into the database.")
 
         return {"message": "Account successfully created!"}, 201
-    
+
 @blp.route("/login")
 class AccountLogin(MethodView):
     @blp.arguments(LoginSchema)
@@ -53,20 +64,20 @@ class AccountLogin(MethodView):
 
             set_access_cookies(response, access_token)
             set_refresh_cookies(response, refresh_token)
-
-            return response, 200
         else:
             abort(401, message="Invalid credentials.")
+
+        return response, 200
 
 @blp.route("/logout")
 class AccountLogout(MethodView):
     @jwt_required(optional=True)
     @blp.arguments(BlocklistSchema)
-    def post(self, blocklist_data):
+    def post(self):
         jti = get_jwt()["jti"]
 
         blocklist = BlocklistModel(jti=jti)
-        
+
         try:
             db.session.add(blocklist)
             db.session.commit()
@@ -74,7 +85,7 @@ class AccountLogout(MethodView):
             abort(500, message="An error occured while inserting the item into the database.")
 
         return {"message": "Successfully logged out."}, 200
-    
+
 @blp.route("/refresh") 
 class TokenRefresh(MethodView):
     @jwt_required(refresh=True)
@@ -88,7 +99,6 @@ class TokenRefresh(MethodView):
 
         return response, 200
 
-
 @blp.route("/account/<int:account_id>")
 class Account(MethodView):
     @blp.response(200, AccountSchema)
@@ -97,9 +107,9 @@ class Account(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         return account
-    
+
     @jwt_required(fresh=True)
     @blp.arguments(UpdateAccountSchema)
     def put(self, account_data, account_id):
@@ -107,7 +117,7 @@ class Account(MethodView):
 
         if account:
             if all(account_data.values()):
-                account.password = account_data["password"]
+                account.password = pbkdf2_sha256.hash(account_data["password"])
             else:
                 return {"message" : "New password required."}, 400
         else: 
@@ -134,5 +144,5 @@ class Account(MethodView):
 
         except SQLAlchemyError:
             abort(500, message="An error occured while deleting the account")
-        
+
         return {"message": "The account was successfully deleted."}, 200

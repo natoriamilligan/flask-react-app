@@ -17,9 +17,9 @@ class AccountDeposit(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         return account.deposits.all()
-    
+
     @jwt_required()
     @blp.arguments(DepositSchema)
     def post(self, deposit_data, account_id):
@@ -28,10 +28,10 @@ class AccountDeposit(MethodView):
 
         if not account:
             return {"message": "Account not found."}, 404
-        
+
         account.balance = account.balance + deposit_data["amount"]
         deposit = DepositModel(account_id=account_id, **deposit_data)
-        
+
         try:
             db.session.add(deposit)
             db.session.commit()
@@ -39,7 +39,7 @@ class AccountDeposit(MethodView):
             abort(500, message="An error occured adding the deposit to the database")
 
         return {"message": "Deposit was successfully posted."}, 201
-    
+
 @blp.route("/deposit/<int:deposit_id>")
 class Deposit(MethodView):
     @blp.response(200, DepositSchema)
@@ -48,7 +48,5 @@ class Deposit(MethodView):
 
         if not deposit:
             return {"message": "Deposit not found."}, 404
-        
-        return deposit
-    
 
+        return deposit
