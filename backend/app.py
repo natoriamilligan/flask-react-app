@@ -1,12 +1,13 @@
+"""Banking API Flask Application"""
 import os
+from datetime import timedelta
 from flask import Flask, jsonify
 from flask_smorest import Api
-from db import db
 from flask_jwt_extended import JWTManager
 from flask_migrate import Migrate
 from flask_cors import CORS
-from datetime import timedelta
 from dotenv import load_dotenv
+from db import db
 
 from models import BlocklistModel
 from resources.accounts import blp as AccountsBlueprint
@@ -16,6 +17,7 @@ from resources.transfers import blp as TransfersBlueprint
 from resources.transactions import blp as TransactionsBlueprint
 
 def create_app():
+    """Create and configure flask app"""
     app = Flask(__name__)
     load_dotenv()
     CORS(app, supports_credentials=True, origins=["http://localhost:3000"])

@@ -5,7 +5,7 @@ class DepositSchema(Schema):
     amount = fields.Float(required=True)
     account_id = fields.Int(dump_only=True)
     timestamp = fields.Str(dump_only=True)
-    
+
 class WithdrawalSchema(Schema):
     id = fields.Int(dump_only=True)
     amount = fields.Float(required=True)
@@ -21,13 +21,13 @@ class TransferSchema(Schema):
     timestamp = fields.Str(dump_only=True)
 
 class UpdateAccountSchema(Schema):
-    first_name = fields.Str(required=True)
-    last_name = fields.Str(required=True)
     password = fields.Str(required=True, load_only=True)
 
 class AccountSchema(UpdateAccountSchema):
     id = fields.Int(dump_only=True)
     username = fields.Str(required=True)
+    first_name = fields.Str(required=True)
+    last_name = fields.Str(required=True)
     balance = fields.Str(dump_only=True)
     sent_transfers = fields.List(fields.Nested(TransferSchema()), dump_only=True)
     received_transfers = fields.List(fields.Nested(TransferSchema()), dump_only=True)
@@ -48,3 +48,4 @@ class TransactionSchema(Schema):
     amount = fields.Float(dump_only=True)
     submitter_id = fields.Int(dump_only=True)
     recipient_id = fields.Int(dump_only=True)
+    timestamp = fields.Str(dump_only=True)

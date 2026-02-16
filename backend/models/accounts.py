@@ -16,3 +16,4 @@ class AccountModel(db.Model):
     received_transfers = db.relationship("TransferModel", foreign_keys=[TransferModel.recipient_id], back_populates="recipient", lazy="dynamic", cascade="all, delete")
     deposits = db.relationship("DepositModel", foreign_keys=[DepositModel.account_id], back_populates="account", lazy="dynamic", cascade="all, delete")
     withdrawals = db.relationship("WithdrawalModel", foreign_keys=[WithdrawalModel.account_id], back_populates="account", lazy="dynamic", cascade="all, delete")
+    

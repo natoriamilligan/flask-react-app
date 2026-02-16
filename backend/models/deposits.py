@@ -1,5 +1,5 @@
-from db import db
 from datetime import datetime, timezone
+from db import db
 
 class DepositModel(db.Model):
     __tablename__ = "deposits"
