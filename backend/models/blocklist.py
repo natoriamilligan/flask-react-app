@@ -5,4 +5,3 @@ class BlocklistModel(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     jti = db.Column(db.Text, unique=False, nullable=False)
-    

@@ -40,4 +40,3 @@ class TransactionList(MethodView):
         transactions.sort(key=lambda x: x["timestamp"], reverse=True)
 
         return transactions
-    

@@ -86,7 +86,7 @@ class AccountLogout(MethodView):
 
         return {"message": "Successfully logged out."}, 200
 
-@blp.route("/refresh") 
+@blp.route("/refresh")
 class TokenRefresh(MethodView):
     @jwt_required(refresh=True)
     def post(self):
@@ -120,7 +120,7 @@ class Account(MethodView):
                 account.password = pbkdf2_sha256.hash(account_data["password"])
             else:
                 return {"message" : "New password required."}, 400
-        else: 
+        else:
             return {"message" : "Invalid account or password."}, 401
 
         try:
@@ -133,7 +133,7 @@ class Account(MethodView):
 
     @jwt_required(fresh=True)
     def delete(self, account_id):
-        account = AccountModel.query.get(account_id) 
+        account = AccountModel.query.get(account_id)
 
         if not account:
             return {"message": "Account not found."}, 404

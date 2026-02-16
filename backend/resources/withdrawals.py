@@ -30,8 +30,8 @@ class AccountWithdrawal(MethodView):
 
         if account.balance - withdrawal_data["amount"] < 0:
             return {"message": "Not enough funds."}, 422
-        else:
-            account.balance = account.balance - withdrawal_data["amount"]
+
+        account.balance = account.balance - withdrawal_data["amount"]
 
         withdrawal = WithdrawalModel(account_id=account_id, **withdrawal_data)
 
