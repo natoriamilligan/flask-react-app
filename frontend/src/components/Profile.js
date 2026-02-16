@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, Button, Form, Modal} from 'react-bootstrap';
 import { PersonCircle } from 'react-bootstrap-icons';
 import { useNavigate } from 'react-router-dom';
+import zxcvbn from 'zxcvbn';
 import toast from 'react-hot-toast';
 import Sidebar from './Sidebar';
 import Header from './Header';
@@ -11,7 +12,7 @@ function Profile() {
     const [username, setUsername] = useState('');
     const [firstname, setFirstname] = useState('');
     const [lastname, setLastname] = useState('');
-    const [newPassword, setnewPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [isDelete, setIsDelete] = useState(false);
@@ -23,7 +24,8 @@ function Profile() {
     const [changePasswordAlert, setChangePasswordAlert] = useState(false);
     const [successShow, setSuccessShow] = useState(false);
     const [accountID, setAccountID] = useState('');
-
+    const [weakPassword, setWeakPassword] = useState(false);
+    const [score, setScore] = useState(0);
 
     const handleLoginClose = () => setLoginShow(false);
     const handleDeleteClose = () => setDeleteShow(false);
@@ -101,6 +103,20 @@ function Profile() {
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoginShow(true);
+    }
+
+    const passwordStrength = (e) => {
+          const password = e.target.value;
+          setNewPassword(password);
+    
+          const passwordCheck = zxcvbn(newPassword);
+          setScore(passwordCheck.score);
+
+          if (passwordCheck.score < 4) {
+            setWeakPassword(true);
+          } else {
+            setWeakPassword(false);
+          }
     }
     
     const handleChangePassword = async (e) => {
@@ -273,14 +289,17 @@ function Profile() {
                             <Form.Control 
                             type="password"  
                             value={newPassword}
-                            onChange={(e) => setnewPassword(e.target.value)}
+                            onChange={passwordStrength}
                             />
                             {changePasswordAlert &&
                                 <Form.Text>Please enter a new password.</Form.Text>
                             }
+                            {weakPassword &&
+                                <Form.Text>Password weak. Please try again.</Form.Text>
+                            }
                         </Form.Group>
                         <div className="login-btn">
-                            <Button type="submit">Submit</Button>
+                            <Button type="submit" disabled={score < 4}>Submit</Button>
                         </div>
                     </Form>        
                 </Modal.Body>
