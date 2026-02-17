@@ -16,22 +16,26 @@ from resources.withdrawals import blp as WithdrawalsBlueprint
 from resources.transfers import blp as TransfersBlueprint
 from resources.transactions import blp as TransactionsBlueprint
 
-def create_app():
-    """Create and configure flask app"""
+def create_app(config_name="production"):
     app = Flask(__name__)
     load_dotenv()
     CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    if (config_name == "testing"):
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+        app.config["JWT_COOKIE_SECURE"] = False
+        app.config["JWT_SECRET_KEY"] = "super-secret"
+    else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+        app.config["JWT_COOKIE_SECURE"] = False
+        app.config["JWT_SECRET_KEY"] = "super-secret"
+
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.1.1"
-
-    app.config["JWT_SECRET_KEY"] = "super-secret"
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
-    app.config["JWT_COOKIE_SECURE"] = False # For dev purposes only
     app.config["JWT_COOKIE_SAMESITE"] = "Lax"
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_REFRESH_COOKIES_PATH"] = "/refresh"
