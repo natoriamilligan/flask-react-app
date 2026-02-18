@@ -1,9 +1,7 @@
 name: Deploy App to AWS ECS
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
 
 jobs:
   deploy:
