@@ -23,14 +23,13 @@ def create_app(config_name="production"):
 
     if (config_name == "testing"):
         app.config["TESTING"] = True
-        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
         app.config["JWT_COOKIE_SECURE"] = False
         app.config["JWT_SECRET_KEY"] = "super-secret"
     else:
-        app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
         app.config["JWT_COOKIE_SECURE"] = False
         app.config["JWT_SECRET_KEY"] = "super-secret"
-
+        
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "Banking API"
