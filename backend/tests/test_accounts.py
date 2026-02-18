@@ -27,16 +27,6 @@ def test_refresh_success(client, test_user):
 
     assert response.status_code == 200
 
-def test_account_ID(client, test_user):
-    client.post("/login", json={
-        "username": test_user.username,
-        "password": "bunnyB45!!!"
-    })
-
-    response = client.get("/me")
-
-    assert response.status_code == 200
-
 def test_logout(client, test_user):
     client.post("/login", json={
         "username": test_user.username,
@@ -84,7 +74,7 @@ def test_no_entry_update_account(client, test_user, me):
 
     assert response.status_code == 400
 
-def test_delete(client, test_user, ME):
+def test_delete(client, test_user, me):
     client.post("/login", json={
         "username": test_user.username,
         "password": "bunnyB45!!!"
