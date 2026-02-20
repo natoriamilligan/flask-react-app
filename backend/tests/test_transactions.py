@@ -2,7 +2,7 @@ import pytest
 
 def test_post_transactions(client, test_user, me):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 

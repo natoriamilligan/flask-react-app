@@ -57,7 +57,7 @@ def test_user(app):
 @pytest.fixture()
 def me(client, test_user):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
     return client.get("/me").get_json()

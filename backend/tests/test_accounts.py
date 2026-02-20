@@ -2,7 +2,7 @@ import pytest
 
 def test_login_success(client, test_user):
     response = client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
     assert response.status_code == 200
@@ -19,7 +19,7 @@ def test_login_failure(client):
 
 def test_refresh_success(client, test_user):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
@@ -29,7 +29,7 @@ def test_refresh_success(client, test_user):
 
 def test_logout(client, test_user):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
@@ -39,7 +39,7 @@ def test_logout(client, test_user):
 
 def test_account(client, test_user, me):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
@@ -50,7 +50,7 @@ def test_account(client, test_user, me):
 
 def test_update_account(client, test_user, me):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
@@ -63,7 +63,7 @@ def test_update_account(client, test_user, me):
 
 def test_no_entry_update_account(client, test_user, me):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
@@ -76,7 +76,7 @@ def test_no_entry_update_account(client, test_user, me):
 
 def test_delete(client, test_user, me):
     client.post("/login", json={
-        "username": test_user.username,
+        "username": test_user["username"],
         "password": "bunnyB45!!!"
     })
 
