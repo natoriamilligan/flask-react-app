@@ -7,7 +7,7 @@ from flask_jwt_extended import create_access_token, create_refresh_token, get_jw
 
 from db import db
 from models import AccountModel, BlocklistModel
-from schemas import AccountSchema, UpdateAccountSchema, LoginSchema, BlocklistSchema
+from schemas import AccountSchema, UpdateAccountSchema, LoginSchema
 
 blp = Blueprint("accounts", __name__, description="Operation on accounts")
 
@@ -72,7 +72,6 @@ class AccountLogin(MethodView):
 @blp.route("/logout")
 class AccountLogout(MethodView):
     @jwt_required(optional=True)
-    @blp.arguments(BlocklistSchema)
     def post(self):
         jti = get_jwt()["jti"]
 
