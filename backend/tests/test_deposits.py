@@ -1,12 +1,9 @@
 import pytest
 
-def test_post_deposit(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_post_deposit(client, me):
     account_id = me["account_id"]
-    response = client.post("/account/{account_id}/deposit")
+    response = client.post(f"/account/{account_id}/deposit",json={
+        "amount": "100"
+    })
 
     assert response.status_code == 201

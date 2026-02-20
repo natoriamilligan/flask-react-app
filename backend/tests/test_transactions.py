@@ -1,12 +1,7 @@
 import pytest
 
-def test_post_transactions(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_get_transactions(client, me):
     account_id = me["account_id"]
-    response = client.post("/account/{account_id}/transactions")
+    response = client.get(f"/account/{account_id}/transactions")
 
-    assert response.status_code == 201
+    assert response.status_code == 200

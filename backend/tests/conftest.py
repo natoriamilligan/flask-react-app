@@ -6,7 +6,7 @@ from app import create_app
 from models import AccountModel
 from db import db
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def app():
     test_app = create_app("testing")
 
@@ -28,7 +28,7 @@ def session(app):
 def client(app):
     return app.test_client()
 
-@pytest.fixture(scope="session")
+@pytest.fixture()
 def test_user(app):
     with app.app_context():
         existingUser = AccountModel.query.filter_by(username="test_user").first()

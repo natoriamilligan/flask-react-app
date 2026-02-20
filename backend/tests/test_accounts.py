@@ -37,23 +37,13 @@ def test_logout(client, test_user):
 
     assert response.status_code == 200
 
-def test_account(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_account(client, me):
     account_id = me["account_id"]
     response = client.get(f"/account/{account_id}")
 
     assert response.status_code == 200
 
-def test_update_account(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_update_account(client, me):
     account_id = me["account_id"]
     response = client.put(f"/account/{account_id}", json={
         "password": "bunnyB46!!!"
@@ -61,12 +51,7 @@ def test_update_account(client, test_user, me):
 
     assert response.status_code == 200
 
-def test_no_entry_update_account(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_no_entry_update_account(client, me):
     account_id = me["account_id"]
     response = client.put(f"/account/{account_id}", json={
         "password": ""
@@ -74,12 +59,7 @@ def test_no_entry_update_account(client, test_user, me):
 
     assert response.status_code == 400
 
-def test_delete(client, test_user, me):
-    client.post("/login", json={
-        "username": test_user["username"],
-        "password": "bunnyB45!!!"
-    })
-
+def test_delete(client, me):
     account_id = me["account_id"]
     response = client.delete(f"/account/{account_id}")
 
