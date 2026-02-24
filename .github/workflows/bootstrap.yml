@@ -43,6 +43,13 @@ jobs:
       with:
         name: plan
         path: terraform/bootstrap/plan
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@v2.1.1
+      with:
+        channel-id: ${{ secrets.CHANNEL_ID }}
+        slack-message: "Terraform plan complete, awaiting approval."
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   terraform-apply:
     needs: plan
@@ -63,20 +70,28 @@ jobs:
     - name: Send Slack nameservers
       uses: slackapi/slack-github-action@v2.1.1
       with:
-        payload: |
-          {
-            "text": "Nameservers: ```${{  steps.ns_output.outputs.nameservers  }}```>"
-          }
+        channel-id: ${{ CHANNEL_ID }}
+        slack-message: |
+          Nameservers: 
+          ```${{  steps.ns_output.outputs.nameservers  }}```
       env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
         
-    - name: Notify Slack if pipeline fails
-      if: failure()
-      uses: slackapi/slack-github-action@v2.1.1
-      with:
-        payload: |
-          {
-            "text": "🚨 *Infrastructure Pipeline Failed*\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nWorkflow: ${{ github.workflow }}\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
-          }
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+   notify_failure:
+    needs: [terraform-plan, terraform-apply]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Notify Slack if any job failed
+        if: ${{ needs.terraform-plan.result == 'failure' || needs.terraform-apply.result == 'failure' }}
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          slack-message: |
+            🚨 *Terraform Pipeline Failed*
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Workflow: ${{ github.workflow }}
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
