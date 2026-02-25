@@ -1,0 +1,75 @@
+name: Provision Core Infrastructure
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  configure-aws:
+    runs-on: ubuntu-latest
+    steps: 
+    - name: Checkout repository
+      uses: actions/checkout@v6
+      
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v5
+      with: 
+        role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
+        aws-region: us-east-1
+
+   terraform-plan:  
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.14.3
+        
+    - name: Initiate Terraform
+      run: terraform init
+      working-directory: terraform/bootstrap
+
+    - name: Plan infrastructure
+      run: terraform plan -out=plan
+      working-directory: terraform/bootstrap
+
+    - name: Save plan
+      uses: actions/upload-artifact@v6
+      with:
+        name: plan
+        path: terraform/bootstrap/plan
+    - name: Notify Slack
+      uses: slackapi/slack-github-action@v2.1.1
+      with:
+        channel-id: ${{ secrets.CHANNEL_ID }}
+        slack-message: "Terraform plan complete, awaiting approval."
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+
+  terraform-apply:
+    needs: plan
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Apply infrastructure 
+      run: terraform apply -auto-approve
+      working-directory: terraform/bootstrap
+
+  notify_failure:
+    needs: [terraform-plan, terraform-apply]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Notify Slack if any job failed
+        if: ${{ needs.terraform-plan.result == 'failure' || needs.terraform-apply.result == 'failure' }}
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          slack-message: |
+            🚨 *Terraform Pipeline Failed*
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Workflow: ${{ github.workflow }}
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
