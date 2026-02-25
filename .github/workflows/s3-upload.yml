@@ -1,0 +1,58 @@
+name: Upload Frontend Files to S3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v6
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 25
+        cache: "npm"
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build app
+      run: npm run build
+      env:
+        CI: false
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v5
+      with:
+        role-to-assume: arn:aws:iam::000363030077:role/s3-github-role
+        aws-region: us-east-1
+
+    - name: Fetch config from SSM
+      run: |
+        echo "S3_BUCKET_NAME=$(aws ssm get-parameter --name /banksie_app/prod/s3_bucket_name --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "CF_DIST_ID=$(aws ssm get-parameter --name /banksie_app/prod/cloudfront_distribution_id --query Parameter.Value --output text)" >> $GITHUB_ENV
+
+    - name: Sync to S3 bucket
+      run: aws s3 sync ./build s3://banksie.app/ --delete
+
+    - name: Invalidate CloudFront
+      run: |
+        aws cloudfront create-invalidation \
+          --distribution-id ${{ env.CF_DIST_ID }} \
+          --paths "/*"
+
+    - name: Notify Slack if pipeline fails
+      if: failure()
+      uses: slackapi/slack-github-action@v2.1.1
+      with:
+        channel-id: ${{ secrets.CHANNEL_ID }}
+        slack-message: |
+          🚨 *Upload to S3 Failed*
+          Repo: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Workflow: ${{ github.workflow }}
+          <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
+      env:
+        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
