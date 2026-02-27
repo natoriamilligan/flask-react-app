@@ -9,7 +9,7 @@ BOT_SECRET_NAME = os.environ["SLACK_BOT_TOKEN_SECRET"]
 NAMESERVERS = json.loads(os.environ["NAMESERVERS"])
 DOMAIN = os.environ["DOMAIN"]
 SCHEDULER_NAME = os.environ["SCHEDULER_NAME"]
-CHANNEL = os.environ["SLACK_CHANNEL"]
+CHANNEL_ID = os.environ["CHANNEL_ID"]
 
 secrets_client = boto3.client("secretsmanager")
 scheduler_client = boto3.client("scheduler")
@@ -36,8 +36,30 @@ def lambda_handler(event, context):
 
     if propagated:
         message = f"Nameservers have propagated for {DOMAIN}."
-        requests.post(SLACK_WEBHOOK_URL, json={"text": message})
-        scheduler_client.update_schedule(Name=SCHEDULER_NAME, State="DISABLED")
+        response = requests.post(
+            "https://slack.com/api/chat.postMessage",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "channel": CHANNEL_ID,
+                "text": message
+            }
+        )
+
+        result = response.json()
+        if not result.get("ok"):
+            raise RuntimeError(f"Slack API error: {result.get('error')}")
+       
+        existing = scheduler_client.get_schedule(Name=SCHEDULER_NAME)
+        scheduler_client.update_schedule(
+            Name=SCHEDULER_NAME,
+            State="DISABLED",
+            ScheduleExpression=existing["ScheduleExpression"],
+            FlexibleTimeWindow=existing["FlexibleTimeWindow"],
+            Target=existing["Target"],
+        )
     
     return {
         "status_code": 200,
