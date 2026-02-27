@@ -9,13 +9,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-        
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v5
         with:
           role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
           aws-region: us-east-1
-  
+
       - name: Create lambda zip folder
         run: |
           cd lambda
@@ -34,14 +34,15 @@ jobs:
       - name: Plan infrastructure
         run: terraform plan
         working-directory: terraform/bootstrap
-          
+
       - name: Notify Slack
         uses: slackapi/slack-github-action@v2.1.1
         with:
-          channel-id: ${{ secrets.CHANNEL_ID }}
-          slack-message: "Terraform plan complete, awaiting approval."
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.CHANNEL_ID }}
+            text: "Terraform plan complete for bootstrap plan workflow, awaiting approval."
 
   notify_failure:
     needs: [terraform-plan]
@@ -52,12 +53,8 @@ jobs:
         if: ${{ needs.terraform-plan.result == 'failure'}}
         uses: slackapi/slack-github-action@v2.1.1
         with:
-          channel-id: ${{ secrets.CHANNEL_ID }}
-          slack-message: |
-            🚨 *Terraform Pipeline Failed*
-            Repo: ${{ github.repository }}
-            Branch: ${{ github.ref_name }}
-            Workflow: ${{ github.workflow }}
-            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.CHANNEL_ID }}
+            text: "🚨 *Terraform Pipeline Failed*\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nWorkflow: ${{ github.workflow }}\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"

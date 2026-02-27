@@ -1,10 +1,13 @@
-name: Provision Core Infrastructure
+name: Apply Bootstrap Infrastructure
 
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 
 jobs:
-  terraform-plan:
+  terraform-apply:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -16,35 +19,34 @@ jobs:
           role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
           aws-region: us-east-1
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.14.3
-
-      - name: Initiate Terraform
-        run: terraform init
+      - name: Apply infrastructure
+        env:
+          TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
+        run: terraform apply -auto-approve
         working-directory: terraform/bootstrap
 
-      - name: Plan infrastructure
-        run: terraform plan
-        working-directory: terraform/bootstrap
+      - name: Get nameserver domains
+        id: ns_output
+        run: |
+          OUTPUT=$(terraform output -json nameservers)
+          echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
 
-      - name: Notify Slack
+      - name: Send Slack nameservers
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
           token: ${{ secrets.SLACK_BOT_TOKEN }}
           payload: |
             channel: ${{ secrets.CHANNEL_ID }}
-            text: "Terraform plan complete for core plan workflow, awaiting approval."
+            text: "Nameservers: ${{  steps.ns_output.outputs.nameservers  }}"
 
   notify_failure:
-    needs: [terraform-plan]
+    needs: [terraform-apply]
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
       - name: Notify Slack if any job failed
-        if: ${{ needs.terraform-plan.result == 'failure'}}
+        if: ${{ needs.terraform-apply.result == 'failure'}}
         uses: slackapi/slack-github-action@v2.1.1
         with:
           method: chat.postMessage
