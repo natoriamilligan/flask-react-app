@@ -19,12 +19,15 @@ jobs:
       - name: Create lambda zip folder
         run: |
           cd lambda
-          zip -r ../terraform/boostrap/ns-propagation.zip .
+          zip -r ../terraform/bootstrap/ns-propagation.zip .
           cd ..
 
   terraform-plan:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -39,9 +42,9 @@ jobs:
         working-directory: terraform/bootstrap
 
       - name: Save plan
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
-          name: plan
+          name: terraform-plan
           path: terraform/bootstrap/plan
       - name: Notify Slack
         uses: slackapi/slack-github-action@v2.1.1
@@ -52,11 +55,20 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
   terraform-apply:
-    needs: plan
+    needs: terraform-plan
     runs-on: ubuntu-latest
     environment: production
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download plan
+        uses: actions/download-artifact@v8
+        with:
+          name: terraform-plan
+          path: terraform/bootstrap/plan
+
       - name: Apply infrastructure
         env:
           TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
@@ -72,7 +84,7 @@ jobs:
       - name: Send Slack nameservers
         uses: slackapi/slack-github-action@v2.1.1
         with:
-          channel-id: ${{ CHANNEL_ID }}
+          channel-id: ${{ secrets.CHANNEL_ID }}
           slack-message: |
             Nameservers: 
             ```${{  steps.ns_output.outputs.nameservers  }}```
