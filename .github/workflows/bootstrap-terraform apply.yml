@@ -39,7 +39,7 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
           
   notify_failure:
-    needs: [terraform-plan]
+    needs: [terraform-apply]
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
