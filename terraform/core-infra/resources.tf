@@ -295,24 +295,6 @@ resource "random_password" "db_password" {
   special = true
 }
 
-# Create secret in Secrets Manager 
-resource "aws_secretsmanager_secret" "db_credentials" {
-  name = "db-credentials"
-}
-
-# Create db credentials secret version
-resource "aws_secretsmanager_secret_version" "db_credentials" {
-  secret_id     = aws_secretsmanager_secret.db_credentials.id
-  secret_string = jsonencode({
-    password = random_password.db_credentials.result
-    username = "postgres"
-    db_name  = "appdb
-    host     = aws_db_instance.app_db.endpoint
-  })
-
-  depends_on    = [aws_db_instance.app_db, random_password.db_credentials]
-}
-
 # Create database instance
 resource "aws_db_instance" "app_db" {
   allocated_storage           = 20
@@ -331,6 +313,17 @@ resource "aws_db_instance" "app_db" {
   depends_on = [random_password.db_password]
 }
 
+# Create secret for database URL
+resource "aws_secretsmanager_secret" "db_secret" {
+  name = "DATABASE_URL"
+}
+
+# Add secret value to secret
+resource "aws_secretsmanager_secret_version" "db_secret" {
+  secret_id     = aws_secretsmanager_secret.db_secret.id
+  secret_string = "postgresql://${aws_db_instance.app_db.username}:${aws_db_instance.app_db.password}@${aws_db_instance.app_db.endpoint}/${aws_db_instance.app_db.db_name}"
+}
+
 # Create private repository in ECR
 resource "aws_ecr_repository" "app_repo" {
   name                 = "app-repo"
@@ -339,6 +332,155 @@ resource "aws_ecr_repository" "app_repo" {
   image_scanning_configuration {
     scan_on_push = true
   }
+}
+
+# Create cluster in ECS
+resource "aws_ecs_cluster" "app_cluster" {
+  name = "app-cluster"
+}
+
+# Create task execution role that allows access to Secret Manager for environment variable/secret
+resource "aws_iam_role" "task_execution_role" {
+  name               = "ecsTaskExecutionRole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
+}
+
+# Create policy to allow ECS to access the secret created in Secrets Manager
+resource "aws_iam_role_policy" "test_policy" {
+  name = "accessSecretsManager"
+  role = aws_iam_role.task_execution_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+          Action = ["secretsmanager:GetSecretValue"]
+          Effect   = "Allow"
+          Resource = [aws_secretsmanager_secret.db_secret.arn]
+      },
+    ]
+  })
+}
+
+# Add AWS managed task role policy to role
+resource "aws_iam_role_policy_attachment" "AWS_managed_task_policy" {
+  role       = aws_iam_role.task_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+# Create CloudWatch log group for tasks
+resource "aws_cloudwatch_log_group" "ecs" {
+  name              = "/ecs/app-tasks"
+}
+
+# Create task definition
+resource "aws_ecs_task_definition" "app_task" {
+  family                   = "app-task"
+  execution_role_arn       = aws_iam_role.task_execution_role.arn
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "512"
+  memory                   = "2048"
+  container_definitions    = jsonencode([
+    {
+      name      = "app-container"
+      image     = "${data.aws_caller_identity.current.account_id}.dkr.ecr.${var.region}.amazonaws.com/${aws_ecr_repository.app_repo.name}:latest"
+      cpu       = 0
+      essential = true
+      portMappings = [
+        {
+          containerPort = 80
+          hostPort      = 80
+        }
+      ]
+      secrets = [
+        {
+          name = "DATABASE_URL"
+          valueFrom = aws_secretsmanager_secret.db_secret.arn
+        }
+      ]
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = aws_cloudwatch_log_group.ecs.name
+          "awslogs-region"        = "us-east-1"
+          "awslogs-stream-prefix" = "ecs"
+        }
+      }
+    }
+  ])
+}
+
+# Create security group for ECS tasks
+resource "aws_security_group" "app_task_sg" {
+  name        = "app-task-sg"
+  vpc_id      = aws_vpc.main.id
+}
+
+# Allow HTTP traffic to tasks from LB on port 80
+resource "aws_security_group_rule" "allow_alb" {
+  type                     = "ingress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.alb_sg.id
+  security_group_id        = aws_security_group.app_task_sg.id
+}
+
+# Create ECS service
+resource "aws_ecs_service" "app-service" {
+  name            = "app_service"
+  cluster         = aws_ecs_cluster.app_cluster.id
+  task_definition = aws_ecs_task_definition.app_task.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    security_groups  = [aws_security_group.app_task_sg.id]
+    subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]
+    assign_public_ip = false
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.app_task_tg.arn
+    container_name   = "app-container"
+    container_port   = 80
+  }
+}
+
+# Create security group for load balancer
+resource "aws_security_group" "alb_sg" {
+  name        = "alb-sg"
+  vpc_id      = aws_vpc.main.id
+}
+
+# Allow all HTTP traffic to LB
+resource "aws_vpc_security_group_ingress_rule" "alb_alb_http" {
+  security_group_id = aws_security_group.alb_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  ip_protocol       = "tcp"
+  to_port           = 80
+}
+
+# Allow all HTTPS traffic to LB
+resource "aws_vpc_security_group_ingress_rule" "alb_alb_https" {
+  security_group_id = aws_security_group.alb_sg.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  ip_protocol       = "tcp"
+  to_port           = 443
+}
+
+# Create a load balancer
+resource "aws_lb" "app_alb" {
+  name               = "app-alb"
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.alb_sg.id]
+  subnets            = [
+    aws_subnet.public_a.id,
+    aws_subnet.public_b.id
+  ]
 }
 
 # Create TLS certificate for api domain
@@ -374,4 +516,44 @@ resource "aws_route53_record" "api_validation_record" {
 resource "aws_acm_certificate_validation" "api_cert_validation" {
   certificate_arn         = aws_acm_certificate.api_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.api_validation_record : record.fqdn]
+}
+
+# Create A record for api domain pointing to LB
+resource "aws_route53_record" "alb" {
+  zone_id  = aws_route53_zone.hosted_zone.zone_id
+  name     = local.api_domain
+  type     = "A"
+
+  alias {
+    name                   = aws_lb.app_alb.dns_name
+    zone_id                = aws_lb.app_alb.zone_id
+    evaluate_target_health = false
+  }
+}
+
+# Create target group for LB
+resource "aws_lb_target_group" "app_task_tg" {
+  name        = "app-task-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.main.id
+
+  health_check {
+    path  = "/health" 
+  }
+}
+
+# Create listener for LB
+resource "aws_lb_listener" "alb_listener" {
+  load_balancer_arn = aws_lb.app_alb.arn
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.api_domain_cert.arn
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_task_tg.arn
+  }
 }
