@@ -69,11 +69,8 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.nameservers)
       DOMAIN                       = locals.root_domain
-      SLACK_BOT_TOKEN_SECRET       = "slack-bot-token-secret"
-      TOKEN_NAME                   = "aws-github-token"
-      GITHUB_REPO                  = "natoriamilligan/python-simple-banking-app"
-      GITHUB_WORKFLOW              = "infra.yml"
-      GITHUB_REF                   = "master"
+      SLACK_BOT_TOKEN_SECRET       = "slack-bot-secret-name"
+      SCHEDULER_NAME               = aws_scheduler_schedule.lambda_schedule.name
     }
   }
 }

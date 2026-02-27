@@ -9,6 +9,7 @@ BOT_SECRET_NAME = os.environ["SLACK_BOT_TOKEN_SECRET"]
 NAMESERVERS = json.loads(os.environ["NAMESERVERS"])
 DOMAIN = os.environ["DOMAIN"]
 SCHEDULER_NAME = os.environ["SCHEDULER_NAME"]
+CHANNEL = os.environ["SLACK_CHANNEL"]
 
 secrets_client = boto3.client("secretsmanager")
 scheduler_client = boto3.client("scheduler")
