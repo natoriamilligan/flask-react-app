@@ -1,0 +1,58 @@
+name: Apply Bootstrap Infrastructure
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
+          aws-region: us-east-1
+
+      - name: Apply infrastructure
+        env:
+          TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
+        run: terraform apply -auto-approve
+        working-directory: terraform/bootstrap
+
+      - name: Get nameserver domains
+        id: ns_output
+        run: |
+          OUTPUT=$(terraform output -json nameservers)
+          echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
+
+      - name: Send Slack nameservers
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          slack-message: |
+            Nameservers: 
+            ```${{  steps.ns_output.outputs.nameservers  }}```
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          
+  notify_failure:
+    needs: [terraform-plan]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Notify Slack if any job failed
+        if: ${{ needs.terraform-apply.result == 'failure'}}
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          channel-id: ${{ secrets.CHANNEL_ID }}
+          slack-message: |
+            🚨 *Terraform Pipeline Failed*
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref_name }}
+            Workflow: ${{ github.workflow }}
+            <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
