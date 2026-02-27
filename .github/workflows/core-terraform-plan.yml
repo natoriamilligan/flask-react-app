@@ -4,21 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
-  configure-aws:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v5
-        with:
-          role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
-          aws-region: us-east-1
-
   terraform-plan:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-
+        
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v5
+        with:
+          role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
+          aws-region: us-east-1
+          
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -29,49 +26,26 @@ jobs:
         working-directory: terraform/bootstrap
 
       - name: Plan infrastructure
-        run: terraform plan -out=plan
+        run: terraform plan 
         working-directory: terraform/bootstrap
-
-      - name: Save plan
-        uses: actions/upload-artifact@v7
-        with:
-          name: terraform-plan
-          path: terraform/core-infra/plan
 
       - name: Notify Slack
         uses: slackapi/slack-github-action@v2.1.1
         with:
           channel-id: ${{ secrets.CHANNEL_ID }}
-          slack-message: "Terraform plan complete, awaiting approval."
+          slack-message: |
+            Terraform plan complete, awaiting approval. 
+            Workflow: ${{ github.workflow }}
         env:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
-  terraform-apply:
-    needs: plan
-    runs-on: ubuntu-latest
-    environment: production
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Download plan
-        uses: actions/download-artifact@v8
-        with:
-          name: terraform-plan
-          path: terraform/core-infra/plan
-
-      - name: Apply infrastructure
-        run: terraform apply -auto-approve
-        working-directory: terraform/core-infra
-
   notify_failure:
-    needs: [terraform-plan, terraform-apply]
+    needs: [terraform-plan]
     runs-on: ubuntu-latest
     if: ${{ always() }}
     steps:
       - name: Notify Slack if any job failed
-        if: ${{ needs.terraform-plan.result == 'failure' || needs.terraform-apply.result == 'failure' }}
+        if: ${{ needs.terraform-plan.result == 'failure'}}
         uses: slackapi/slack-github-action@v2.1.1
         with:
           channel-id: ${{ secrets.CHANNEL_ID }}
