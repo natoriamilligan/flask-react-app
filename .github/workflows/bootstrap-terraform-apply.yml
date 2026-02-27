@@ -19,6 +19,12 @@ jobs:
           role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
           aws-region: us-east-1
 
+      - name: Create lambda zip folder
+        run: |
+          cd lambda
+          zip -r ../terraform/bootstrap/ns-propagation.zip .
+          cd ..
+
       - name: Apply infrastructure
         env:
           TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
