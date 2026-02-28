@@ -3,7 +3,7 @@ name: Plan Bootstrap Infrastructure
 on:
   push:
     paths:
-      - "terraform/bootstrap"
+      - "terraform/bootstrap/**"
   workflow_dispatch:
 
 jobs:
