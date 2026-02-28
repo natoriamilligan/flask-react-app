@@ -2,8 +2,8 @@ name: Plan Bootstrap Infrastructure
 
 on:
   push:
-      branches:
-        - master
+    paths:
+      - "terraform/bootstrap"
   workflow_dispatch:
 
 jobs:
