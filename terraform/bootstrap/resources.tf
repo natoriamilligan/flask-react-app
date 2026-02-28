@@ -60,7 +60,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
 resource "aws_lambda_function" "lambda_function" {
   filename         = "ns-propagation.zip"
   function_name    = "ns-propagation"
-  role             = aws_iam_role.lamda_role.arn
+  role             = aws_iam_role.lambda_role.arn
   handler          = "ns-propagation.lambda_handler"
   source_code_hash = filebase64sha256("ns-propagation.zip")
   runtime          = "python3.11"
@@ -70,7 +70,7 @@ resource "aws_lambda_function" "lambda_function" {
       NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.nameservers)
       DOMAIN                       = locals.root_domain
       SLACK_BOT_TOKEN_SECRET       = "slack-bot-secret-name"
-      SCHEDULER_NAME               = aws_scheduler_schedule.lambda_schedule.name
+      SCHEDULER_NAME               = "lambda_schedule"
     }
   }
 }
