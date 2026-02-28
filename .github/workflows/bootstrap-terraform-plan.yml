@@ -23,12 +23,6 @@ jobs:
           role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
           aws-region: us-east-1
 
-      - name: Set Terraform environment variables from GitHub secrets
-        env:
-          TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
-          TF_VAR_slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
-        run: echo "Terraform environment variables set"
-
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
@@ -40,6 +34,9 @@ jobs:
 
       - name: Plan infrastructure
         run: terraform plan
+        env:
+          TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
+          TF_VAR_slack_bot_token: ${{ secrets.SLACK_BOT_TOKEN }}
         working-directory: terraform/bootstrap
 
       - name: Notify Slack
