@@ -1,6 +1,9 @@
 name: Plan Bootstrap Infrastructure
 
 on:
+  push:
+      branches:
+        - master
   workflow_dispatch:
 
 jobs:
