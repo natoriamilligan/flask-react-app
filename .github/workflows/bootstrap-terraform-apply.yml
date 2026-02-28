@@ -2,8 +2,8 @@ name: Apply Bootstrap Infrastructure
 
 on:
   push:
-    branches:
-      - master
+    paths:
+      - "terraform/core-infra"
   workflow_dispatch:
 
 jobs:
