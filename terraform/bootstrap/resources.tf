@@ -67,8 +67,8 @@ resource "aws_lambda_function" "lambda_function" {
 
   environment {
     variables = {
-      NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.nameservers)
-      DOMAIN                       = locals.root_domain
+      NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.name_servers)
+      DOMAIN                       = local.root_domain
       SLACK_BOT_TOKEN_SECRET       = "slack-bot-secret-name"
       SCHEDULER_NAME               = "lambda_schedule"
     }
