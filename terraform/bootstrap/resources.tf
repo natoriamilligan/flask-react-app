@@ -58,7 +58,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
 
 # Create lambda function
 resource "aws_lambda_function" "lambda_function" {
-  filename         = "ns-propagation.zip"
+  filename         = "../../lambda/ns-propagation.zip"
   function_name    = "ns-propagation"
   role             = aws_iam_role.lambda_role.arn
   handler          = "ns-propagation.lambda_handler"
