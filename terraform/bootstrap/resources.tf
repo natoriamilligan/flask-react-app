@@ -16,7 +16,7 @@ locals {
 
 # Create hosted zone
 resource "aws_route53_zone" "hosted_zone" {
-  name = locals.root_domain
+  name = local.root_domain
 }
 
 # Create Lambda IAM role
@@ -103,7 +103,7 @@ resource "aws_scheduler_schedule_group" "lamdba_group" {
 }
 
 # Create schedule for lambda function
-resource "aws_scheduler_schedule" "lambda_scheduler" {
+resource "aws_scheduler_schedule" "lambda_schedule" {
   name       = "lambda-schedule"
   group_name = aws_scheduler_schedule_group.lambda_group.name
 
