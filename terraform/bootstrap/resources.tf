@@ -4,7 +4,7 @@ terraform {
     bucket         = "nmilligan-tf-states"
     key            = "bootstrap/terraform.tfstate"
     region         = "us-east-1"
-    use_lockfile   = "terraform-lock"
+    use_lockfile   = true
     encrypt        = true
   }
 }
