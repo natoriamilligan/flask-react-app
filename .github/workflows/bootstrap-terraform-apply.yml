@@ -35,15 +35,13 @@ jobs:
         working-directory: terraform/bootstrap
 
       - name: Apply infrastructure
-        env:
-          TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
         run: terraform apply -auto-approve
         working-directory: terraform/bootstrap
 
       - name: Get nameserver domains
         id: ns_output
         run: |
-          OUTPUT=$(terraform output -json nameservers)
+          OUTPUT=$(terraform output -json name_servers)
           echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
 
       - name: Send Slack nameservers
