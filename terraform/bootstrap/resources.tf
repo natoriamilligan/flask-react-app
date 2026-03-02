@@ -116,4 +116,6 @@ resource "aws_scheduler_schedule" "lambda_schedule" {
     arn      = aws_lambda_function.lambda_function.arn
     role_arn = aws_iam_role.scheduler_role.arn
   }
+
+depends_on = [aws_lambda_function.lambda_function]
 }
