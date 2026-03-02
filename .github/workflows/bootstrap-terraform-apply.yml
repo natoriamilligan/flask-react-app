@@ -42,7 +42,7 @@ jobs:
         id: ns_output
         working-directory: terraform/bootstrap
         run: |
-          OUTPUT=$(terraform output -json nameservers)
+          OUTPUT=$(terraform output -json nameservers | jq -r '.[]' | paste -sd ",")
           echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
 
       - name: Send Slack nameservers
