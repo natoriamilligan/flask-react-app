@@ -13,7 +13,7 @@ secrets_client = boto3.client("secretsmanager")
 scheduler_client = boto3.client("scheduler")
 
 def get_url_secret():
-    response = secrets_client.get_secret_value(SecretId=SLACK_BOT_SECRETS)
+    response = secrets_client.get_secret_value(SecretId="SLACK_BOT_SECRETS")
     url_string = response.get("SecretString")
     if not url_string:
         raise RuntimeError("Cannot find SecretString key.")
