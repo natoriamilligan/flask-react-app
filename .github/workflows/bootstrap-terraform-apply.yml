@@ -21,6 +21,10 @@ jobs:
 
       - name: Create lambda zip folder
         run: |
+          mkdir build
+          cd build
+          pip install requests dnspython -t .
+          cp ../lambda/ns-propagation.py .
           cd lambda
           zip -r ../terraform/bootstrap/ns-propagation.zip .
           cd ..
