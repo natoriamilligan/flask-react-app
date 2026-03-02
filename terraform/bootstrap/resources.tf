@@ -42,7 +42,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
       {
           Action = ["secretsmanager:GetSecretValue"]
           Effect   = "Allow"
-          Resource = "arn:aws:secretsmanager:${data.aws_caller_identity.current.account_id}:secret:SLACK_BOT_SECRETS*"
+          Resource = "arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:SLACK_BOT_SECRETS*"
       },
       {
           Effect   = "Allow"
