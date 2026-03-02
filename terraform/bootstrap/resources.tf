@@ -111,7 +111,7 @@ resource "aws_scheduler_schedule" "lambda_schedule" {
   }
 
   schedule_expression = "rate(30 minutes)"
-  start_date          = formatdate("YYYY-MM-DDTHH:MM:SSZ", timestamp())
+  start_date          = timestamp()
 
   target {
     arn      = aws_lambda_function.lambda_function.arn
