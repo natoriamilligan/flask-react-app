@@ -40,6 +40,7 @@ jobs:
 
       - name: Get nameserver domains
         id: ns_output
+        working-directory: terraform/bootstrap
         run: |
           OUTPUT=$(terraform output -json nameservers)
           echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
