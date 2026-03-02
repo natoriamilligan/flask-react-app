@@ -42,7 +42,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
       {
           Action = ["secretsmanager:GetSecretValue"]
           Effect   = "Allow"
-          Resource = "arn:aws:secretsmanager:${data.aws_caller_identity.current.account_id}:secret:slack-webhook-url*"
+          Resource = "arn:aws:secretsmanager:${data.aws_caller_identity.current.account_id}:secret:SLACK_BOT_SECRETS*"
       },
       {
           Effect   = "Allow"
@@ -69,7 +69,6 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.name_servers)
       DOMAIN                       = local.root_domain
-      SLACK_BOT_TOKEN_SECRET       = "slack-bot-secret-name"
       SCHEDULER_NAME               = "lambda_schedule"
     }
   }

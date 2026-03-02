@@ -5,24 +5,23 @@ import requests
 import dns.resolver
 from dns.exception import DNSException
 
-BOT_SECRET_NAME = os.environ["SLACK_BOT_TOKEN_SECRET"]
 NAMESERVERS = json.loads(os.environ["NAMESERVERS"])
 DOMAIN = os.environ["DOMAIN"]
 SCHEDULER_NAME = os.environ["SCHEDULER_NAME"]
-CHANNEL_ID = os.environ["CHANNEL_ID"]
 
 secrets_client = boto3.client("secretsmanager")
 scheduler_client = boto3.client("scheduler")
 
 def get_url_secret():
-    response = secrets_client.get_secret_value(SecretId=BOT_SECRET_NAME)
+    response = secrets_client.get_secret_value(SecretId=SLACK_BOT_SECRETS)
     url_string = response.get("SecretString")
     if not url_string:
         raise RuntimeError("Cannot find SecretString key.")
-    return json.loads(url_string)["slack-bot-token"]
+    return json.loads(url_string)
 
 def lambda_handler(event, context):
-    token = get_url_secret()
+    token = get_url_secret()["token"]
+    channel_id = get_url_secret()["channel_id"]
     
     propagated = True
     for ns in NAMESERVERS:
@@ -43,7 +42,7 @@ def lambda_handler(event, context):
                 "Content-Type": "application/json"
             },
             json={
-                "channel": CHANNEL_ID,
+                "channel": channel_id,
                 "text": message
             }
         )
