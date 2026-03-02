@@ -80,9 +80,9 @@ resource "aws_iam_role" "scheduler_role" {
   assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role.json
 }
 
-# Policy for Schedular IAM role
+# Policy for Schedular IAM role to invoke lambda function
 resource "aws_iam_role_policy" "scheduler_lambda_policy" {
-  role = aws_iam_role.eventbridge_role.id
+  role = aws_iam_role.scheduler_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -97,7 +97,7 @@ resource "aws_iam_role_policy" "scheduler_lambda_policy" {
 }
 
 # Schedular group
-resource "aws_scheduler_schedule_group" "lamdba_group" {
+resource "aws_scheduler_schedule_group" "lambda_group" {
   name = "lambda-group"
 }
 
