@@ -34,7 +34,7 @@ resource "aws_iam_role_policy_attachment" "lambda_execution_attach" {
 # Policy to allow Lamdba to access Secrets Manager and scheduler
 resource "aws_iam_role_policy" "lambda_policy" {
   name = "accessSecretsManager"
-  role = aws_iam_role.lambda_role.id
+  role = aws_iam_role.lambda_role.name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -80,9 +80,9 @@ resource "aws_iam_role" "scheduler_role" {
   assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role.json
 }
 
-# Policy for Schedular IAM role to invoke lambda function
+# Policy for Scheduler IAM role to invoke lambda function
 resource "aws_iam_role_policy" "scheduler_lambda_policy" {
-  role = aws_iam_role.scheduler_role.id
+  role = aws_iam_role.scheduler_role.name
 
   policy = jsonencode({
     Version = "2012-10-17"
