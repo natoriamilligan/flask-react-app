@@ -41,7 +41,7 @@ jobs:
       - name: Get nameserver domains
         id: ns_output
         run: |
-          OUTPUT=$(terraform output -json name_servers)
+          OUTPUT=$(terraform output -json nameservers)
           echo "nameservers=$OUTPUT" >> $GITHUB_OUTPUT
 
       - name: Send Slack nameservers
