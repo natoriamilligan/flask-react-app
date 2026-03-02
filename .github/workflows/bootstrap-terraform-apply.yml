@@ -25,6 +25,15 @@ jobs:
           zip -r ../terraform/bootstrap/ns-propagation.zip .
           cd ..
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.3
+
+      - name: Initiate Terraform
+        run: terraform init
+        working-directory: terraform/bootstrap
+
       - name: Apply infrastructure
         env:
           TF_VAR_channel_id: ${{ secrets.CHANNEL_ID }}
