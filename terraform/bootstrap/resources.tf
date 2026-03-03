@@ -71,8 +71,11 @@ resource "aws_lambda_function" "lambda_function" {
       NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.name_servers)
       DOMAIN                       = local.root_domain
       SCHEDULER_NAME               = "lambda_schedule"
+      GROUP_NAME                   = aws_scheduler_schedule_group.lambda_group.name
     }
   }
+
+  depends_on = [aws_scheduler_schedule_group.lambda_group]
 }
 
 # Create Scheduler IAM role
