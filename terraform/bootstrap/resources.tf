@@ -48,7 +48,7 @@ resource "aws_iam_role_policy" "lambda_policy" {
           Effect   = "Allow"
           Action = [
             "scheduler:UpdateSchedule",
-            "scheduler:DescribeSchedule",
+            "scheduler:UpdateSchedule",
             "scheduler:GetSchedule"
           ]
           Resource = aws_scheduler_schedule.lambda_schedule.arn
