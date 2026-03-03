@@ -9,6 +9,7 @@ from dns.exception import DNSException
 NAMESERVERS = json.loads(os.environ["NAMESERVERS"])
 DOMAIN = os.environ["DOMAIN"]
 SCHEDULER_NAME = os.environ["SCHEDULER_NAME"]
+GROUP_NAME = os.environ["GROUP_NAME"]
 
 secrets_client = boto3.client("secretsmanager")
 scheduler_client = boto3.client("scheduler")
@@ -53,7 +54,7 @@ def lambda_handler(event, context):
         if not result.get("ok"):
             raise RuntimeError(f"Slack API error: {result.get('error')}")
        
-        existing = scheduler_client.get_schedule(Name=SCHEDULER_NAME)
+        existing = scheduler_client.get_schedule(Name=SCHEDULER_NAME, GroupName=GROUP_NAME)
         scheduler_client.update_schedule(
             Name=SCHEDULER_NAME,
             State="DISABLED",
