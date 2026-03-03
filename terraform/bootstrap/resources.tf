@@ -70,7 +70,7 @@ resource "aws_lambda_function" "lambda_function" {
     variables = {
       NAMESERVERS                  = jsonencode(aws_route53_zone.hosted_zone.name_servers)
       DOMAIN                       = local.root_domain
-      SCHEDULER_NAME               = "lambda_schedule"
+      SCHEDULER_NAME               = "lambda-schedule"
       GROUP_NAME                   = aws_scheduler_schedule_group.lambda_group.name
     }
   }
