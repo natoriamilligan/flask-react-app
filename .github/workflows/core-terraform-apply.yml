@@ -1,6 +1,9 @@
 name: Apply Core Infrastructure
 
 on:
+  push:
+    paths:
+      - "terraform/core-infra/**"
   workflow_dispatch:
 
 permissions:
