@@ -1,3 +1,13 @@
+# Reference output from bootstrap remote state
+data "terraform_remote_state" "bootstrap" {
+  backend = "s3"
+  config = {
+    bucket = "nmilligan-tf-states"
+    key    = "bootstrap/terraform.tfstate"
+    region = var.region
+  }
+}
+
 # Create bucket policy for S3 bucket to allow CloudFront access
 data "aws_iam_policy_document" "origin_bucket_policy" {
   statement {

@@ -3,8 +3,8 @@ terraform {
   backend "s3" {
     bucket         = "nmilligan-tf-states"
     key            = "core-infra/terraform.tfstate"
-    region         = var.region
-    dynamodb_table = "terraform-lock"
+    region         = "us-east-1"
+    use_lockfile   = true
     encrypt        = true
   }
 }
@@ -12,7 +12,7 @@ terraform {
 locals {
   root_domain  = "banksie.app"
   subdomain    = "www.banksie.app"
-  api_domain   = api.banksie.app
+  api_domain   = "api.banksie.app"
   s3_origin_id = "s3origin"
 }
 
@@ -136,7 +136,7 @@ resource "aws_route53_record" "validation_records" {
       name    = domain.resource_record_name
       record  = domain.resource_record_value
       type    = domain.resource_record_type
-      zone_id = aws_route53_zone.hosted_zone.zone_id
+      zone_id = data.terraform_remote_state.bootstrap.outputs.hosted_zone_id
     }
   }
 
@@ -256,7 +256,7 @@ resource "aws_cloudfront_distribution" "app_distribution" {
 # Create A records pointing to the CloudFront distribution
 resource "aws_route53_record" "cloudfront" {
   for_each = aws_cloudfront_distribution.app_distribution.aliases
-  zone_id  = aws_route53_zone.hosted_zone.zone_id
+  zone_id  = data.terraform_remote_state.bootstrap.outputs.hosted_zone_id
   name     = each.value
   type     = "A"
 
@@ -279,7 +279,7 @@ resource "aws_security_group_rule" "allow_tasks" {
   from_port                = 5432
   to_port                  = 5432
   protocol                 = "tcp"
-  source_security_group_id = aws_security_group.task_sg.id
+  source_security_group_id = aws_security_group.app_task_sg.id
   security_group_id        = aws_security_group.db_sg.id
 }
 
@@ -484,7 +484,7 @@ resource "aws_lb" "app_alb" {
 }
 
 # Create TLS certificate for api domain
-resource "aws_acm_certificate" "api_cert" {
+resource "aws_acm_certificate" "api_domain_cert" {
   domain_name       = local.api_domain
   validation_method = "DNS"
 
@@ -496,11 +496,11 @@ resource "aws_acm_certificate" "api_cert" {
 # Create CNAME records in hosted zone for api
 resource "aws_route53_record" "api_validation_record" {
   for_each = {
-    for domain in aws_acm_certificate.api_cert.domain_validation_options : domain.domain_name => {
+    for domain in aws_acm_certificate.api_domain_cert.domain_validation_options : domain.domain_name => {
       name    = domain.resource_record_name
       record  = domain.resource_record_value
       type    = domain.resource_record_type
-      zone_id = aws_route53_zone.hosted_zone.zone_id
+      zone_id = data.terraform_remote_state.bootstrap.outputs.hosted_zone_id
     }
   }
 
@@ -514,13 +514,13 @@ resource "aws_route53_record" "api_validation_record" {
 
 # Validate the api certificate using CNAME records
 resource "aws_acm_certificate_validation" "api_cert_validation" {
-  certificate_arn         = aws_acm_certificate.api_cert.arn
+  certificate_arn         = aws_acm_certificate.api_domain_cert.arn
   validation_record_fqdns = [for record in aws_route53_record.api_validation_record : record.fqdn]
 }
 
 # Create A record for api domain pointing to LB
 resource "aws_route53_record" "alb" {
-  zone_id  = aws_route53_zone.hosted_zone.zone_id
+  zone_id  = data.terraform_remote_state.bootstrap.outputs.hosted_zone_id
   name     = local.api_domain
   type     = "A"
 
