@@ -1,6 +1,9 @@
 name: Upload Frontend Files to S3
 
 on:
+  push:
+    paths:
+      - "frontend/src/**"
   workflow_dispatch:
 
 jobs:
@@ -17,9 +20,11 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
+      working-directory: frontend
 
     - name: Build app
       run: npm run build
+      working-directory: frontend/
       env:
         CI: false
 
@@ -31,11 +36,10 @@ jobs:
 
     - name: Fetch config from SSM
       run: |
-        echo "S3_BUCKET_NAME=$(aws ssm get-parameter --name /banksie_app/prod/s3_bucket_name --query Parameter.Value --output text)" >> $GITHUB_ENV
-        echo "CF_DIST_ID=$(aws ssm get-parameter --name /banksie_app/prod/cloudfront_distribution_id --query Parameter.Value --output text)" >> $GITHUB_ENV
+        echo "CF_DIST_ID=$(aws ssm get-parameter --name cf-arn --query Parameter.Value --output text)" >> $GITHUB_ENV
 
     - name: Sync to S3 bucket
-      run: aws s3 sync ./build s3://banksie.app/ --delete
+      run: aws s3 sync frontend/build s3://banksie.app/ --delete
 
     - name: Invalidate CloudFront
       run: |
@@ -47,12 +51,9 @@ jobs:
       if: failure()
       uses: slackapi/slack-github-action@v2.1.1
       with:
-        channel-id: ${{ secrets.CHANNEL_ID }}
-        slack-message: |
-          🚨 *Upload to S3 Failed*
-          Repo: ${{ github.repository }}
-          Branch: ${{ github.ref_name }}
-          Workflow: ${{ github.workflow }}
-          <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>
-      env:
-        SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+      with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.CHANNEL_ID }}
+            text: "🚨 *Upload to S3 Failed*\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nWorkflow: ${{ github.workflow }}\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
