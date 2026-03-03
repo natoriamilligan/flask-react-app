@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -24,7 +24,7 @@ function Transfer() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('https://api.banksie.app/me', {
+                const response = await fetch('http://localhost:5000/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -36,7 +36,7 @@ function Transfer() {
                     throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                setAccountID(data.id);
+                setAccountID(data.account_id);
 
             } catch(error) {
                 toast.error(error.message);
@@ -49,11 +49,11 @@ function Transfer() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (recipient == "") {
+        if (recipient === "") {
             setEmpty(true);
         } else {
             try {
-                const response = await fetch(`https://api.banksie.app/transfer`, {
+                const response = await fetch(`http://localhost:5000/transfer`, {
                     method: 'POST',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include",
@@ -68,7 +68,7 @@ function Transfer() {
                 const data = await response.json();
 
                 if (!response.ok) {
-                    if (data["code"] == 404) {
+                    if (data["code"] === 404) {
                         setEmpty(false);
                         setNotFound(true);
                     } else {
@@ -107,7 +107,6 @@ function Transfer() {
                                     value={transfer}
                                     onChange={(e) => setTransfer(e.target.value)}
                                     />
-                                    <Form.Text muted>Daily limit $5,000</Form.Text><br />
                                     {isInvalid &&
                                         <Form.Text>Please enter a valid amount.</Form.Text>
                                     }
@@ -139,7 +138,7 @@ function Transfer() {
                                 </div>
                             </Form>
                             <div className="cancel-btn">
-                                <Button variant="danger">Cancel Transfer</Button>
+                                <Button variant="danger" onClick={toDashboard}>Cancel Transfer</Button>
                             </div>
                         </>
                     )}

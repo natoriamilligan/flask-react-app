@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -20,7 +20,7 @@ function Deposit() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('https://api.banksie.app/me', {
+                const response = await fetch('http://localhost:5000/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -32,7 +32,7 @@ function Deposit() {
                     throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
                 }
 
-                setAccountID(data.id);
+                setAccountID(data.account_id);
 
             } catch(error) {
                 toast.error(error.message);
@@ -46,7 +46,7 @@ function Deposit() {
         e.preventDefault();
 
         try {
-            const response = await fetch(`https://api.banksie.app/account/${accountID}/deposit`, {
+            const response = await fetch(`http://localhost:5000/account/${accountID}/deposit`, {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include",
@@ -54,6 +54,8 @@ function Deposit() {
                     amount: deposit
                 })
             })
+
+            const data = await response.json();
 
             if (!Number.isFinite(Number(deposit))) {
                 setIsInvalid(true);
@@ -76,39 +78,38 @@ function Deposit() {
             <Header />
             <Card className="form-card">
                 <Card.Header>Create Deposit</Card.Header>
-                <Card.Body>
-                    <>
-                        {success ? (
-                            <>
-                                <p>Deposit was successful!</p>
-                                <Button onClick={toDashboard}>Back to Dashboard</Button>
-                            </>
-                        ) : (
-                            <>
-                                <Form onSubmit={handleSubmit}>
-                                    <Form.Group className="form-input">
-                                        <Form.Label className="fs-4">Amount:</Form.Label>
-                                        <Form.Control 
-                                        type="text"
-                                        value={deposit}
-                                        onChange={(e) => setDeposit(e.target.value)}
-                                        ></Form.Control>
-                                        <Form.Text muted>Daily limit $5,000</Form.Text><br />
-                                        {isInvalid &&
-                                            <Form.Text>Please enter a valid number.</Form.Text>
-                                        }
-                                    </Form.Group>
-                                    <div className="submit-btn">
-                                        <Button type="submit">Deposit</Button>
+                    <Card.Body>
+                        <>
+                            {success ? (
+                                <>
+                                    <p>Deposit was successful!</p>
+                                    <Button onClick={toDashboard}>Back to Dashboard</Button>
+                                </>
+                            ) : (
+                                <>
+                                    <Form onSubmit={handleSubmit}>
+                                        <Form.Group className="form-input">
+                                            <Form.Label className="fs-4">Amount:</Form.Label>
+                                            <Form.Control 
+                                            type="text"
+                                            value={deposit}
+                                            onChange={(e) => setDeposit(e.target.value)}
+                                            ></Form.Control>
+                                            {isInvalid &&
+                                                <Form.Text>Please enter a valid number.</Form.Text>
+                                            }
+                                        </Form.Group>
+                                        <div className="submit-btn">
+                                            <Button type="submit">Deposit</Button>
+                                        </div>
+                                    </Form>
+                                    <div className="cancel-btn">
+                                        <Button variant="danger" onClick={toDashboard}>Cancel Deposit</Button>
                                     </div>
-                                </Form>
-                                <div className="cancel-btn">
-                                    <Button variant="danger" onClick={toDashboard}>Cancel Deposit</Button>
-                                </div>
-                            </>
-                        )}
-                    </>
-                </Card.Body>
+                                </>
+                            )}
+                        </>
+                    </Card.Body>
             </Card>
         </>
         
