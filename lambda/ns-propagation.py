@@ -57,7 +57,7 @@ def lambda_handler(event, context):
         existing = scheduler_client.get_schedule(Name=SCHEDULER_NAME, GroupName=GROUP_NAME)
         scheduler_client.update_schedule(
             Name=SCHEDULER_NAME,
-            GroupName=GROUP_NAME
+            GroupName=GROUP_NAME,
             State="DISABLED",
             ScheduleExpression=existing["ScheduleExpression"],
             FlexibleTimeWindow=existing["FlexibleTimeWindow"],
