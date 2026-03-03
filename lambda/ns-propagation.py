@@ -1,6 +1,7 @@
 import os
 import json
 import boto3
+import socket
 import requests
 import dns.resolver
 from dns.exception import DNSException
@@ -26,10 +27,11 @@ def lambda_handler(event, context):
     propagated = True
     for ns in NAMESERVERS:
         try:
+            ns_ip = socket.gethostbyname(ns)
             resolver = dns.resolver.Resolver()
-            resolver.nameservers = [ns]
+            resolver.nameservers = [ns_ip]
             resolver.resolve(DOMAIN, "NS")
-        except DNSException:
+        except (DNSException, socket.gaierror):
             propagated = False
             break
 
