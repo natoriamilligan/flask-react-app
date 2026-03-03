@@ -19,6 +19,15 @@ jobs:
           role-to-assume: arn:aws:iam::000363030077:role/terraform-github-role
           aws-region: us-east-1
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.14.3
+
+      - name: Initiate Terraform
+        run: terraform init
+        working-directory: terraform/core-infra
+
       - name: Apply infrastructure
         run: terraform apply -auto-approve
         working-directory: terraform/core-infra
