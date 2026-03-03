@@ -52,8 +52,15 @@ resource "aws_iam_role_policy" "lambda_policy" {
           ]
           Resource = aws_scheduler_schedule.lambda_schedule.arn
       },
+      {
+        "Effect": "Allow",
+        "Action": "iam:PassRole",
+        "Resource": aws_iam_role.scheduler_role.arn
+      }
     ]
   })
+
+  depends_on = [aws_scheduler_schedule.lambda_schedule, aws_iam_role.scheduler_role]
 }
 
 # Create lambda function
@@ -113,7 +120,7 @@ resource "aws_scheduler_schedule" "lambda_schedule" {
     mode = "OFF"
   }
 
-  schedule_expression = "rate(30 minutes)"
+  schedule_expression = "rate(5 minutes)"
 
   target {
     arn      = aws_lambda_function.lambda_function.arn
