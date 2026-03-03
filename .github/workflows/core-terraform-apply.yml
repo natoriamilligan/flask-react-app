@@ -3,6 +3,9 @@ name: Apply Core Infrastructure
 on:
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 jobs:
   terraform-apply:
     runs-on: ubuntu-latest
