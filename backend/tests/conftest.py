@@ -7,30 +7,30 @@ from models import AccountModel
 from db import db
 
 @pytest.fixture()
-def app():
-    test_app = create_app("testing")
+def test_app():
+    test_app_instance = create_app("testing")
 
     db_url = os.getenv("DATABASE_URL")
-    test_app.config["SQLALCHEMY_DATABASE_URI"] = db_url
+    test_app_instance.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
-    with test_app.app_context():
+    with test_app_instance.app_context():
         upgrade()
-        yield test_app
+        yield test_app_instance
         db.session.remove()
 
 @pytest.fixture(autouse=True)
-def session(app):
+def session():
     db.session.begin()
     yield
     db.session.rollback()
 
 @pytest.fixture
-def client(app):
-    return app.test_client()
+def client(test_app):
+    return test_app.test_client()
 
 @pytest.fixture()
-def test_user(app):
-    with app.app_context():
+def test_user(test_app):
+    with test_app.app_context():
         existing_user = AccountModel.query.filter_by(username="test_user").first()
         if existing_user:
             existing_user.password = pbkdf2_sha256.hash("bunnyB45!!!")
@@ -55,8 +55,8 @@ def test_user(app):
         }
 
 @pytest.fixture()
-def test_recipient_user(app):
-    with app.app_context():
+def test_recipient_user(test_app):
+    with test_app.app_context():
         existing_recipient_user = AccountModel.query.filter_by(username="test_recipient_user").first()
         if  existing_recipient_user:
             existing_recipient_user.password = pbkdf2_sha256.hash("bunnyB46!!!")

@@ -10,4 +10,3 @@ def test_post_withdrawal(client, me):
     })
 
     assert response.status_code == 201
-    
