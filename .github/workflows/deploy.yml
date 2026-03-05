@@ -43,6 +43,7 @@ jobs:
         run: pylint /backend
         
   deploy:
+    needs: test-lint
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
