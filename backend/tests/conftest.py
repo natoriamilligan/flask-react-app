@@ -19,14 +19,17 @@ def test_app():
         db.session.remove()
 
 @pytest.fixture(autouse=True)
-def session():
-    db.session.begin()
-    yield
-    db.session.rollback()
+def session(test_app):
+    with test_app.app_context():
+        db.session.begin()
+        yield
+        db.session.rollback()
 
 @pytest.fixture
 def client(test_app):
-    return test_app.test_client()
+    with test_app.app_context():
+        with test_app.test_client() as client:
+            yield client
 
 @pytest.fixture()
 def test_user(test_app):
