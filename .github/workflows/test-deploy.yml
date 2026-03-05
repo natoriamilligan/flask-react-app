@@ -1,0 +1,104 @@
+name: Test and Deploy App to AWS ECS
+
+on:
+  push:
+    paths:
+      - "backend/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+
+jobs:  
+  test-lint:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      
+      - name: Set up Python
+        uses: actions/setup-python@v6.2.0
+        with:
+          python-version: '3.13'
+          
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pylint pytest
+        
+      - name: Run tests
+        run: pytest tests
+        env:
+          DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/test_db
+
+      - name: Run pylint
+        run: pylint .
+        
+  deploy:
+    needs: test-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/deploy-github-role
+          aws-region: us-east-1
+
+      - name: Login to AWS ECR
+        uses: aws-actions/amazon-ecr-login@v2.0.1
+
+      - name: Build and push Docker image to ECR
+        run: |
+          docker build -f backend/Dockerfile -t ${{ secrets.ECR_REPO }}:latest backend/
+          docker push ${{ secrets.ECR_REPO }}:latest
+
+      - name: Fetch ECS Task Definition
+        run: |
+          aws ecs describe-task-definition --task-definition banksie-task --query taskDefinition > task-definition.json
+
+      - name: Update task definition
+        id: updated-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1.8.3
+        with:
+          task-definition: task-definition.json
+          container-name: banksie-container
+          image: ${{ secrets.ECR_REPO }}:latest
+
+      - name: Deploy to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2.6.0
+        with:
+          task-definition: ${{ steps.updated-task.outputs.task-definition }}
+          cluster: ${{ vars.ECS_CLUSTER }}
+          service: ${{ vars.ECS_SERVICE }}
+          wait-for-service-stability: true
+
+  notify_failure:
+    needs: [test-lint, deploy]
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    steps:
+      - name: Notify Slack if any job failed
+        if: ${{ needs.test-lint.result == 'failure' || needs.deploy.result == 'failure' }}
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.SLACK_BOT_TOKEN }}
+          payload: |
+            channel: ${{ secrets.CHANNEL_ID }}
+            text: "🚨 *Test/Deploy Pipeline Failed*\nRepo: ${{ github.repository }}\nBranch: ${{ github.ref_name }}\nWorkflow: ${{ github.workflow }}\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
