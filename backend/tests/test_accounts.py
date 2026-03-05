@@ -1,5 +1,3 @@
-import pytest
-
 def test_login_success(client, test_user):
     response = client.post("/login", json={
         "username": test_user["username"],

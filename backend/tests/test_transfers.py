@@ -1,5 +1,3 @@
-import pytest
-
 def test_post_transfer(client, me, test_recipient_user, test_user):
     account_id = me["account_id"]
 
