@@ -560,7 +560,7 @@ resource "aws_lb_listener" "alb_listener" {
 
 # Create SSM parameter for CF ID 
 resource "aws_ssm_parameter" "cf_arn" {
-  name  = "cf-id"
+  name  = "cf-arn"
   type  = "String"
   value = aws_cloudfront_distribution.app_distribution.arn
 }
