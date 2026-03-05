@@ -12,6 +12,9 @@ permissions:
 jobs:  
   test-lint:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     services:
       postgres:
         image: postgres
@@ -40,7 +43,7 @@ jobs:
         run: pytest tests
 
       - name: Run pylint
-        run: pylint /backend
+        run: pylint backend/
         
   deploy:
     needs: test-lint
