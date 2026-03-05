@@ -45,7 +45,7 @@ jobs:
           DATABASE_URL: postgresql://testuser:testpassword@localhost:5432/test_db
 
       - name: Run pylint
-        run: pylint backend/
+        run: pylint .
         
   deploy:
     needs: test-lint
