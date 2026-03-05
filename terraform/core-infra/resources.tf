@@ -345,7 +345,7 @@ resource "aws_secretsmanager_secret_version" "db_secret" {
 
 # Create private repository in ECR
 resource "aws_ecr_repository" "app_repo" {
-  name                 = "app-repo"
+  name                 = "banksie-repo"
   image_tag_mutability = "MUTABLE"
 
   image_scanning_configuration {
