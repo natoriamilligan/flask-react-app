@@ -31,22 +31,22 @@ def client(app):
 @pytest.fixture()
 def test_user(app):
     with app.app_context():
-        existingUser = AccountModel.query.filter_by(username="test_user").first()
-        if existingUser:
-            existingUser.password = pbkdf2_sha256.hash("bunnyB45!!!")
+        existing_user = AccountModel.query.filter_by(username="test_user").first()
+        if existing_user:
+            existing_user.password = pbkdf2_sha256.hash("bunnyB45!!!")
             db.session.commit()
             return {
-                "username": existingUser.username,
+                "username": existing_user.username,
                 "password": "bunnyB45!!!"
             }
-        
+
         test_user = AccountModel(
             first_name="Test",
             last_name="User",
             username="test_user",
             password=pbkdf2_sha256.hash("bunnyB45!!!")
         )
-    
+
         db.session.add(test_user)
         db.session.commit()
         return {
@@ -57,22 +57,22 @@ def test_user(app):
 @pytest.fixture()
 def test_recipient_user(app):
     with app.app_context():
-        existingRecipientUser = AccountModel.query.filter_by(username="test_recipient_user").first()
-        if  existingRecipientUser:
-            existingRecipientUser.password = pbkdf2_sha256.hash("bunnyB46!!!")
+        existing_recipient_user = AccountModel.query.filter_by(username="test_recipient_user").first()
+        if  existing_recipient_user:
+            existing_recipient_user.password = pbkdf2_sha256.hash("bunnyB46!!!")
             db.session.commit()
             return {
-                "username": existingRecipientUser.username,
+                "username": existing_recipient_user.username,
                 "password": "bunnyB46!!!"
             }
-        
+
         recipient_user = AccountModel(
             first_name="Test",
             last_name="Recipient",
             username="test_recipient_user",
             password=pbkdf2_sha256.hash("bunnyB46!!!")
         )
-    
+
         db.session.add(recipient_user)
         db.session.commit()
         return {
