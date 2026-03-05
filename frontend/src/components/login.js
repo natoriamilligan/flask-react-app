@@ -24,7 +24,7 @@ function Login({setLoginTime}) {
       setLoginAlert(true);
     } else {
         try {
-          const response = await fetch('http://localhost:5000/login', {
+          const response = await fetch('https://api.banksie.app/login', {
             method: 'POST',
             headers: {'Content-Type' : 'application/json'},
             credentials: "include",
@@ -69,6 +69,7 @@ function Login({setLoginTime}) {
               <Form.Control 
                 type='password' 
                 value={password}
+                autoComplete="new-password"
                 onChange={(e) => setPassword(e.target.value)}
               />
               {loginAlert &&

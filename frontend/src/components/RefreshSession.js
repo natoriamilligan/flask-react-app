@@ -11,7 +11,7 @@ function RefreshSession({showModal, setShowModal, setLoginTime}) {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch("http://localhost:5000/logout", {
+            const response = await fetch("https://api.banksie.app/logout", {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -34,7 +34,7 @@ function RefreshSession({showModal, setShowModal, setLoginTime}) {
 
     const handleRefresh = async () => {
         try {
-            const response = await fetch("http://localhost:5000/refresh", {
+            const response = await fetch("https://api.banksie.app/refresh", {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"

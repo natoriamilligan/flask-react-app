@@ -37,7 +37,7 @@ function Profile() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('http://localhost:5000/me', {
+                const response = await fetch('https://api.banksie.app/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -75,7 +75,7 @@ function Profile() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/account/${accountID}`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                 method: 'GET',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -125,7 +125,7 @@ function Profile() {
             setChangePasswordAlert(true);
         } else {
             try {
-                const response = await fetch(`http://localhost:5000/account/${accountID}`, {
+                const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                     method: 'PUT',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include",
@@ -154,7 +154,7 @@ function Profile() {
             setLoginAlert(true);
         } else {
             try {
-                const response = await fetch('http://localhost:5000/login', {
+                const response = await fetch('https://api.banksie.app/login', {
                         method: 'POST',
                         headers: {'Content-Type' : 'application/json'},
                         credentials: "include",
@@ -188,7 +188,7 @@ function Profile() {
 
     const handleLogout = async () => {
         try {
-            const response = await fetch('http://localhost:5000/logout', {
+            const response = await fetch('https://api.banksie.app/logout', {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"
@@ -208,7 +208,7 @@ function Profile() {
 
     const handleDelete = async (e) => {
         try {
-            const response = await fetch(`http://localhost:5000/account/${accountID}`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}`, {
                 method: 'DELETE',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include"

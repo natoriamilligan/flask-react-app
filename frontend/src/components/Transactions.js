@@ -22,7 +22,7 @@ function Transactions({ selectedType }) {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('http://localhost:5000/me', {
+                const response = await fetch('https://api.banksie.app/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -61,7 +61,7 @@ function Transactions({ selectedType }) {
     async function fetchTransactions() {
 
         try {
-            const response = await fetch(`http://localhost:5000/account/${accountID}/transactions`, {
+            const response = await fetch(`https://api.banksie.app//account/${accountID}/transactions`, {
                   method: 'GET',
                   headers: {'Content-Type' : 'application/json'},
                   credentials: "include"
@@ -111,7 +111,11 @@ function Transactions({ selectedType }) {
                 {paginatedItems.map((item) => (
                     <ListGroup.Item key={item.id} className="trans-list-item">
                     <div className="list-item-bottom">
-                        <div>{item["type"]}</div>
+                        <div>
+                            <div className='trans-type-name'>{item["type"]}</div>
+                            <div>{item["timestamp"].match(/^\d{4}-\d{2}-\d{2}/)[0]}</div>
+                        </div>
+                        
                         <div>${item["amount"]}</div>
                     </div>
                     </ListGroup.Item>

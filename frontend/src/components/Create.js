@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, Button, Form, Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import zxcvbn from 'zxcvbn';
 import toast from 'react-hot-toast';
 import '../Create.css';
 
@@ -12,14 +13,30 @@ function Create() {
     const [password, createPassword] = useState('');
     const [isCreated, setIsCreated] = useState(false);
     const [createError, setCreateError] = useState(false);
+    const [score, setScore] = useState(0);
+    const [weakPassword, setWeakPassword] = useState(false);
 
     const btnLink = () => {
       navigate('/login');
     }
 
+    const passwordStrength = (e) => {
+      const newPassword = e.target.value;
+      createPassword(newPassword);
+
+      const passwordCheck = zxcvbn(newPassword);
+      setScore(passwordCheck.score);
+
+      if (passwordCheck.score < 4) {
+        setWeakPassword(true);
+      } else {
+        setWeakPassword(false);
+      }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (firstname == "" || lastname == "" || username == "" || password == "") {
+        if (firstname === "" || lastname === "" || username === "" || password === "") {
           setCreateError(true);
         } else {
             try {
@@ -35,7 +52,7 @@ function Create() {
                   })
               })
 
-              const data = response.json();
+              const data = await response.json();
               
               if (!response.ok) {
                 throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
@@ -89,16 +106,19 @@ function Create() {
                 <Form.Group controlId='password'>
                   <Form.Label>Password:</Form.Label>
                   <Form.Control 
-                    type='text' 
+                    type='password' 
                     value={password}
-                    onChange={(e) => createPassword(e.target.value)}
+                    onChange={passwordStrength}
                   />
+                  {weakPassword &&
+                    <Form.Text>Password weak. Please try again.</Form.Text>
+                  }
                   {createError &&
                     <Form.Text>Please complete all fields.</Form.Text>
                   }
                 </Form.Group>
                 <div className="card-btn">
-                  <Button type="submit" >Create Account</Button>
+                  <Button type="submit" disabled={score < 4}>Create Account</Button>
                 </div>
               </Form>
               <div className="card-btn">

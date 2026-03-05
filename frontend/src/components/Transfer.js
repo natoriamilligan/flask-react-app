@@ -24,7 +24,7 @@ function Transfer() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('http://localhost:5000/me', {
+                const response = await fetch('https://api.banksie.app/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -53,7 +53,7 @@ function Transfer() {
             setEmpty(true);
         } else {
             try {
-                const response = await fetch(`http://localhost:5000/transfer`, {
+                const response = await fetch(`https://api.banksie.app/transfer`, {
                     method: 'POST',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include",

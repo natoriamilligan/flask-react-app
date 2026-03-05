@@ -20,7 +20,7 @@ function Withdrawal() {
     useEffect(() => {
         async function fetchAccountID() {
             try {
-                const response = await fetch('http://localhost:5000/me', {
+                const response = await fetch('https://api.banksie.app/me', {
                     method: 'GET',
                     headers: {'Content-Type' : 'application/json'},
                     credentials: "include"
@@ -46,7 +46,7 @@ function Withdrawal() {
         e.preventDefault();
 
         try {
-            const response = await fetch(`http://localhost:5000/account/${accountID}/withdrawal`, {
+            const response = await fetch(`https://api.banksie.app/account/${accountID}/withdrawal`, {
                 method: 'POST',
                 headers: {'Content-Type' : 'application/json'},
                 credentials: "include",
