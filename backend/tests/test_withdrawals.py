@@ -1,5 +1,3 @@
-import pytest
-
 def test_post_withdrawal(client, me):
     account_id = me["account_id"]
 
@@ -12,3 +10,4 @@ def test_post_withdrawal(client, me):
     })
 
     assert response.status_code == 201
+    
