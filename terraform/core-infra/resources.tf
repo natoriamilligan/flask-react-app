@@ -313,6 +313,25 @@ resource "aws_db_instance" "app_db" {
   depends_on = [random_password.db_password]
 }
 
+# Generate random JWT secret key
+resource "random_password" "jwt_secret" {
+  length  = 64
+  special = true
+}
+
+# Create secret for JWT secret key
+resource "aws_secretsmanager_secret" "jwt_secret" {
+  name = "JWT_SECRET_KEY"
+}
+
+# Add JWT secret version to secret
+resource "aws_secretsmanager_secret_version" "jwt_secret" {
+  secret_id     = aws_secretsmanager_secret.jwt_secret.id
+  secret_string = random_password.jwt_secret.result
+
+  depends_on = [random_password.jwt_secret]
+}
+
 # Create secret for database URL
 resource "aws_secretsmanager_secret" "db_secret" {
   name = "DATABASE_URL"
