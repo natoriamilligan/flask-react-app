@@ -1,7 +1,13 @@
 name: Deploy App to AWS ECS
 
 on:
+  push:
+    paths:
+      - "backend/"
   workflow_dispatch:
+
+permissions:
+  id-token: write
 
 jobs:  
   test-lint:
@@ -51,11 +57,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
-<<<<<<< HEAD
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/deploy-github-role
-=======
-          role-to-assume: arn:aws:iam::$ {{ AWS_ACCOUNT_ID }}:role/deploy-github-role
->>>>>>> 21afec2f265df8461c83de13c428b52ccd59cdbf
           aws-region: us-east-1
 
       - name: Login to AWS ECR
