@@ -21,7 +21,7 @@ def create_app(config_name="production"):
     load_dotenv()
     CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
 
-    if (config_name == "testing"):
+    if config_name == "testing":
         app.config["TESTING"] = True
         app.config["JWT_COOKIE_SECURE"] = False
         app.config["JWT_SECRET_KEY"] = "super-secret"
