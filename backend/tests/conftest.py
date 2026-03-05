@@ -1,3 +1,5 @@
+# pylint: disable=redefined-outer-name
+
 import os
 from passlib.hash import pbkdf2_sha256
 import pytest
