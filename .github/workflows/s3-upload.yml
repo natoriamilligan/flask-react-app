@@ -39,7 +39,7 @@ jobs:
 
       - name: Fetch config from SSM
         run: |
-          echo "CF_DIST_ID=$(aws ssm get-parameter --name cf-arn --query Parameter.Value --output text)" >> $GITHUB_ENV
+          echo "CF_DIST_ID=$(aws ssm get-parameter --name cf-id --query Parameter.Value --output text)" >> $GITHUB_ENV
 
       - name: Sync to S3 bucket
         run: aws s3 sync frontend/build s3://banksie.app/ --delete
