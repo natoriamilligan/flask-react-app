@@ -1,7 +1,13 @@
 name: Deploy App to AWS ECS
 
 on:
+  push:
+    paths:
+      - "backend/"
   workflow_dispatch:
+
+permissions:
+  id-token: write
 
 jobs:  
   test:
