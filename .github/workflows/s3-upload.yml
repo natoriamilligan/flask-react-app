@@ -6,6 +6,9 @@ on:
       - "frontend/src/**"
   workflow_dispatch:
 
+permissions:
+  id-token: write
+
 jobs:
   deploy_frontend:
     runs-on: ubuntu-latest
