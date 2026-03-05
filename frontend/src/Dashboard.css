@@ -93,3 +93,31 @@
 .color {
     color: black;
 }
+
+.trans-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.filter-title {
+    padding-top: 15px;
+}
+
+.filter-select {
+    border-radius: 5px;
+    height: 35px;
+    width: 12rem;
+}
+
+.trans-type-name {
+    font-weight: 500;
+}
