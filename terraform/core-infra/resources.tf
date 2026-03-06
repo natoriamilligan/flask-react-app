@@ -283,16 +283,6 @@ resource "aws_security_group_rule" "allow_tasks" {
   security_group_id        = aws_security_group.db_sg.id
 }
 
-# Allow database traffic from local ip
-resource "aws_security_group_rule" "allow_my_ip" {
-  type                      = "ingress"
-  from_port                 = 5432
-  to_port                   = 5432
-  protocol                  = "tcp"
-  security_group_id         = aws_security_group.db_sg.id
-  cidr_blocks               = ["${var.my_ip}/32"]
-}
-
 # Create database subnet group to attach to VPC
 resource "aws_db_subnet_group" "db_subnet_group" {
   name = "db-subnet-group"
