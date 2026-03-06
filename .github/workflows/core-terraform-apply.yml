@@ -32,7 +32,9 @@ jobs:
         working-directory: terraform/core-infra
 
       - name: Apply infrastructure
-        run: terraform apply -auto-approve
+        env:
+          MY_IP: ${{ secrets.MY_IP }}
+        run: terraform apply -var "my_ip=${MY_IP}" -auto-approve
         working-directory: terraform/core-infra
 
   notify_failure:
