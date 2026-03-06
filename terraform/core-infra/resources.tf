@@ -450,6 +450,16 @@ resource "aws_security_group_rule" "allow_alb" {
   security_group_id        = aws_security_group.app_task_sg.id
 }
 
+# Allow database traffic from tasks to anywhere (AWS API)
+resource "aws_security_group_rule" "tasks_to_anywhere" {
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.app_task_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 # Create ECS service
 resource "aws_ecs_service" "app-service" {
   name            = "banksie-task-service"
