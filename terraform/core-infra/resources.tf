@@ -416,6 +416,10 @@ resource "aws_ecs_task_definition" "app_task" {
         {
           name = "DATABASE_URL"
           valueFrom = aws_secretsmanager_secret.db_secret.arn
+        },
+        {
+          name = "JWT_SECRET_KEY"
+          valueFrom = aws_secretsmanager_secret.jwt_secret.arn
         }
       ]
       logConfiguration = {
