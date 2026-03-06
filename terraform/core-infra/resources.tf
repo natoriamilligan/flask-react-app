@@ -77,7 +77,7 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.main.id
   route {
       cidr_block = "0.0.0.0/0"
-      gateway_id = aws_nat_gateway.ngw.id
+      nat_gateway_id = aws_nat_gateway.ngw.id
   }
 }
 
@@ -364,7 +364,7 @@ resource "aws_iam_role" "task_execution_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-# Create policy to allow ECS to access the secret created in Secrets Manager
+# Create policy to allow ECS to access the secrets created in Secrets Manager
 resource "aws_iam_role_policy" "test_policy" {
   name = "accessSecretsManager"
   role = aws_iam_role.task_execution_role.id
@@ -375,7 +375,7 @@ resource "aws_iam_role_policy" "test_policy" {
       {
           Action = ["secretsmanager:GetSecretValue"]
           Effect   = "Allow"
-          Resource = [aws_secretsmanager_secret.db_secret.arn]
+          Resource = [aws_secretsmanager_secret.db_secret.arn, aws_secretsmanager_secret.jwt_secret.arn]
       },
     ]
   })
