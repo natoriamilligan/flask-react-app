@@ -84,6 +84,11 @@ jobs:
           --query "SecurityGroups[0].GroupId" \
           --output text)
 
+          DATABASE_URL=$(aws secretsmanager get-secret-value \
+            --secret-id DATABASE_URL \
+            --query SecretString \
+            --output text)
+
           TASK_ARN=$(aws ecs run-task \
             --cluster $CLUSTER_NAME \
             --task-definition app-task \
@@ -93,7 +98,10 @@ jobs:
               "containerOverrides": [
                 {
                   "name": "app-container",
-                  "command": ["flask","db","upgrade"]
+                  "command": ["flask","db","upgrade"],
+                  "environment": [
+                    {"name": "DATABASE_URL", "value": "'"$DATABASE_URL"'"}
+                  ]
                 }
               ]
             }' \
