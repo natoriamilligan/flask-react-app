@@ -505,6 +505,16 @@ resource "aws_vpc_security_group_ingress_rule" "alb_alb_https" {
   to_port           = 443
 }
 
+# Allow all traffic outbound from ALB
+resource "aws_security_group_rule" "alb_to_anywhere" {
+  type                     = "egress"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.alb_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 # Create a load balancer
 resource "aws_lb" "app_alb" {
   name               = "app-alb"
