@@ -461,7 +461,7 @@ resource "aws_security_group_rule" "tasks_to_anywhere" {
 }
 
 # Allow database traffic from tasks to anywhere (AWS API)
-resource "aws_security_group_rule" "tasks_to_anywhere" {
+resource "aws_security_group_rule" "tasks_to_anywhere_80" {
   type                     = "egress"
   from_port                = 80
   to_port                  = 80
@@ -471,7 +471,7 @@ resource "aws_security_group_rule" "tasks_to_anywhere" {
 }
 
 # Allow database traffic from tasks to anywhere on port 5432
-resource "aws_security_group_rule" "tasks_to_anywhere" {
+resource "aws_security_group_rule" "tasks_to_database" {
   type                     = "egress"
   from_port                = 5432
   to_port                  = 5432
