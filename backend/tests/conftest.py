@@ -3,7 +3,6 @@
 import os
 from passlib.hash import pbkdf2_sha256
 import pytest
-from flask_migrate import upgrade
 from app import create_app
 from models import AccountModel
 from db import db
