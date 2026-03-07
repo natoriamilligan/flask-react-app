@@ -573,7 +573,8 @@ resource "aws_lb_target_group" "app_task_tg" {
   vpc_id      = aws_vpc.main.id
 
   health_check {
-    path  = "/health" 
+    path    = "/health" 
+    timeout = 30
   }
 }
 
