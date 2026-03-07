@@ -468,8 +468,6 @@ resource "aws_ecs_service" "app-service" {
   desired_count                     = 1
   launch_type                       = "FARGATE"
 
-  health_check_grace_period_seconds = 30
-
   network_configuration {
     security_groups  = [aws_security_group.app_task_sg.id]
     subnets          = [aws_subnet.private_a.id, aws_subnet.private_b.id]
@@ -575,7 +573,8 @@ resource "aws_lb_target_group" "app_task_tg" {
   vpc_id      = aws_vpc.main.id
 
   health_check {
-    path    = "/health" 
+    path        = "/health" 
+    startPeriod = 30
   }
 }
 
