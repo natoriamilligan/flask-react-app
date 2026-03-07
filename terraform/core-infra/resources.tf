@@ -398,8 +398,8 @@ resource "aws_ecs_task_definition" "app_task" {
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "512"
-  memory                   = "2048"
+  cpu                      = "1024" 
+  memory                   = "4096"
   container_definitions    = jsonencode([
     {
       name      = "app-container"
@@ -573,8 +573,7 @@ resource "aws_lb_target_group" "app_task_tg" {
   vpc_id      = aws_vpc.main.id
 
   health_check {
-    path        = "/health" 
-    startPeriod = 30
+    path        = "/health"
   }
 }
 
