@@ -16,7 +16,7 @@ def test_app():
     test_app_instance.config["SQLALCHEMY_DATABASE_URI"] = db_url
 
     with test_app_instance.app_context():
-        upgrade()
+        db.create_all()
         yield test_app_instance
         db.session.remove()
 
