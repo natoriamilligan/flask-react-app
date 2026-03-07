@@ -19,7 +19,10 @@ from resources.transactions import blp as TransactionsBlueprint
 def create_app(config_name="production"):
     app = Flask(__name__)
     load_dotenv()
-    CORS(app, supports_credentials=True, origins=["http://localhost:3000"])
+    CORS(app, supports_credentials=True, origins=[
+        "https://banksie.app",
+        "https://www.banksie.app"
+        ])
 
     if config_name == "testing":
         app.config["TESTING"] = True
