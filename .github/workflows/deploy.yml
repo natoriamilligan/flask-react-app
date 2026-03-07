@@ -80,19 +80,22 @@ jobs:
 
       - name: Run DB migrations
         run: |
-          aws ecs run-task \
+          TASK_ARN=$(aws ecs run-task \
             --cluster $${{ vars.ECS_CLUSTER }} \
             --task-definition app-task \
             --launch-type FARGATE \
-            --network-configuration "awsvpcConfiguration={subnets=[${{ $PRIVATE_SUBNETS }}],securityGroups=[app-task-sg],assignPublicIp=DISABLED}" \
+            --network-configuration "awsvpcConfiguration={subnets=[$PRIVATE_SUBNETS],securityGroups=[app-task-sg],assignPublicIp=DISABLED}" \
             --overrides '{
               "containerOverrides": [
                 {
-                  "name": {{ vars.ECS_CONTAINER }},
+                  "name": "app-container",
                   "command": ["flask","db","upgrade"]
                 }
               ]
-            }'
+            }' \
+            --query "tasks[0].taskArn" --output text)
+
+          aws ecs wait tasks-stopped --cluster $CLUSTER_NAME --tasks $TASK_ARN
 
       - name: Fetch ECS Task Definition
         run: |
@@ -103,7 +106,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1.8.3
         with:
           task-definition: task-definition.json
-          container-name: ${{ vars.ECS_CONTAINER }}
+          container-name: app-container
           image: ${{ secrets.ECR_REPO }}:latest
 
       - name: Deploy to Amazon ECS
