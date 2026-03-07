@@ -462,11 +462,13 @@ resource "aws_security_group_rule" "tasks_to_anywhere" {
 
 # Create ECS service
 resource "aws_ecs_service" "app-service" {
-  name            = "banksie-task-service"
-  cluster         = aws_ecs_cluster.app_cluster.id
-  task_definition = aws_ecs_task_definition.app_task.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  name                              = "banksie-task-service"
+  cluster                           = aws_ecs_cluster.app_cluster.id
+  task_definition                   = aws_ecs_task_definition.app_task.arn
+  desired_count                     = 1
+  launch_type                       = "FARGATE"
+
+  health_check_grace_period_seconds = 30
 
   network_configuration {
     security_groups  = [aws_security_group.app_task_sg.id]
@@ -574,7 +576,6 @@ resource "aws_lb_target_group" "app_task_tg" {
 
   health_check {
     path    = "/health" 
-    timeout = 30
   }
 }
 
