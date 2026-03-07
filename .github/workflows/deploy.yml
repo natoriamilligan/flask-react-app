@@ -67,6 +67,32 @@ jobs:
         run: |
           docker build -f backend/Dockerfile -t ${{ secrets.ECR_REPO }}:latest backend/
           docker push ${{ secrets.ECR_REPO }}:latest
+      
+      - name: Get private subnets
+        id: subnets
+        run: |
+          PRIVATE_SUBNETS=$(aws ec2 describe-subnets \
+            --filters "Name=vpc-id,Values=${{ secrets.VPC_ID }}" "Name=map-public-ip-on-launch,Values=false" \
+            --query "Subnets[*].SubnetId" 
+            --output text)
+          PRIVATE_SUBNETS=$(echo $PRIVATE_SUBNETS | tr ' ' ',')
+          echo "PRIVATE_SUBNETS=$PRIVATE_SUBNETS" >> $GITHUB_ENV
+
+      - name: Run DB migrations
+        run: |
+          aws ecs run-task \
+            --cluster $${{ vars.ECS_CLUSTER }} \
+            --task-definition app-task \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[${{ $PRIVATE_SUBNETS }}],securityGroups=[app-task-sg],assignPublicIp=DISABLED}" \
+            --overrides '{
+              "containerOverrides": [
+                {
+                  "name": {{ vars.ECS_CONTAINER }},
+                  "command": ["flask","db","upgrade"]
+                }
+              ]
+            }'
 
       - name: Fetch ECS Task Definition
         run: |
@@ -77,7 +103,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1.8.3
         with:
           task-definition: task-definition.json
-          container-name: app-container
+          container-name: ${{ vars.ECS_CONTAINER }}
           image: ${{ secrets.ECR_REPO }}:latest
 
       - name: Deploy to Amazon ECS
