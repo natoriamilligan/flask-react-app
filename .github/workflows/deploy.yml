@@ -80,7 +80,7 @@ jobs:
       - name: Run DB migrations
         run: |
           TASK_ARN=$(aws ecs run-task \
-            --cluster $${{ vars.ECS_CLUSTER }} \
+            --cluster $CLUSTER_NAME \
             --task-definition app-task \
             --launch-type FARGATE \
             --network-configuration "awsvpcConfiguration={subnets=[$PRIVATE_SUBNETS],securityGroups=[app-task-sg],assignPublicIp=DISABLED}" \
