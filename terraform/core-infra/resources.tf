@@ -365,7 +365,7 @@ resource "aws_iam_role" "task_execution_role" {
 }
 
 # Create policy to allow ECS to access the secrets created in Secrets Manager
-resource "aws_iam_role_policy" "test_policy" {
+resource "aws_iam_role_policy" "ecs_role_policy" {
   name = "accessSecretsManager"
   role = aws_iam_role.task_execution_role.id
 
@@ -626,4 +626,27 @@ resource "aws_ssm_parameter" "cf_id" {
   name  = "cf-id"
   type  = "String"
   value = aws_cloudfront_distribution.app_distribution.id
+}
+
+# Create role for running migrations in EC2
+resource "aws_iam_role" "migrations_role" {
+  name               = "migrations-role"
+  assume_role_policy = data.aws_iam_policy_document.assume_migrations_role_policy.json
+}
+
+# Create policy to allow ECS to access the secrets created in Secrets Manager
+resource "aws_iam_role_policy" "migrations_secrets_policy" {
+  name = "accessSecretsManager"
+  role = aws_iam_role.migrations_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+          Action = ["secretsmanager:GetSecretValue"]
+          Effect   = "Allow"
+          Resource = [aws_secretsmanager_secret.db_secret.arn]
+      },
+    ]
+  })
 }
