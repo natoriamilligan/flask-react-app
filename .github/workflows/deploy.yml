@@ -67,49 +67,6 @@ jobs:
         run: |
           docker build -f backend/Dockerfile -t ${{ secrets.ECR_REPO }}:latest backend/
           docker push ${{ secrets.ECR_REPO }}:latest
-      
-      - name: Get private subnets
-        id: subnets
-        run: |
-          PRIVATE_SUBNETS=$(aws ec2 describe-subnets \
-            --filters "Name=vpc-id,Values=${{ secrets.VPC_ID }}" "Name=map-public-ip-on-launch,Values=false" \
-            --query "Subnets[*].SubnetId" --output text)
-          PRIVATE_SUBNETS=$(echo $PRIVATE_SUBNETS | tr ' ' ',')
-          echo "PRIVATE_SUBNETS=$PRIVATE_SUBNETS" >> $GITHUB_ENV
-
-      - name: Run DB migrations
-        run: |
-          SECURITY_GROUP_ID=$(aws ec2 describe-security-groups \
-          --filters "Name=group-name,Values=app-task-sg" \
-          --query "SecurityGroups[0].GroupId" \
-          --output text)
-
-          DATABASE_URL=$(aws secretsmanager get-secret-value \
-            --secret-id DATABASE_URL \
-            --query SecretString \
-            --output text)
-
-          TASK_ARN=$(aws ecs run-task \
-            --cluster $CLUSTER_NAME \
-            --task-definition app-task \
-            --launch-type FARGATE \
-            --network-configuration "awsvpcConfiguration={subnets=[$PRIVATE_SUBNETS],securityGroups=[$SECURITY_GROUP_ID],assignPublicIp=DISABLED}" \
-            --overrides '{
-              "containerOverrides": [
-                {
-                  "name": "app-container",
-                  "command": ["flask","db","upgrade"],
-                  "environment": [
-                    {"name": "DATABASE_URL", "value": "'"$DATABASE_URL"'"}
-                  ]
-                }
-              ]
-            }' \
-            --query "tasks[0].taskArn" --output text)
-
-          aws ecs wait tasks-stopped --cluster $CLUSTER_NAME --tasks $TASK_ARN
-        env:
-          CLUSTER_NAME: ${{ vars.ECS_CLUSTER }}
 
       - name: Fetch ECS Task Definition
         run: |
