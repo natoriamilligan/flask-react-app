@@ -99,5 +99,5 @@ resource "aws_instance" "migrations_instance" {
                 --output text)"
               EOF
 
-  depends_on = [aws_iam_instance_profile.ec2_profile.name, aws_security_group.ec2_sg.id]
+  depends_on = [aws_iam_instance_profile.ec2_profile, aws_security_group.ec2_sg]
 }
