@@ -379,6 +379,8 @@ resource "aws_iam_role_policy" "ecs_role_policy" {
       },
     ]
   })
+
+  depends_on = [aws_iam_role.task_execution_role]
 }
 
 # Add AWS managed task role policy to role
