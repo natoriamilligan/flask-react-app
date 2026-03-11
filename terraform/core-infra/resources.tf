@@ -1,4 +1,4 @@
-# Direct state file to S3 bucket and connect DynamoDB table
+# Direct state file to S3 bucket
 terraform {
   backend "s3" {
     bucket         = "nmilligan-tf-states"
@@ -450,17 +450,7 @@ resource "aws_security_group_rule" "allow_alb" {
   security_group_id        = aws_security_group.app_task_sg.id
 }
 
-# Allow database traffic from tasks to anywhere (AWS API)
-resource "aws_security_group_rule" "tasks_to_anywhere" {
-  type                     = "egress"
-  from_port                = 443
-  to_port                  = 443
-  protocol                 = "tcp"
-  security_group_id        = aws_security_group.app_task_sg.id
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
-# Allow database traffic from tasks to anywhere (AWS API)
+# Allow traffic from tasks to anywhere (AWS API)
 resource "aws_security_group_rule" "tasks_to_anywhere_80" {
   type                     = "egress"
   from_port                = 80
@@ -626,27 +616,4 @@ resource "aws_ssm_parameter" "cf_id" {
   name  = "cf-id"
   type  = "String"
   value = aws_cloudfront_distribution.app_distribution.id
-}
-
-# Create role for running migrations in EC2
-resource "aws_iam_role" "migrations_role" {
-  name               = "migrations-role"
-  assume_role_policy = data.aws_iam_policy_document.assume_migrations_role_policy.json
-}
-
-# Create policy to allow ECS to access the secrets created in Secrets Manager
-resource "aws_iam_role_policy" "migrations_secrets_policy" {
-  name = "accessSecretsManager"
-  role = aws_iam_role.migrations_role.id
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-          Action = ["secretsmanager:GetSecretValue"]
-          Effect   = "Allow"
-          Resource = [aws_secretsmanager_secret.db_secret.arn]
-      },
-    ]
-  })
 }

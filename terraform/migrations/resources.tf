@@ -37,3 +37,67 @@ resource "aws_iam_instance_profile" "ec2_profile" {
   name = "migrations-instance-profile"
   role = aws_iam_role.migrations_role.name
 }
+
+# Create EC2 security group
+resource "aws_security_group" "ec2_sg" {
+  name        = "ec2-sg"
+  vpc_id      = aws_vpc.main.id
+}
+
+# Allow traffic from anywhere to EC2 instance
+resource "aws_security_group_rule" "allow_ec2" {
+  type                     = "ingress"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.ec2_sg.id
+  cidr_blocks              = ["0.0.0.0/0"]
+}
+
+# Allow traffic from EC2 instance to anywhere (AWS API)
+resource "aws_security_group_rule" "ec2_to_anywhere" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.ec2_sg.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
+# Create EC2 instance for migrations
+resource "aws_instance" "migrations_instance" {
+  ami                         = "ami-02dfbd4ff395f2a1b"
+  instance_type               = "t3.micro"
+  key_name                    = "db-migrations"
+  subnet_id                   = aws_subnet.public_a.id
+  vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
+  associate_public_ip_address = true
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
+
+  root_block_device {
+    volume_size = 8
+    volume_type = "gp3"
+  }
+
+  user_data = <<-EOF
+              #!/bin/bash -xe
+
+              sudo yum update -y
+              sudo yum install -y git python3 python3-pip 
+
+              git clone https://github.com/natoriamilligan/flask-react-app.git
+              cd flask-react-app/backend
+
+              python3 -m venv venv
+              source venv/bin/activate
+
+              pip install -r requirements.txt
+
+              export DATABASE_URL="$(aws secretsmanager get-secret-value \
+                --secret-id DATABASE_URL \
+                --query SecretString \
+                --output text)"
+              EOF
+
+  depends_on = [aws_iam_instance_profile.ec2_profile.name, aws_security_group.ec2_sg.id]
+}
