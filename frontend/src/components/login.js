@@ -1,13 +1,13 @@
-import { useState } from 'react';
-import { Card, Button, Form, Container } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import '../Login.css';
+import { useState } from "react";
+import { Card, Button, Form, Container } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import "../Login.css";
 
-function Login({setLoginTime}) {
+function Login({ setLoginTime }) {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [loginAlert, setLoginAlert] = useState(false);
 
   const createLink = () => {
@@ -16,39 +16,38 @@ function Login({setLoginTime}) {
 
   const dashboardLink = () => {
     navigate("/dashboard");
-  }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     if (username === "" || password === "") {
       setLoginAlert(true);
     } else {
-        try {
-          const response = await fetch('https://api.banksie.app/login', {
-            method: 'POST',
-            headers: {'Content-Type' : 'application/json'},
-            credentials: "include",
-            body: JSON.stringify({
-              username: username,
-              password: password 
-            })
-          })
+      try {
+        const response = await fetch("https://api.banksie.app/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
+        });
 
-          const data = await response.json();
+        const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message || "Login unsuccessful.")
-        } 
-        
+          throw new Error(data.message || "Login unsuccessful.");
+        }
+
         setLoginTime(Date.now());
         dashboardLink();
-
-      } catch(error) {
-        toast.error(error.message)
+      } catch (error) {
+        toast.error(error.message);
       }
     }
-  }
-  
+  };
+
   return (
     <Container fluid className="px-0 login-container">
       <Card className="login-card" bg="light">
@@ -56,37 +55,38 @@ function Login({setLoginTime}) {
         <Card.Body>
           <Card.Title>Sign In</Card.Title>
           <Form onSubmit={handleLogin}>
-            <Form.Group controlId='username'>
+            <Form.Group controlId="username">
               <Form.Label>Username:</Form.Label>
-              <Form.Control 
-                type='text' 
+              <Form.Control
+                type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId='password'>
+            <Form.Group controlId="password">
               <Form.Label>Password:</Form.Label>
-              <Form.Control 
-                type='password' 
+              <Form.Control
+                type="password"
                 value={password}
                 autoComplete="new-password"
                 onChange={(e) => setPassword(e.target.value)}
               />
-              {loginAlert &&
+              {loginAlert && (
                 <Form.Text>Please enter username and password.</Form.Text>
-              }
+              )}
             </Form.Group>
             <div className="card-btn">
               <Button type="submit">Sign In</Button>
             </div>
           </Form>
           <div className="card-btn">
-            <Button variant="secondary" onClick={createLink}>Create Account</Button>
+            <Button variant="secondary" onClick={createLink}>
+              Create Account
+            </Button>
           </div>
         </Card.Body>
       </Card>
     </Container>
-    
-  )
+  );
 }
 export default Login;
