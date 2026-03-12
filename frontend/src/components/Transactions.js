@@ -6,17 +6,17 @@ import toast from "react-hot-toast";
 function Transactions({ selectedType }) {
   const [transactions, setTransactions] = useState([]);
   const [accountID, setAccountID] = useState("");
-  const [currentPage, setCurrentPage] = useState(0);
   const [paginatedItems, setPaginatedItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
 
   const allTransactions = useRef([]);
 
   const itemsPerPage = 6;
-  const offset = currentPage * itemsPerPage;
 
   const handlePageClick = ({ selected }) => {
-    setCurrentPage(selected);
+    const start = selected * itemsPerPage;
+    const end = start + itemsPerPage;
+    setPaginatedItems(transactions.slice(start, end));
   };
 
   useEffect(() => {
@@ -88,34 +88,16 @@ function Transactions({ selectedType }) {
   }
 
   useEffect(() => {
+    const filtered =
+      selectedType === "all"
+        ? allTransactions.current
+        : allTransactions.current.filter((t) => t.type === selectedType);
+
+    setTransactions(filtered);
     setCurrentPage(0);
-  }, [selectedType]);
-
-  useEffect(() => {
-    if (selectedType === "all") {
-      setPaginatedItems(
-        allTransactions.current.slice(offset, offset + itemsPerPage),
-      );
-      setPageCount(Math.ceil(allTransactions.current.length / itemsPerPage));
-    } else {
-      setPaginatedItems(transactions.slice(offset, offset + itemsPerPage));
-      setPageCount(Math.ceil(transactions.length / itemsPerPage));
-    }
-  }, [transactions, currentPage, selectedType]);
-
-  useEffect(() => {
-    if (selectedType === "all") {
-      setTransactions(allTransactions.current);
-      return;
-    }
-
-    const newTransactionList = allTransactions.current.filter(
-      function (element) {
-        return element["type"] === selectedType;
-      },
-    );
-    setTransactions(newTransactionList);
-  }, [selectedType]);
+    setPageCount(Math.ceil(filtered.length / itemsPerPage));
+    setPaginatedItems(filtered.slice(0, itemsPerPage));
+  }, [selectedType, allTransactions.current]);
 
   return (
     <>
