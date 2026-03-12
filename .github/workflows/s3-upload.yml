@@ -41,8 +41,11 @@ jobs:
         run: |
           echo "CF_DIST_ID=$(aws ssm get-parameter --name cf-id --query Parameter.Value --output text)" >> $GITHUB_ENV
 
-      - name: Sync to S3 bucket
-        run: aws s3 sync frontend/build s3://banksie.app/ --delete
+      - name: Empty S3 bucket
+        run: aws s3 rm s3://banksie.app --recursive
+
+      - name: Upload new build
+        run: aws s3 cp frontend/build s3://banksie.app --recursive
 
       - name: Invalidate CloudFront
         run: |
