@@ -89,5 +89,13 @@ resource "aws_instance" "migrations_instance" {
     volume_type = "gp3"
   }
 
+  user_data = <<-EOF
+              #!/bin/bash -xe
+
+              sudo yum update -y
+              sudo yum install -y git python3 python3-pip 
+
+              EOF
+
   depends_on = [aws_iam_instance_profile.ec2_profile, aws_security_group.ec2_sg]
 }
