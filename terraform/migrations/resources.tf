@@ -41,7 +41,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 # Create EC2 security group
 resource "aws_security_group" "ec2_sg" {
   name        = "ec2-sg"
-  vpc_id      = aws_vpc.main.id
+  vpc_id      = data.terraform_remote_state.core-infra.outputs.vpc
 }
 
 # Allow traffic from anywhere to EC2 instance
@@ -64,12 +64,22 @@ resource "aws_security_group_rule" "ec2_to_anywhere" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
+# Allow database traffic from EC2 instance
+resource "aws_security_group_rule" "ec2_to_db" {
+  type                     = "ingress"
+  from_port                = 5432
+  to_port                  = 5432
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.ec2_sg.id
+  security_group_id        = data.terraform_remote_state.core-infra.outputs.db_sg_id
+}
+
 # Create EC2 instance for migrations
 resource "aws_instance" "migrations_instance" {
   ami                         = "ami-02dfbd4ff395f2a1b"
   instance_type               = "t3.micro"
   key_name                    = "db-migrations"
-  subnet_id                   = aws_subnet.public_a.id
+  subnet_id                   = data.terraform_remote_state.core-infra.outputs.public_subnet
   vpc_security_group_ids      = [aws_security_group.ec2_sg.id]
   associate_public_ip_address = true
   iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
@@ -78,26 +88,6 @@ resource "aws_instance" "migrations_instance" {
     volume_size = 8
     volume_type = "gp3"
   }
-
-  user_data = <<-EOF
-              #!/bin/bash -xe
-
-              sudo yum update -y
-              sudo yum install -y git python3 python3-pip 
-
-              git clone https://github.com/natoriamilligan/flask-react-app.git
-              cd flask-react-app/backend
-
-              python3 -m venv venv
-              source venv/bin/activate
-
-              pip install -r requirements.txt
-
-              export DATABASE_URL="$(aws secretsmanager get-secret-value \
-                --secret-id DATABASE_URL \
-                --query SecretString \
-                --output text)"
-              EOF
 
   depends_on = [aws_iam_instance_profile.ec2_profile, aws_security_group.ec2_sg]
 }
