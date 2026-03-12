@@ -94,7 +94,6 @@ function Transactions({ selectedType }) {
         : allTransactions.current.filter((t) => t.type === selectedType);
 
     setTransactions(filtered);
-    setCurrentPage(0);
     setPageCount(Math.ceil(filtered.length / itemsPerPage));
     setPaginatedItems(filtered.slice(0, itemsPerPage));
   }, [selectedType, allTransactions.current]);
