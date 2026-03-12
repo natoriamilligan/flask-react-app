@@ -30,9 +30,9 @@ class TransactionList(MethodView):
         for w in withdrawal_data:
             w["type"] = "Withdrawal"
         for s in sent_transfer_data:
-            s["type"] = "Sent Transfer"
+            s["type"] = "Transfer"
         for r in received_transfer_data:
-            r["type"] = "Received Transfer"
+            r["type"] = "Transfer"
 
         transfer_data = sent_transfer_data + received_transfer_data
 
