@@ -1,139 +1,151 @@
-import { useEffect, useState, useRef } from 'react';
-import { ListGroup } from 'react-bootstrap';
-import ReactPaginate from 'react-paginate';
-import toast from 'react-hot-toast';
+import { useEffect, useState, useRef } from "react";
+import { ListGroup } from "react-bootstrap";
+import ReactPaginate from "react-paginate";
+import toast from "react-hot-toast";
 
 function Transactions({ selectedType }) {
-    const [transactions, setTransactions] = useState([]);
-    const [accountID, setAccountID] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [paginatedItems, setPaginatedItems] = useState([]);
-    const [pageCount, setPageCount] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const [accountID, setAccountID] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [paginatedItems, setPaginatedItems] = useState([]);
+  const [pageCount, setPageCount] = useState(0);
 
-    const allTransactions = useRef([]);
+  const allTransactions = useRef([]);
 
-    const itemsPerPage = 6;
-    const offset = currentPage * itemsPerPage;
+  const itemsPerPage = 6;
+  const offset = currentPage * itemsPerPage;
 
-    const handlePageClick = ({ selected }) => {
-        setCurrentPage(selected);
-    };
+  const handlePageClick = ({ selected }) => {
+    setCurrentPage(selected);
+  };
 
-    useEffect(() => {
-        async function fetchAccountID() {
-            try {
-                const response = await fetch('https://api.banksie.app/me', {
-                    method: 'GET',
-                    headers: {'Content-Type' : 'application/json'},
-                    credentials: "include"
-                })
+  useEffect(() => {
+    async function fetchAccountID() {
+      try {
+        const response = await fetch("https://api.banksie.app/me", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        });
 
-                const data = await response.json();
+        const data = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
-                }
-
-                setAccountID(data.account_id);
-
-            } catch(error) {
-                toast.error(error.message);
-            }
+        if (!response.ok) {
+          throw new Error(
+            data.message ||
+              `Failed to fetch: ${response.status} ${response.statusText}`,
+          );
         }
 
-        fetchAccountID();
-    }, []);
-
-    useEffect(() => {
-        if (!accountID) return;
-
-        async function loadData() {
-            try {
-                await fetchTransactions();
-            } catch(error) {
-                toast.error(error.message || "Failed to load account data.")
-            }
-        }
-
-        loadData();
-    }, [accountID]);
-
-    async function fetchTransactions() {
-
-        try {
-            const response = await fetch(`https://api.banksie.app//account/${accountID}/transactions`, {
-                  method: 'GET',
-                  headers: {'Content-Type' : 'application/json'},
-                  credentials: "include"
-            })
-
-            const data = await response.json();
-
-            if (!response.ok) {  
-                throw new Error(data.message || `Failed to fetch: ${response.status} ${response.statusText}`);
-            }
-
-            setTransactions(data);
-            allTransactions.current = data;
-        } catch(error) {
-            toast.error(error.message)
-        }     
+        setAccountID(data.account_id);
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
 
-    useEffect(() => {
-        console.log(transactions)
-        if (selectedType === "all") {
-            setPaginatedItems(allTransactions.current.slice(offset, offset + itemsPerPage));
-            setPageCount(Math.ceil(allTransactions.current.length / itemsPerPage));
-        } else {
-            setPaginatedItems(transactions.slice(offset, offset + itemsPerPage));
-            setPageCount(Math.ceil(transactions.length / itemsPerPage));
-        }
-    }, [transactions, currentPage])
+    fetchAccountID();
+  }, []);
 
-    useEffect(() => {
-        console.log("entered")
-        if (selectedType === 'all') {
-            setTransactions(allTransactions.current);
-            return;
-        }
-            
-        const newTransactionList = allTransactions.current.filter(function(element) {
-            return element["type"] === selectedType;
-        })
-        console.log("entered2")
-        setTransactions(newTransactionList);
-    }, [selectedType])
+  useEffect(() => {
+    if (!accountID) return;
 
-     return (
-        <>
-            <ListGroup>
-                {paginatedItems.map((item) => (
-                    <ListGroup.Item key={item.id} className="trans-list-item">
-                    <div className="list-item-bottom">
-                        <div>
-                            <div className='trans-type-name'>{item["type"]}</div>
-                            <div>{item["timestamp"].match(/^\d{4}-\d{2}-\d{2}/)[0]}</div>
-                        </div>
-                        
-                        <div>${item["amount"]}</div>
-                    </div>
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
-            <ReactPaginate
-                breakLabel="..."
-                nextLabel="next >"
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={2}
-                pageCount={pageCount}
-                previousLabel="< prev"
-                containerClassName={"pagnation-container"}
-                previousLinkClassName={"previous color"}
-                nextLinkClassName={"next color"}
-                pageClassName={"page-list"}
-            />
-        </>
-     )
+    async function loadData() {
+      try {
+        await fetchTransactions();
+      } catch (error) {
+        toast.error(error.message || "Failed to load account data.");
+      }
+    }
+
+    loadData();
+  }, [accountID]);
+
+  async function fetchTransactions() {
+    try {
+      const response = await fetch(
+        `https://api.banksie.app/account/${accountID}/transactions`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+            `Failed to fetch: ${response.status} ${response.statusText}`,
+        );
+      }
+
+      setTransactions(data);
+      allTransactions.current = data;
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [selectedType]);
+
+  useEffect(() => {
+    if (selectedType === "all") {
+      setPaginatedItems(
+        allTransactions.current.slice(offset, offset + itemsPerPage),
+      );
+      setPageCount(Math.ceil(allTransactions.current.length / itemsPerPage));
+    } else {
+      setPaginatedItems(transactions.slice(offset, offset + itemsPerPage));
+      setPageCount(Math.ceil(transactions.length / itemsPerPage));
+    }
+  }, [transactions, currentPage, selectedType]);
+
+  useEffect(() => {
+    if (selectedType === "all") {
+      setTransactions(allTransactions.current);
+      return;
+    }
+
+    const newTransactionList = allTransactions.current.filter(
+      function (element) {
+        return element["type"] === selectedType;
+      },
+    );
+    setTransactions(newTransactionList);
+  }, [selectedType]);
+
+  return (
+    <>
+      <ListGroup>
+        {paginatedItems.map((item) => (
+          <ListGroup.Item key={item.id} className="trans-list-item">
+            <div className="list-item-bottom">
+              <div>
+                <div className="trans-type-name">{item["type"]}</div>
+                <div>{item["timestamp"].match(/^\d{4}-\d{2}-\d{2}/)[0]}</div>
+              </div>
+
+              <div>${item["amount"]}</div>
+            </div>
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={2}
+        pageCount={pageCount}
+        previousLabel="< prev"
+        containerClassName={"pagnation-container"}
+        previousLinkClassName={"previous color"}
+        nextLinkClassName={"next color"}
+        pageClassName={"page-list"}
+      />
+    </>
+  );
 }
-export default Transactions
+export default Transactions;
