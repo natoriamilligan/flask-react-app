@@ -9,14 +9,17 @@ function Transactions({ selectedType }) {
   const [paginatedItems, setPaginatedItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
 
-  const allTransactions = useRef([]);
-
   const itemsPerPage = 6;
 
   const handlePageClick = ({ selected }) => {
     const start = selected * itemsPerPage;
     const end = start + itemsPerPage;
-    setPaginatedItems(transactions.slice(start, end));
+
+    const filtered =
+      selectedType === "all"
+        ? transactions
+        : transactions.filter((t) => t.type === selectedType);
+    setPaginatedItems(filtered.slice(start, end));
   };
 
   useEffect(() => {
@@ -81,7 +84,6 @@ function Transactions({ selectedType }) {
       }
 
       setTransactions(data);
-      allTransactions.current = data;
     } catch (error) {
       toast.error(error.message);
     }
@@ -90,13 +92,13 @@ function Transactions({ selectedType }) {
   useEffect(() => {
     const filtered =
       selectedType === "all"
-        ? allTransactions.current
-        : allTransactions.current.filter((t) => t.type === selectedType);
+        ? transactions
+        : transactions.filter((t) => t.type === selectedType);
 
     setTransactions(filtered);
     setPageCount(Math.ceil(filtered.length / itemsPerPage));
     setPaginatedItems(filtered.slice(0, itemsPerPage));
-  }, [selectedType, allTransactions.current]);
+  }, [selectedType, transactions]);
 
   return (
     <>
