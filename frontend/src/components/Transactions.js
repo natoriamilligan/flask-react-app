@@ -4,9 +4,9 @@ import ReactPaginate from "react-paginate";
 import toast from "react-hot-toast";
 
 function Transactions({ selectedType }) {
-  const [transactions, setTransactions] = useState([]);
   const [accountID, setAccountID] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+  const [allTransactions, setAllTransactions] = useState([]);
 
   const itemsPerPage = 6;
 
@@ -75,7 +75,7 @@ function Transactions({ selectedType }) {
         );
       }
 
-      setTransactions(data);
+      setAllTransactions(data);
     } catch (error) {
       toast.error(error.message);
     }
@@ -83,8 +83,8 @@ function Transactions({ selectedType }) {
 
   const filtered =
     selectedType === "all"
-      ? transactions
-      : transactions.filter((t) => t.type === selectedType);
+      ? allTransactions
+      : allTransactions.filter((t) => t.type === selectedType);
 
   useEffect(() => {
     setCurrentPage(0);
@@ -98,7 +98,10 @@ function Transactions({ selectedType }) {
     <>
       <ListGroup>
         {paginatedItems.map((item) => (
-          <ListGroup.Item key={item.id} className="trans-list-item">
+          <ListGroup.Item
+            key={`${item.type}-${item.id}`}
+            className="trans-list-item"
+          >
             <div className="list-item-bottom">
               <div>
                 <div className="trans-type-name">{item["type"]}</div>
