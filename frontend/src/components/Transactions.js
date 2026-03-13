@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { ListGroup } from "react-bootstrap";
 import ReactPaginate from "react-paginate";
 import toast from "react-hot-toast";
@@ -6,20 +6,12 @@ import toast from "react-hot-toast";
 function Transactions({ selectedType }) {
   const [transactions, setTransactions] = useState([]);
   const [accountID, setAccountID] = useState("");
-  const [paginatedItems, setPaginatedItems] = useState([]);
-  const [pageCount, setPageCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const itemsPerPage = 6;
 
   const handlePageClick = ({ selected }) => {
-    const start = selected * itemsPerPage;
-    const end = start + itemsPerPage;
-
-    const filtered =
-      selectedType === "all"
-        ? transactions
-        : transactions.filter((t) => t.type === selectedType);
-    setPaginatedItems(filtered.slice(start, end));
+    setCurrentPage(selected);
   };
 
   useEffect(() => {
@@ -89,15 +81,18 @@ function Transactions({ selectedType }) {
     }
   }
 
-  useEffect(() => {
-    const filtered =
-      selectedType === "all"
-        ? transactions
-        : transactions.filter((t) => t.type === selectedType);
+  const filtered =
+    selectedType === "all"
+      ? transactions
+      : transactions.filter((t) => t.type === selectedType);
 
-    setPageCount(Math.ceil(filtered.length / itemsPerPage));
-    setPaginatedItems(filtered.slice(0, itemsPerPage));
-  }, [selectedType, transactions]);
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [selectedType]);
+
+  const start = currentPage * itemsPerPage;
+  const paginatedItems = filtered.slice(start, start + itemsPerPage);
+  const pageCount = Math.ceil(filtered.length / itemsPerPage);
 
   return (
     <>
