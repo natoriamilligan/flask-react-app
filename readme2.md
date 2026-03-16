@@ -28,7 +28,7 @@
 </details>
 
 
-## ❓ Overview 
+## Overview 
 Full-stack banking application deployed on AWS (ECS, S3/CloudFront, RDS) with Terraform-provisioned infrastructure and CI/CD via GitHub Actions.
 Go to website -> [Live Website](https://banksie.app)
 
@@ -36,14 +36,14 @@ Go to website -> [Live Website](https://banksie.app)
 ### Backend Infrastructure
 ### Frontend Infrastructure
 
-## 🧰 Tech
-Frontend - React
-Backend - Flask (Python), PostgreSQL
-AWS Services - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch
-Infrastructure - Terraform, Docker  
-CI/CD - GitHub Actions 
-Auth & Security - JWT, Refresh Tokens, HTTP-only Cookies
-Testing - Integration Tests, Linting 
+## Tech
+- Frontend - React
+- Backend - Flask (Python), PostgreSQL
+- AWS Services - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch
+- Infrastructure - Terraform, Docker  
+- CI/CD - GitHub Actions 
+- Auth & Security - JWT, Refresh Tokens, HTTP-only Cookies
+- Testing - Integration Tests, Linting 
 
 ## AWS Infrastructure
 - **ECS Fargate** - Chose serverless containers over EC2 to eliminate instance management and enable automatic scaling
@@ -71,10 +71,20 @@ Every push to frontend/src triggers the following pipeline:
 4. **Alert** — Slack notification sent to team channel on pipeline failure
    
 ## App Features
+- User registration and login with secure authentication
+- Account dashboard with transaction history
+- Fund transfers between accounts
+- Real-time balance updates
+- Full error handling with descriptive API responses
+- Protected routes requiring valid authentication
+  
 ## Local Development
-## Testing
+See [Local Setup Guide](local-setup.md) for instructions on running the app locally.
 
-## 📫 Contact
+## Testing
+Integration tests cover core API routes including authentication and account operations. Tests run automatically in the CI/CD pipeline on every push to main.
+
+## Contact
 Natoria Milligan - [@natoriamilligan](https://x.com/natoriamilligan) - natoriamilligan@gmail.com - [LinkedIn](https://www.linkedin.com/in/natoriamilligan)
 
 Project Link: [https://github.com/natoriamilligan/flask-react-app](https://github.com/natoriamilligan/flask-react-app)
