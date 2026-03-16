@@ -1,29 +1,21 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
+    <li><a href="#overview">Overview</a></li>
     <li>
-      <a href="#-overview">Overview</a>
+      <a href="#architecture-diagrams">Architecture Diagrams</a>
       <ul>
-        <li><a href="#-tech">Tech</a></li>
-        <ul>
-          <li><a href="#application">Application</a></li>
-          <li><a href="#aws-infrastructure">AWS Infrastructure</a></li>
-          <li><a href="#devops--cicd">DevOps / CI/CD</a></li>
-          <li><a href="#dev-tools">Dev Tools</a></li>
-        </ul>
+        <li><a href="#frontend-infrastructure">Frontend</a></li>
+        <li><a href="#backend-infrastructure">Backend</a></li>
       </ul>
     </li>
-    <li>
-      <a href="#%EF%B8%8F-architecture-setup">Architecture Setup</a>
-      <ul>
-        <li><a href="#%EF%B8%8F-frontend">Frontend</a></li>
-        <li><a href="#%EF%B8%8F-database">Database</a></li>
-        <li><a href="#%EF%B8%8F-backend">Backend</a></li>
-      </ul>
-    </li>
-    <li><a href="#-troubleshooting">Troubleshooting</a></li>
-    <li><a href="#-what-i-learned">What I Learned</a></li>
-    <li><a href="#-contact">Contact</a></li>
+    <li><a href="#tech">Tech</a></li>
+    <li><a href="#aws-infrastructure">AWS Infrastructure</a></li>
+    <li><a href="#cicd-pipeline">CI/CD Pipeline</a></li>
+    <li><a href="#app-features">App Features</a></li>
+    <li><a href="#local-development">Local Development</a></li>
+    <li><a href="#testing">Testing</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
 
@@ -72,6 +64,7 @@ Every push to frontend/src triggers the following pipeline:
    
 ## App Features
 - User registration and login with secure authentication
+- Session management via refresh tokens, keeping users securely logged in without re-entering credentials
 - Account dashboard with transaction history
 - Fund transfers between accounts
 - Real-time balance updates
