@@ -37,13 +37,13 @@ Go to website -> [Live Website](https://banksie.app)
 ### Frontend Infrastructure
 
 ## 🧰 Tech
-Frontend        - React
-Backend         - Flask (Python), PostgreSQL
-AWS Services    - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch
-Infrastructure  - Terraform, Docker  
-CI/CD           - GitHub Actions 
+Frontend - React
+Backend - Flask (Python), PostgreSQL
+AWS Services - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch
+Infrastructure - Terraform, Docker  
+CI/CD - GitHub Actions 
 Auth & Security - JWT, Refresh Tokens, HTTP-only Cookies
-Testing         - Integration Tests, Linting 
+Testing - Integration Tests, Linting 
 
 ## AWS Infrastructure
 - **ECS Fargate** - Chose serverless containers over EC2 to eliminate instance management and enable automatic scaling
@@ -54,6 +54,22 @@ Testing         - Integration Tests, Linting
 - **Terraform** - All AWS infrastructure provisioned as code, enabling repeatable and version-controlled deployments
   
 ## CI/CD Pipeline
+Every push to backend triggers the following pipeline:
+
+1. **Test** — Integration tests executed against all covered routes
+2. **Lint** — Code quality checks run on the Flask backend
+3. **Build** — Docker image built and tagged
+4. **Push** — Image pushed to Amazon ECR
+5. **Deploy** — ECS service updated with new task definition, rolling deployment with zero downtime
+6. **Alert** — Slack notification sent to team channel on pipeline failure
+
+Every push to frontend/src triggers the following pipeline:
+
+1. **Build** — React app built and compiled
+2. **Deploy** — Build files synced to S3 bucket
+3. **Invalidate** — CloudFront cache invalidated to serve latest build immediately
+4. **Alert** — Slack notification sent to team channel on pipeline failure
+   
 ## App Features
 ## Local Development
 ## Testing
