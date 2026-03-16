@@ -5,8 +5,8 @@
     <li>
       <a href="#architecture-diagrams">Architecture Diagrams</a>
       <ul>
-        <li><a href="#frontend-infrastructure">Frontend</a></li>
         <li><a href="#backend-infrastructure">Backend</a></li>
+        <li><a href="#frontend-infrastructure">Frontend</a></li>
       </ul>
     </li>
     <li><a href="#tech">Tech</a></li>
