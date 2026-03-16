@@ -1,3 +1,5 @@
+# Banksie
+
 <details>
   <summary>Table of Contents</summary>
   <ol>
@@ -19,10 +21,8 @@
   </ol>
 </details>
 
-
 ## Overview 
-Full-stack banking application deployed on AWS (ECS, S3/CloudFront, RDS) with Terraform-provisioned infrastructure and CI/CD via GitHub Actions.
-Go to website -> [Live Website](https://banksie.app)
+Banksie is a full-stack banking application where users can create accounts, deposit and withdraw funds, and transfer money between accounts. Built with Flask and React, the entire infrastructure is provisioned on AWS via Terraform and deployed automatically through a CI/CD pipeline using GitHub Actions. -> [Live Website](https://banksie.app)
 
 ## Architecture Diagrams 
 ### Backend Infrastructure
