@@ -31,7 +31,7 @@ Banksie is a full-stack banking application where users can create accounts, dep
 ## Tech
 - Frontend - React
 - Backend - Flask (Python), PostgreSQL
-- AWS Services - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch
+- AWS Services - ECS Fargate, ECR, RDS, S3, CloudFront, ALB, Route 53, ACM, Secrets Manager, CloudWatch, Lambda, Eventbridge
 - Infrastructure - Terraform, Docker  
 - CI/CD - GitHub Actions 
 - Auth & Security - JWT, Refresh Tokens, HTTP-only Cookies
@@ -44,6 +44,7 @@ Banksie is a full-stack banking application where users can create accounts, dep
 - **Secrets Manager** - All credentials injected at runtime instead of being hardcoded or stored in environment files
 - **ALB** - Handles SSL termination, accepting HTTPS traffic on port 443 and forwarding plain HTTP internally to Flask containers on port 80
 - **Terraform** - All AWS infrastructure provisioned as code, enabling repeatable and version-controlled deployments
+- **Lambda + EventBridge** - Scheduled rule triggers a Lambda function every 5 minutes to poll DNS propagation status, sending a Slack notification once propagation is complete 
   
 ## CI/CD Pipeline
 Every push to backend triggers the following pipeline:
