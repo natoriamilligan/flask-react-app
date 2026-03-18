@@ -54,6 +54,7 @@ Banksie is a full-stack banking application where users can create accounts, dep
 - **ALB** - Handles SSL termination, accepting HTTPS traffic on port 443 and forwarding plain HTTP internally to Flask containers on port 80
 - **Terraform** - All AWS infrastructure provisioned as code, enabling repeatable and version-controlled deployments
 - **Lambda + EventBridge** - Scheduled rule triggers a Lambda function every 5 minutes to poll DNS propagation status, sending a Slack notification once propagation is complete
+- **EC2 Migration Instance** — Provisioned an EC2 instance with user data scripts to automatically install Git, Python, and pip on launch, executing PostgreSQL schema migrations directly against RDS within the private VPC network
 
 ## CI/CD Pipeline
 
