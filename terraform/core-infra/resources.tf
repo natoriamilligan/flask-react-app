@@ -295,11 +295,17 @@ resource "random_password" "db_password" {
   special = true
 }
 
-# Create SSM Parameter for DB password
-resource "aws_ssm_parameter" "db_password" {
-  name  = "db_password"
-  type  = "SecureString"
-  value = random_password.db_password.result
+# Create secret for DB password
+resource "aws_secretsmanager_secret" "db_pw_secret" {
+  name = "db-password"
+}
+
+# Add DB secret version to secret
+resource "aws_secretsmanager_secret_version" "db_pw_secret" {
+  secret_id     = aws_secretsmanager_secret.db_pw_secret.id
+  secret_string = random_password.db_password.result
+
+  depends_on = [random_password.db_secret]
 }
 
 # Create database instance
@@ -326,11 +332,17 @@ resource "random_password" "jwt_secret" {
   special = true
 }
 
-# Create SSM Parameter for JWT secret key
-resource "aws_ssm_parameter" "jwt_secret" {
-  name  = "JWT_SECRET_KEY"
-  type  = "SecureString"
-  value = random_password.jwt_secret.result
+# Create secret for JWT secret key
+resource "aws_secretsmanager_secret" "jwt_secret" {
+  name = "JWT_SECRET_KEY"
+}
+
+# Add JWT secret version to secret
+resource "aws_secretsmanager_secret_version" "jwt_secret" {
+  secret_id     = aws_secretsmanager_secret.jwt_secret.id
+  secret_string = random_password.jwt_secret.result
+
+  depends_on = [random_password.jwt_secret]
 }
 
 # Create SSM Parameter for DB URL
@@ -361,14 +373,19 @@ resource "aws_iam_role" "task_execution_role" {
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-# Create policy to allow ECS to access SSM Parameter Store
+# Create policy to allow ECS to access SSM Parameter Store and Secrets
 resource "aws_iam_role_policy" "ecs_role_policy" {
-  name = "accessSSMParameterStore"
+  name = "accessEnvVars"
   role = aws_iam_role.task_execution_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      {
+          Action = ["secretsmanager:GetSecretValue"]
+          Effect   = "Allow"
+          Resource = [aws_secretsmanager_secret.jwt_secret.arn]
+      },
       {
           Action = [
             "ssm:GetParameter",
@@ -427,7 +444,7 @@ resource "aws_ecs_task_definition" "app_task" {
         },
         {
           name = "JWT_SECRET_KEY"
-          valueFrom = aws_ssm_parameter.jwt_secret.arn
+          valueFrom = aws_secretsmanager_secret.jwt_secret.arn
         }
       ]
       logConfiguration = {
