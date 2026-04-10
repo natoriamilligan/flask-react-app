@@ -334,7 +334,7 @@ resource "random_password" "jwt_secret" {
 
 # Create secret for JWT secret key
 resource "aws_secretsmanager_secret" "jwt_secret" {
-  name = "JWT_SECRET_KEY"
+  name = "JWT_KEY"
 }
 
 # Add JWT secret version to secret
@@ -443,7 +443,7 @@ resource "aws_ecs_task_definition" "app_task" {
           valueFrom = aws_ssm_parameter.db_secret_url.arn
         },
         {
-          name = "JWT_SECRET_KEY"
+          name = "JWT_KEY"
           valueFrom = aws_secretsmanager_secret.jwt_secret.arn
         }
       ]
