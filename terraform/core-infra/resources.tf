@@ -345,11 +345,15 @@ resource "aws_secretsmanager_secret_version" "jwt_secret" {
   depends_on = [random_password.jwt_secret]
 }
 
-# Create SSM Parameter for DB URL
-resource "aws_ssm_parameter" "db_secret_url" {
-  name  = "DATABASE_URL"
-  type  = "SecureString"
-  value = "postgresql://${aws_db_instance.app_db.username}:${aws_db_instance.app_db.password}@${aws_db_instance.app_db.endpoint}/${aws_db_instance.app_db.db_name}"
+# Create secret for database URL
+resource "aws_secretsmanager_secret" "db_secret" {
+  name = "DATABASE_URL"
+}
+
+# Add secret value to secret
+resource "aws_secretsmanager_secret_version" "db_secret" {
+  secret_id     = aws_secretsmanager_secret.db_secret.id
+  secret_string = "postgresql://${aws_db_instance.app_db.username}:${aws_db_instance.app_db.password}@${aws_db_instance.app_db.endpoint}/${aws_db_instance.app_db.db_name}"
 }
 
 # Create private repository in ECR
@@ -440,7 +444,7 @@ resource "aws_ecs_task_definition" "app_task" {
       secrets = [
         {
           name = "DATABASE_URL"
-          valueFrom = aws_ssm_parameter.db_secret_url.arn
+          valueFrom = aws_secretsmanager_secret.db_secret.arn
         },
         {
           name = "JWT_KEY"
