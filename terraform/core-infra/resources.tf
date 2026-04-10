@@ -347,7 +347,7 @@ resource "aws_secretsmanager_secret_version" "jwt_secret" {
 
 # Create secret for database URL
 resource "aws_secretsmanager_secret" "db_secret" {
-  name = "DATABASE_URL"
+  name = "DB_URL"
 }
 
 # Add secret value to secret
@@ -443,7 +443,7 @@ resource "aws_ecs_task_definition" "app_task" {
       ]
       secrets = [
         {
-          name = "DATABASE_URL"
+          name = "DB_URL"
           valueFrom = aws_secretsmanager_secret.db_secret.arn
         },
         {
