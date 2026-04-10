@@ -24,10 +24,19 @@ resource "aws_iam_role_policy" "migrations_secrets_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-          Action = ["secretsmanager:GetSecretValue"]
+          Action = [
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath"
+          ]
           Effect   = "Allow"
-          Resource = [data.terraform_remote_state.core-infra.outputs.db_secret]
+          Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/*"
       },
+      {
+          Effect   = "Allow"
+          Action   = ["kms:Decrypt"]
+          Resource = "*"
+      }
     ]
   })
 }
