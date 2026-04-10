@@ -11,19 +11,19 @@ DOMAIN = os.environ["DOMAIN"]
 SCHEDULER_NAME = os.environ["SCHEDULER_NAME"]
 GROUP_NAME = os.environ["GROUP_NAME"]
 
-secrets_client = boto3.client("secretsmanager")
-scheduler_client = boto3.client("scheduler")
+ssm_client = boto3.client("ssm")
 
-def get_url_secret():
-    response = secrets_client.get_secret_value(SecretId="SLACK_BOT_SECRETS")
-    url_string = response.get("SecretString")
-    if not url_string:
-        raise RuntimeError("Cannot find SecretString key.")
-    return json.loads(url_string)
+def get_url_param():
+    response = ssm_client.get_parameter(Name="SLACK_BOT_SECRETS")
+    value = response["Parameter"]["Value"]
+    if not value:
+        raise RuntimeError("Cannot find parameters.")
+    return json.loads(value)
 
 def lambda_handler(event, context):
-    token = get_url_secret()["token"]
-    channel_id = get_url_secret()["channel_id"]
+    secrets = get_url_param()
+    token = secrets["token"]
+    channel_id = secrets["channel_id"]
     
     propagated = True
     for ns in NAMESERVERS:
