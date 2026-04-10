@@ -31,31 +31,31 @@ resource "aws_iam_role_policy_attachment" "lambda_execution_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-# Policy to allow Lamdba to access Secrets Manager and scheduler
+# Policy to allow Lamdba to access SSm Parameter Store and scheduler
 resource "aws_iam_role_policy" "lambda_policy" {
-  name = "accessSecretsManager"
+  name = "accessAWSServices"
   role = aws_iam_role.lambda_role.name
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-          Action = ["secretsmanager:GetSecretValue"]
+          Action   = ["ssm:GetParameter"]
           Effect   = "Allow"
-          Resource = "arn:aws:secretsmanager:${var.region}:${data.aws_caller_identity.current.account_id}:secret:SLACK_BOT_SECRETS*"
+          Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/SLACK_BOT_SECRETS"
       },
       {
           Effect   = "Allow"
-          Action = [
+          Action   = [
             "scheduler:UpdateSchedule",
             "scheduler:GetSchedule"
           ]
           Resource = aws_scheduler_schedule.lambda_schedule.arn
       },
       {
-        "Effect": "Allow",
-        "Action": "iam:PassRole",
-        "Resource": aws_iam_role.scheduler_role.arn
+        Effect   = "Allow"
+        Action   = ["iam:PassRole"]
+        Resource = aws_iam_role.scheduler_role.arn
       }
     ]
   })
