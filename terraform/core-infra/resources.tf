@@ -305,7 +305,7 @@ resource "aws_secretsmanager_secret_version" "db_pw_secret" {
   secret_id     = aws_secretsmanager_secret.db_pw_secret.id
   secret_string = random_password.db_password.result
 
-  depends_on = [random_password.db_secret]
+  depends_on = [random_password.db_password]
 }
 
 # Create database instance
