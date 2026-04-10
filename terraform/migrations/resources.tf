@@ -17,7 +17,7 @@ resource "aws_iam_role" "migrations_role" {
 
 # Create policy to allow EC2 instance to access the DB secret
 resource "aws_iam_role_policy" "migrations_secrets_policy" {
-  name = "accessSecretsManager"
+  name = "accessSSMParameterStore"
   role = aws_iam_role.migrations_role.id
 
   policy = jsonencode({
