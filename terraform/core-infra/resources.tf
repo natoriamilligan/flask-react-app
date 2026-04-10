@@ -295,6 +295,13 @@ resource "random_password" "db_password" {
   special = true
 }
 
+# Create SSM Parameter for DB password
+resource "aws_ssm_parameter" "db_password" {
+  name  = "db_password"
+  type  = "SecureString"
+  value = random_password.db_password.result
+}
+
 # Create database instance
 resource "aws_db_instance" "app_db" {
   allocated_storage           = 20
@@ -319,28 +326,18 @@ resource "random_password" "jwt_secret" {
   special = true
 }
 
-# Create secret for JWT secret key
-resource "aws_secretsmanager_secret" "jwt_secret" {
-  name = "JWT_SECRET_KEY"
+# Create SSM Parameter for JWT secret key
+resource "aws_ssm_parameter" "jwt_secret" {
+  name  = "JWT_SECRET_KEY"
+  type  = "SecureString"
+  value = random_password.jwt_secret.result
 }
 
-# Add JWT secret version to secret
-resource "aws_secretsmanager_secret_version" "jwt_secret" {
-  secret_id     = aws_secretsmanager_secret.jwt_secret.id
-  secret_string = random_password.jwt_secret.result
-
-  depends_on = [random_password.jwt_secret]
-}
-
-# Create secret for database URL
-resource "aws_secretsmanager_secret" "db_secret" {
-  name = "DATABASE_URL"
-}
-
-# Add secret value to secret
-resource "aws_secretsmanager_secret_version" "db_secret" {
-  secret_id     = aws_secretsmanager_secret.db_secret.id
-  secret_string = "postgresql://${aws_db_instance.app_db.username}:${aws_db_instance.app_db.password}@${aws_db_instance.app_db.endpoint}/${aws_db_instance.app_db.db_name}"
+# Create SSM Parameter for DB URL
+resource "aws_ssm_parameter" "db_secret_url" {
+  name  = "DATABASE_URL"
+  type  = "SecureString"
+  value = "postgresql://${aws_db_instance.app_db.username}:${aws_db_instance.app_db.password}@${aws_db_instance.app_db.endpoint}/${aws_db_instance.app_db.db_name}"
 }
 
 # Create private repository in ECR
@@ -358,25 +355,34 @@ resource "aws_ecs_cluster" "app_cluster" {
   name = "app-cluster"
 }
 
-# Create task execution role that allows access to Secret Manager for environment variable/secret
+# Create task execution role that allows access to SSM Parameter Store for environment variable/secret
 resource "aws_iam_role" "task_execution_role" {
   name               = "ecsTaskExecutionRole"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
-# Create policy to allow ECS to access the secrets created in Secrets Manager
+# Create policy to allow ECS to access SSM Parameter Store
 resource "aws_iam_role_policy" "ecs_role_policy" {
-  name = "accessSecretsManager"
+  name = "accessSSMParameterStore"
   role = aws_iam_role.task_execution_role.id
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
-          Action = ["secretsmanager:GetSecretValue"]
+          Action = [
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath"
+          ]
           Effect   = "Allow"
-          Resource = [aws_secretsmanager_secret.db_secret.arn, aws_secretsmanager_secret.jwt_secret.arn]
+          Resource = "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter/*"
       },
+      {
+          Effect   = "Allow"
+          Action   = ["kms:Decrypt"]
+          Resource ="*"
+      }
     ]
   })
 
@@ -417,11 +423,11 @@ resource "aws_ecs_task_definition" "app_task" {
       secrets = [
         {
           name = "DATABASE_URL"
-          valueFrom = aws_secretsmanager_secret.db_secret.arn
+          valueFrom = aws_ssm_parameter.db_secret_url.arn
         },
         {
           name = "JWT_SECRET_KEY"
-          valueFrom = aws_secretsmanager_secret.jwt_secret.arn
+          valueFrom = aws_ssm_parameter.jwt_secret.arn
         }
       ]
       logConfiguration = {
