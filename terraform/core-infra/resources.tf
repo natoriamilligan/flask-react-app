@@ -388,7 +388,7 @@ resource "aws_iam_role_policy" "ecs_role_policy" {
       {
           Action = ["secretsmanager:GetSecretValue"]
           Effect   = "Allow"
-          Resource = [aws_secretsmanager_secret.jwt_secret.arn]
+          Resource = [aws_secretsmanager_secret.jwt_secret.arn, aws_secretsmanager_secret.db_secret.arn]
       },
       {
           Action = [
