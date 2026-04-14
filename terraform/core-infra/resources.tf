@@ -427,8 +427,8 @@ resource "aws_ecs_task_definition" "app_task" {
   execution_role_arn       = aws_iam_role.task_execution_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "1024" 
-  memory                   = "4096"
+  cpu                      = "256" 
+  memory                   = "512"
   container_definitions    = jsonencode([
     {
       name      = "app-container"
