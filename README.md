@@ -1,4 +1,4 @@
-# Full Deployed Banking Platform
+# Cloud Native Banking Application
 
 <details>
   <summary>Table of Contents</summary>
